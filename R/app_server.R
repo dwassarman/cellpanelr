@@ -6,5 +6,5 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
-  
+  mod_01_upload_server("01_upload_ui_1")
 }

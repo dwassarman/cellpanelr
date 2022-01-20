@@ -8,9 +8,18 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    # Enable packages with extra UI features
+    shinyFeedback::useShinyFeedback(),
     # Your application UI logic 
     fluidPage(
-      h1("cellpanelr")
+      titlePanel("cellpanelr"),
+      navbarPage(
+        "Pipeline -->",
+        tabPanel(
+          "Upload",
+          mod_01_upload_ui("01_upload_ui_1")
+        ),
+      )
     )
   )
 }

@@ -13,9 +13,14 @@ Description: A Shiny app and R package for analyzing response data collected
 License: GPL (>= 3)
 Imports: 
     config (>= 0.3.1),
+    DT,
     golem (>= 0.3.1),
+    magrittr,
     rlang,
-    shiny (>= 1.7.1)
+    shiny (>= 1.7.1),
+    shinycssloaders,
+    shinyFeedback,
+    vroom
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
