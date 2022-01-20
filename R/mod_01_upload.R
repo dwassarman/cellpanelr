@@ -15,6 +15,7 @@ mod_01_upload_ui <- function(id){
         fileInput(ns("file"), "Upload data"),
         selectInput(ns("cell"), "Cell line column", choices = NULL),
         selectInput(ns("response"), "Response column", choices = NULL),
+        actionButton(ns("go"), "Submit"),
       ),
       mainPanel(
         DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner()
@@ -26,12 +27,14 @@ mod_01_upload_ui <- function(id){
 #' 01_upload Server Functions
 #'
 #' @noRd 
-mod_01_upload_server <- function(id){
+#' @importFrom rlang .data
+mod_01_upload_server <- function(id, rv){
+  stopifnot(is.reactivevalues(rv))
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
     # Load data file
-    data <- reactive({
+    rv$upload <- reactive({
       if (is.null(input$file)) {
         return(NULL)
       }
@@ -52,17 +55,26 @@ mod_01_upload_server <- function(id){
     
     # Display uploaded data
     output$table <- DT::renderDT(DT::datatable(
-      data(),
+      rv$upload(),
       options = list("scrollX" = TRUE)
     ))
     
-    # Update column selection options
+    # Update column selection options when upload file changes
     observe({
-      choices <- names(data())
+      choices <- names(rv$upload())
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)
     })
     
+    # Wait until button is pushed to process data
+    rv$data <- reactive({
+      if (is.null(rv$upload())) { return(NULL) }
+      rv$upload() %>%
+        dplyr::rename("cell_line" = .data[[input$cell]],
+                      "response" = .data[[input$response]]) %>%
+        dplyr::select(.data[["cell_line"]], 
+                      .data[["response"]])
+    }) %>% bindEvent(input$go)
   })
 }
     

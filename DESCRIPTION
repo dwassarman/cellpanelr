@@ -13,6 +13,7 @@ Description: A Shiny app and R package for analyzing response data collected
 License: GPL (>= 3)
 Imports: 
     config (>= 0.3.1),
+    dplyr,
     DT,
     golem (>= 0.3.1),
     magrittr,
