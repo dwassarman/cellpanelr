@@ -2,6 +2,7 @@
 
 export("%>%")
 export(add_ids)
+export(cor_expression)
 export(run_app)
 import(shiny)
 importFrom(ggplot2,aes)

@@ -1,7 +1,11 @@
+CCLE
 DepMap
 Lifecycle
+TPM
 Tibble
+bool
 depmap
+entrez
 golem
 https
 magrittr
