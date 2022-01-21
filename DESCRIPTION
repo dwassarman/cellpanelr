@@ -21,6 +21,7 @@ Imports:
     shiny (>= 1.7.1),
     shinycssloaders,
     shinyFeedback,
+    tibble,
     vroom
 Encoding: UTF-8
 LazyData: true
@@ -32,3 +33,5 @@ Config/testthat/edition: 3
 Language: en-US
 URL: https://github.com/dwassarman/cellpanelr
 BugReports: https://github.com/dwassarman/cellpanelr/issues
+Depends: 
+    R (>= 2.10)

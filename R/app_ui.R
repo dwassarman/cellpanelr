@@ -14,13 +14,23 @@ app_ui <- function(request) {
     # Your application UI logic 
     fluidPage(
       titlePanel("cellpanelr"),
-      navbarPage(
-        "Pipeline -->",
-        tabPanel(
-          "Upload",
-          mod_01_upload_ui("01_upload_ui_1")
+      navbarPage("Pipeline",
+        navbarMenu("Upload",
+          tabPanel("Single value",
+            mod_01_upload_ui("01_upload_ui_1")
+          ),
+          tabPanel("Fit curves",
+          ),
         ),
-      )
+        navbarMenu("Analyze",
+          tabPanel("Annotations",
+                   mod_annotation_ui("annotation_ui_1")),
+          tabPanel("Gene expression"),
+          tabPanel("Copy number"),
+          tabPanel("Mutations"),
+        ),
+        tabPanel("References"),
+      ),
     )
   )
 }
