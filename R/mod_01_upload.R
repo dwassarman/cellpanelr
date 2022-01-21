@@ -16,7 +16,7 @@ mod_01_upload_ui <- function(id){
         selectInput(ns("cell"), "Cell line column", choices = NULL),
         selectInput(ns("response"), "Response column", choices = NULL),
         actionButton(ns("go"), "Submit"),
-        textOutput(ns("message")),
+        verbatimTextOutput(ns("message")),
       ),
       mainPanel(
         DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner()
