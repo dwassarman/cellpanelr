@@ -19,8 +19,8 @@ that correlate with user-provided data.
 You can install the development version of cellpanelr like so:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("dwassarman/cellpanelr")
+# install.packages("remotes")
+remotes::install_github("dwassarman/cellpanelr")
 ```
 
 ## Running the app
