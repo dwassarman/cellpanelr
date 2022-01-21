@@ -8,7 +8,7 @@ cor_expression(
   data,
   response = "response",
   non_coding = FALSE,
-  nested_output = FALSE
+  return_nested = FALSE
 )
 }
 \arguments{

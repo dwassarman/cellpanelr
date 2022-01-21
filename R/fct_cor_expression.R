@@ -9,9 +9,8 @@
 #' @export
 cor_expression <- function(data,
                            response = "response",
-                           # by = "depmap_id",
                            non_coding = FALSE,
-                           nested_output = FALSE) {
+                           return_nested = FALSE) {
   
   # TODO: update with non-coding data set
   if (non_coding) {
@@ -32,10 +31,15 @@ cor_expression <- function(data,
     dplyr::n_distinct()
   message(paste0(n_matched, "/", dplyr::n_distinct(data$cell_line), " cell lines found in expression data set"))
 
+  # Initialize progress bar
+  pb <- progress::progress_bar$new(total = dplyr::n_distinct(merged$gene_name),
+                                   format = "  correlating genes [:bar] :current/:total  eta: :eta")
+  pb$tick(0)
+  
   # Calculate model
   nested <- merged %>%
     tidyr::nest(data = -c("gene_name", "entrez_id", "gene")) %>%
-    dplyr::mutate(model = purrr::map(.data$data, cor.spearman, "rna_expression", response) %>%
+    dplyr::mutate(model = purrr::map(.data$data, cor.spearman_pb, "rna_expression", response, pb) %>%
                     purrr::map(broom::tidy)) %>%
     tidyr::unnest(.data$model) %>%
     dplyr::rename(rho = .data$estimate) %>%
@@ -45,7 +49,7 @@ cor_expression <- function(data,
                   .data$p.value,
                   .data$data)
 
-  if (nested_output) {
+  if (return_nested) {
     nested
   } else {
     nested %>%
@@ -54,6 +58,17 @@ cor_expression <- function(data,
 }
 
 cor.spearman <- function(data, x, y) {
+  stats::cor.test(
+    x = data[[x]],
+    y = data[[y]],
+    method = "spearman",
+    na.action = stats::na.omit(),
+    exact = FALSE
+  )
+}
+
+cor.spearman_pb <- function(data, x, y, pb) {
+  pb$tick()
   stats::cor.test(
     x = data[[x]],
     y = data[[y]],
