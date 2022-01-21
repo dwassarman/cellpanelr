@@ -17,6 +17,7 @@ mod_annotation_ui <- function(id){
                     choices = names(cellpanelr::annotations),
                     selected = "primary_disease"),
         checkboxInput(ns("log"), "Plot in log-scale"),
+        downloadButton(ns("dl"), "Download"),
       ),
       mainPanel(
         plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
@@ -39,7 +40,8 @@ mod_annotation_server <- function(id, rv){
     annotated <- reactive({
       rv$data() %>%
         dplyr::left_join(cellpanelr::annotations,
-                         by = "depmap_id")
+                         by = "depmap_id",
+                         suffix = c("", ".depmap"))
     })
     
     # Generate boxplot or scatterplot depending on feature
@@ -70,9 +72,16 @@ mod_annotation_server <- function(id, rv){
       }
       
       p
-    })
+    }, res = 96)
     
-    
+    output$dl <- downloadHandler(
+      filename = function() {
+        paste0(Sys.Date(), "-annotated.tsv")
+      },
+      content = function(file) {
+        vroom::vroom_write(annotated(), file)
+      }
+    )
  
   })
 }
