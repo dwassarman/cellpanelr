@@ -72,7 +72,9 @@ mod_annotation_server <- function(id, rv){
       }
       
       p
-    }, res = 96)
+    },
+    height = function() {0.75 * session$clientData[["output_annotation_ui_1-plot_width"]]},
+    res = 96)
     
     output$dl <- downloadHandler(
       filename = function() {
