@@ -16,6 +16,7 @@ mod_01_upload_ui <- function(id){
         selectInput(ns("cell"), "Cell line column", choices = NULL),
         selectInput(ns("response"), "Response column", choices = NULL),
         actionButton(ns("go"), "Submit"),
+        textOutput(ns("message")),
       ),
       mainPanel(
         DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner()
@@ -70,10 +71,29 @@ mod_01_upload_server <- function(id, rv){
     rv$data <- reactive({
       if (is.null(rv$upload())) { return(NULL) }
       rv$upload() %>%
+        # Use standard column names
         dplyr::rename("cell_line" = .data[[input$cell]],
                       "response" = .data[[input$response]]) %>%
+        # Drop extra columns
         dplyr::select(.data[["cell_line"]], 
-                      .data[["response"]])
+                      .data[["response"]]) %>%
+        # Combine replicates based on cell line name
+        dplyr::group_by(.data[["cell_line"]]) %>%
+        dplyr::summarise(response = mean(.data[["response"]], na.rm = TRUE)) %>%
+        add_ids(name_col = "cell_line")
+    }) %>% bindEvent(input$go)
+    
+    # Print message to user about number of cell lines matched
+    output$message <- renderText({
+      upload_unique <- rv$upload()[[input$cell]] %>% dplyr::n_distinct(na.rm = TRUE)
+      ann_len <- rv$data()[["depmap_id"]] %>% dplyr::n_distinct(na.rm = TRUE)
+      # See if replicates are being combines
+      m1 <- if (nrow(rv$upload()) != upload_unique) {
+        "Averaging cell line replicates...\n"
+      } else {
+        ""
+      }
+      paste0(m1, ann_len, "/", upload_unique, " cell lines identified")
     }) %>% bindEvent(input$go)
   })
 }

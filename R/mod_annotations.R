@@ -12,10 +12,13 @@ mod_annotation_ui <- function(id){
   tagList(
     sidebarLayout(
       sidebarPanel(
-        selectInput(ns("feature"), "Select a feature", choices = NULL),
+        selectInput(ns("feature"),
+                    "Feature",
+                    choices = names(cellpanelr::annotations),
+                    selected = "lineage")
       ),
       mainPanel(
-        DT::DTOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
+        plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
       ),
     )
   )
@@ -24,10 +27,32 @@ mod_annotation_ui <- function(id){
 #' annotation Server Functions
 #'
 #' @noRd 
+#' @importFrom ggplot2 ggplot aes geom_boxplot coord_flip xlab
+#' @importFrom rlang .data
 mod_annotation_server <- function(id, rv){
   stopifnot(is.reactivevalues(rv))
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    annotated <- reactive({
+      rv$data() %>%
+        dplyr::left_join(cellpanelr::annotations,
+                         by = "depmap_id")
+    })
+    
+    output$plot <- renderPlot({
+      p <- annotated() %>%
+          ggplot() +
+          geom_boxplot(aes(
+            x = stats::reorder(.data[[input$feature]],
+                               .data[["response"]],
+                               FUN = stats::median,
+                               na.rm = TRUE),
+            y = .data[["response"]])) +
+          coord_flip() +
+          xlab(input$feature)
+      p
+    })
  
   })
 }

@@ -30,7 +30,8 @@ add_ids <- function(data, name_col) {
       stripped_name = gsub("[^[:alnum:]]", "", .data[[name_col]]) %>% toupper()
     ) %>%
     dplyr::left_join(id_df,
-                     by = c("stripped_name")) %>%
+                     by = c("stripped_name"),
+                     suffix = c("", ".depmap")) %>%
     dplyr::select(-.data[["stripped_name"]]) %>%
     remove_multi_id(name_col) %>%
     remove_multi_cell(name_col)

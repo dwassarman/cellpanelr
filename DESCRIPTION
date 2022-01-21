@@ -15,6 +15,7 @@ Imports:
     config (>= 0.3.1),
     dplyr,
     DT,
+    ggplot2,
     golem (>= 0.3.1),
     magrittr,
     rlang,

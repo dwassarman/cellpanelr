@@ -53,12 +53,12 @@ drop_nulls <- function(x){
   }
 }
 
-#' Typing reactiveValues is too long
-#' 
-#' @inheritParams reactiveValues
-#' @inheritParams reactiveValuesToList
-#' 
-#' @noRd
-rv <- shiny::reactiveValues
-rvtl <- shiny::reactiveValuesToList
+#' #' Typing reactiveValues is too long
+#' #' 
+#' #' @inheritParams reactiveValues
+#' #' @inheritParams reactiveValuesToList
+#' #' 
+#' #' @noRd
+#' rv <- shiny::reactiveValues
+#' rvtl <- shiny::reactiveValuesToList
 
