@@ -15,7 +15,9 @@ mod_expression_ui <- function(id){
         verbatimTextOutput(ns("message")),
         actionButton(ns("go"), "Submit"),
       ),
-      mainPanel(),
+      mainPanel(
+        DT::DTOutput(ns("table")),
+      ),
     ),
   )
 }
@@ -27,18 +29,6 @@ mod_expression_server <- function(id, rv){
   stopifnot(is.reactivevalues(rv))
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    
-    # merged <- reactive({
-    #   filtered_exp <- cellpanelr::expression %>%
-    #     dplyr::select(.data[["depmap_id"]],
-    #                   .data[["gene_name"]],
-    #                   .data[["rna_expression"]])
-    #   
-    #   rv$data() %>%
-    #     dplyr::left_join(filtered_exp,
-    #                      by = "depmap_id",
-    #                      suffix = c("", ".depmap"))
-    # })
  
     output$message <- renderText({
       n_matched <- rv$data() %>%
@@ -47,8 +37,17 @@ mod_expression_server <- function(id, rv){
                          suffix = c("", ".dapmap")) %>%
       nrow()
 
-      paste0("Data available for ", n_matched, " lines")
+      paste0(n_matched, " cell lines with expression data")
     })
+    
+    cors <- reactive({
+      rv$data() %>%
+        cor_expression()
+    }) %>% bindEvent(input$go)
+    
+    output$table <- DT::renderDT(DT::datatable(
+      cors(),
+      options = list("scrollX" = TRUE)))
   })
 }
     

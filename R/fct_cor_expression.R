@@ -53,15 +53,6 @@ cor_expression <- function(data,
   }
 }
 
-
-#' Title
-#'
-#' @param data 
-#' @param x 
-#' @param y 
-#'
-#' @return
-#' @NoRd
 cor.spearman <- function(data, x, y) {
   stats::cor.test(
     x = data[[x]],
