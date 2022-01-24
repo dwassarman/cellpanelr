@@ -19,8 +19,7 @@ app_ui <- function(request) {
           tabPanel("Single value",
             mod_01_upload_ui("01_upload_ui_1")
           ),
-          tabPanel("Fit curves",
-          ),
+          tabPanel("Fit curves"),
         ),
         navbarMenu("Analyze",
           tabPanel("Annotations",
