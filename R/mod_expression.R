@@ -14,7 +14,8 @@ mod_expression_ui <- function(id){
       sidebarPanel(
         verbatimTextOutput(ns("matched")),
         actionButton(ns("go"), "Submit"),
-        "Note: this analysis may take several minutes",
+        h5("Note: this analysis may take several minutes"),
+        downloadButton(ns("dl"), "Download tsv"),
       ),
       mainPanel(
         DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner(),
@@ -62,6 +63,22 @@ mod_expression_server <- function(id, rv){
       } else {
         NULL
       }
+    })
+    
+    # Manage data download
+    output$dl <- downloadHandler(
+      filename = function() {
+        paste0(Sys.Date(), "-expression.tsv")
+      },
+      content = function(file) {
+        vroom::vroom_write(rv$exp(), file)
+      }
+    )
+    
+    # Toggle state of download button
+    observe({
+      st <- isTruthy(rv$exp)
+      shinyjs::toggleState("dl", condition = st)
     })
     
   })
