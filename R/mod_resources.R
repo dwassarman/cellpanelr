@@ -15,7 +15,7 @@ mod_resources_ui <- function(id){
     hr(),
     "R shiny references:",
     br(a("\"Mastering Shiny\" by Hadley Wickham", href = "https://mastering-shiny.org")),
-    a("\"Engineering Production-Grade Shiny Apps\" by Colin Fay, Sébastien Rochette, Vincent Guyader and Cervan Girard.",
+    a("\"Engineering Production-Grade Shiny Apps\" by Colin Fay, S\u00E9bastien Rochette, Vincent Guyader and Cervan Girard.",
       href = "https://engineering-shiny.org"),
     hr(),
     "Thank you:",
