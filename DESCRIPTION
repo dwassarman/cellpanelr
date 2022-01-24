@@ -14,11 +14,13 @@ License: GPL (>= 3)
 Imports: 
     broom,
     config (>= 0.3.1),
+    depmap,
     dplyr,
     DT,
     ggplot2,
     golem (>= 0.3.1),
     magrittr,
+    progress,
     purrr,
     rlang,
     shiny (>= 1.7.1),

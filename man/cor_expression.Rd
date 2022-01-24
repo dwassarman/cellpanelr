@@ -4,21 +4,16 @@
 \alias{cor_expression}
 \title{Calculate Spearman correlation between response and gene expression}
 \usage{
-cor_expression(
-  data,
-  response = "response",
-  non_coding = FALSE,
-  return_nested = FALSE
-)
+cor_expression(data, response = "response", return_nested = FALSE)
 }
 \arguments{
 \item{data}{Tibble}
 
 \item{response}{character; Name of column containing response data}
 
-\item{non_coding}{bool; Whether or not to include non-protein-coding transcripts}
-
-\item{nested_output}{bool; Whether to include data list-column in return tibble}
+\item{return_nested}{bool: Whether or not the returned tibble includes the
+data list-column, which holds the cell-line level expression and response
+data}
 }
 \value{
 Tibble

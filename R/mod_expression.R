@@ -12,11 +12,12 @@ mod_expression_ui <- function(id){
   tagList(
     sidebarLayout(
       sidebarPanel(
-        verbatimTextOutput(ns("message")),
+        verbatimTextOutput(ns("matched")),
         actionButton(ns("go"), "Submit"),
+        "Note: this analysis may take several minutes",
       ),
       mainPanel(
-        DT::DTOutput(ns("table")),
+        DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner(),
       ),
     ),
   )
@@ -31,25 +32,38 @@ mod_expression_server <- function(id, rv){
     ns <- session$ns
     
     # Let user know how many cell lines can be analyzed
-    output$message <- renderText({
-      n_matched <- rv$data() %>%
-        dplyr::semi_join(cellpanelr::expression,
-                         by = "depmap_id",
-                         suffix = c("", ".dapmap")) %>%
-      nrow()
+    output$matched <- renderText({
+      n_matched <- rv$data()$depmap_id %>%
+        intersect(.exp_ids) %>%
+        length()
 
       paste0(n_matched, " cell lines with expression data")
     })
     
-    cors <- reactive({
-      rv$data() %>%
-        cor_expression()
+    # Things that need to happen when Submit button is pushed
+    observe({
+      # Save nested data
+      rv$exp_nested <- reactive(cor_expression(rv$data(),
+                                              response = "response",
+                                              return_nested = TRUE))
+      # Save flat data
+      rv$exp <- reactive({
+        rv$exp_nested() %>%
+          dplyr::select(-.data$data)
+     })
+     
     }) %>% bindEvent(input$go)
     
     # Display table
-    output$table <- DT::renderDT(DT::datatable(
-      cors(),
-      options = list("scrollX" = TRUE)))
+    output$table <- DT::renderDT({
+      if (isTruthy(rv$exp)) {
+        DT::datatable(rv$exp(),
+                      options = list("scrollX" = TRUE))
+      } else {
+        NULL
+      }
+    })
+    
   })
 }
     

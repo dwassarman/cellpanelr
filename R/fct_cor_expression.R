@@ -1,23 +1,19 @@
 #' Calculate Spearman correlation between response and gene expression
 #'
 #' @param data Tibble
-#' @param non_coding bool; Whether or not to include non-protein-coding transcripts
+#' @param return_nested bool: Whether or not the returned tibble includes the
+#'   data list-column, which holds the cell-line level expression and response
+#'   data
 #' @param response character; Name of column containing response data
-#' @param nested_output bool; Whether to include data list-column in return tibble
 #'
 #' @return Tibble
 #' @export
 cor_expression <- function(data,
                            response = "response",
-                           non_coding = FALSE,
                            return_nested = FALSE) {
   
-  # TODO: update with non-coding data set
-  if (non_coding) {
-    exp <- NULL
-  } else {
-    exp <- cellpanelr::expression
-  }
+  # Load expression data set from DepMap
+  exp <- expression()
   
   # Merge given data with exp data set
   merged <- data %>%
@@ -48,6 +44,8 @@ cor_expression <- function(data,
                   .data$rho,
                   .data$p.value,
                   .data$data)
+  
+  # TODO: filter out bad fits (genes with no expression data)
 
   if (return_nested) {
     nested
