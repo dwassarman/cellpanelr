@@ -10,4 +10,6 @@ app_server <- function( input, output, session ) {
   mod_01_upload_server("01_upload_ui_1", rv)
   mod_annotation_server("annotation_ui_1", rv)
   mod_expression_server("expression_ui_1", rv)
+  
+  mod_resources_server("resources_1")
 }

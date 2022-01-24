@@ -29,7 +29,8 @@ app_ui <- function(request) {
           tabPanel("Copy number"),
           tabPanel("Mutations"),
         ),
-        tabPanel("References"),
+        tabPanel("Resources",
+                 mod_resources_ui("resources_1")),
       ),
     )
   )
