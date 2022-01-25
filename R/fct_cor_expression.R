@@ -13,7 +13,7 @@ cor_expression <- function(data,
                            return_nested = FALSE) {
   
   # Load expression data set from DepMap
-  exp <- expression()
+  exp <- depmap::depmap_TPM()
   
   # Merge given data with exp data set
   merged <- data %>%
