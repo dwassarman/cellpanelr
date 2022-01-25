@@ -23,9 +23,9 @@ cor_expression <- function(data,
   
   # Inform user how many cell lines were successfully matched
   n_matched <- merged %>%
-    dplyr::pull("cell_line") %>%
+    dplyr::pull("depmap_id") %>%
     dplyr::n_distinct()
-  message(paste0(n_matched, "/", dplyr::n_distinct(data$cell_line), " cell lines found in expression data set"))
+  message(paste0(n_matched, " cell lines found in expression data set"))
 
   # Initialize progress bar
   pb <- progress::progress_bar$new(total = dplyr::n_distinct(merged$gene_name),

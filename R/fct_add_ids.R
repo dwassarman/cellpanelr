@@ -75,6 +75,6 @@ remove_multi_cell <- function(data, name_col, id_col = "depmap_id") {
   
   data %>%
     dplyr::mutate(
-      !!id_col := ifelse(.data[[name_col]] %in% multi_cell[[name_col]], NA, .data[[id_col]])
+      !!id_col := ifelse(.data[[id_col]] %in% multi_cell[[id_col]], NA, .data[[id_col]])
     )
 }

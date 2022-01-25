@@ -16,10 +16,10 @@ test_that("IDs that map to the same cell line are removed", {
 })
 
 test_that("IDs that map to >1 cell line are removed", {
-  data <- tibble::tibble(cells = c("ABC1", "DEF2", "GHI3", "JKL4"),
-                         depmap_id = c("001", "001", "003", NA))
-  sol <- tibble::tibble(cells = c("ABC1", "DEF2", "GHI3", "JKL4"),
-                        depmap_id = c(NA, NA, "003", NA))
-  obj <- remove_multi_cell(sol, "cells")
+  data <- tibble::tibble(cells = c("ABC1", "DEF2", "GHI3", "JKL4", "T.T", "TT"),
+                         depmap_id = c("001", "001", "003", NA, "004", "004"))
+  sol <- tibble::tibble(cells = c("ABC1", "DEF2", "GHI3", "JKL4", "T.T", "TT"),
+                        depmap_id = c(NA, NA, "003", NA, NA, NA))
+  obj <- remove_multi_cell(data, "cells")
   expect_equal(obj, sol)
 })
