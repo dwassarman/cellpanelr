@@ -75,12 +75,6 @@ mod_expression_server <- function(id, rv){
       }
     )
     
-    # Toggle state of download button
-    observe({
-      st <- isTruthy(rv$exp)
-      shinyjs::toggleState("dl", condition = st)
-    })
-    
   })
 }
     

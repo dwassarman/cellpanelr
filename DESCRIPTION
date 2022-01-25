@@ -26,7 +26,6 @@ Imports:
     shiny (>= 1.7.1),
     shinycssloaders,
     shinyFeedback,
-    shinyjs,
     tibble,
     tidyr,
     vroom
