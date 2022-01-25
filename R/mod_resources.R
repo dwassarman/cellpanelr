@@ -10,15 +10,20 @@
 mod_resources_ui <- function(id){
   ns <- NS(id)
   tagList(
-    "Data sources:",
-    br(a("DepMap - Broad Institute", href = "https://depmap.org/portal/")),
+    tags$b("Data:"), br(),
+    a("DepMap - Broad Institute", href = "https://depmap.org/portal/"), br(),
+    a("depmap R-pkg", href = "https://github.com/UCLouvain-CBIO/depmap"), br(),
     hr(),
-    "R shiny references:",
-    br(a("\"Mastering Shiny\" by Hadley Wickham", href = "https://mastering-shiny.org")),
+    
+    tags$b("R and shiny references:"), br(),
+    a("\"R for Data Science\" by Hadley Wickham and Garrett Grolemund"), br(),
+    a("\"Mastering Shiny\" by Hadley Wickham", href = "https://mastering-shiny.org"), br(),
     a("\"Engineering Production-Grade Shiny Apps\" by Colin Fay, S\u00E9bastien Rochette, Vincent Guyader and Cervan Girard.",
-      href = "https://engineering-shiny.org"),
+      href = "https://engineering-shiny.org"), br(),
+    a("\"R packages\" by Hadley Wickham and Jenny Bryan", href = "https://r-pkgs.org"),
     hr(),
-    "Thank you:",
+    
+    tags$b("Thank you:"),
     br("Taia Wu")
   )
 }

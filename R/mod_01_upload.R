@@ -10,6 +10,7 @@
 mod_01_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
+    h4("Single value"),
     sidebarLayout(
       sidebarPanel(
         fileInput(ns("file"), "Upload data"),
