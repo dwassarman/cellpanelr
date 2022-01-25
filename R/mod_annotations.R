@@ -78,7 +78,7 @@ mod_annotation_server <- function(id, rv){
     
     output$dl <- downloadHandler(
       filename = function() {
-        paste0(Sys.Date(), "-annotated.tsv")
+        paste0(Sys.Date(), "_annotated.tsv")
       },
       content = function(file) {
         vroom::vroom_write(annotated(), file)

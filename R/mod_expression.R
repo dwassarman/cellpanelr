@@ -59,7 +59,7 @@ mod_expression_server <- function(id, rv){
     output$table <- DT::renderDT({
       if (isTruthy(rv$exp)) {
         DT::datatable(rv$exp(),
-                      options = list("scrollX" = TRUE))
+                      options = list("scrollX" = TRUE, "scrollY" = TRUE))
       } else {
         NULL
       }
@@ -68,7 +68,7 @@ mod_expression_server <- function(id, rv){
     # Manage data download
     output$dl <- downloadHandler(
       filename = function() {
-        paste0(Sys.Date(), "-expression.tsv")
+        paste0(Sys.Date(), "_expression.tsv")
       },
       content = function(file) {
         vroom::vroom_write(rv$exp(), file)
