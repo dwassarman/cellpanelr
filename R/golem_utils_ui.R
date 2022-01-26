@@ -183,6 +183,14 @@ display <- function(tag) {
   tag
 }
 
+toggle_display <- function(tag, condition) {
+  if (condition) {
+    display(tag)
+  } else {
+    undisplay(tag)
+  }
+}
+
 #' Hide an elements by calling jquery hide on it
 #' 
 #' @param id the id of the element to hide

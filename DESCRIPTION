@@ -8,14 +8,29 @@ Authors@R:
            email = "dwassar@gmail.com")
 Description: A Shiny app and R package for analyzing response data collected
   from panels of cell lines. It uses data sets and annotations publicly
-  available from [DepMap](https://depmap.org/portal/) to identify features that
+  available from [DepMap](<https://depmap.org/portal/>) to identify features that
   correlate with user-provided data.
 License: GPL (>= 3)
+biocViews:
 Imports: 
+    broom,
     config (>= 0.3.1),
+    depmap,
+    dplyr,
+    DT,
+    ggplot2,
     golem (>= 0.3.1),
+    magrittr,
+    pkgload,
+    progress,
+    purrr,
     rlang,
-    shiny (>= 1.7.1)
+    shiny (>= 1.7.1),
+    shinycssloaders,
+    shinyFeedback,
+    tibble,
+    tidyr,
+    vroom
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
@@ -26,3 +41,5 @@ Config/testthat/edition: 3
 Language: en-US
 URL: https://github.com/dwassarman/cellpanelr
 BugReports: https://github.com/dwassarman/cellpanelr/issues
+Depends: 
+    R (>= 2.10)

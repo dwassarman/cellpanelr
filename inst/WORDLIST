@@ -1,6 +1,12 @@
+CCLE
 DepMap
 Lifecycle
+TPM
+Tibble
+bool
 depmap
-github
+entrez
 golem
 https
+magrittr
+tibble

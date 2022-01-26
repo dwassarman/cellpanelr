@@ -8,9 +8,37 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    # Enable packages with extra UI features
+    shinyFeedback::useShinyFeedback(),
+    # shinyjs::useShinyjs(),
     # Your application UI logic 
     fluidPage(
-      h1("cellpanelr")
+      navbarPage("cellpanelr",
+        navbarMenu("Upload",
+          tabPanel(
+            "Single value",
+            mod_01_upload_ui("01_upload_ui_1")
+          ),
+          tabPanel(
+            "Fit curves",
+            h4("Fit curves"),
+          ),
+        ),
+        navbarMenu("Analyze",
+          tabPanel("Annotations",
+                   h4("Annotations"),
+                   mod_annotation_ui("annotation_ui_1")),
+          tabPanel("Gene expression",
+                   h4("Gene expression"),
+                   mod_expression_ui("expression_ui_1")),
+          tabPanel("Copy number",
+                   h4("Copy number")),
+          tabPanel("Mutations",
+                   h4("Mutations")),
+        ),
+        tabPanel("Resources",
+                 mod_resources_ui("resources_1")),
+      ),
     )
   )
 }
