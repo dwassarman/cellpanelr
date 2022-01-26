@@ -21,6 +21,7 @@ Imports:
     ggplot2,
     golem (>= 0.3.1),
     magrittr,
+    pkgload,
     progress,
     purrr,
     rlang,
