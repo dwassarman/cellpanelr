@@ -15,10 +15,12 @@ mod_expression_ui <- function(id){
         verbatimTextOutput(ns("matched")),
         actionButton(ns("go"), "Submit"),
         h5("Note: this analysis may take several minutes"),
+        checkboxInput(ns("log"), "log-scale y-axis"),
         downloadButton(ns("dl"), "Download tsv"),
       ),
       mainPanel(
         DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner(),
+        plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
       ),
     ),
   )
@@ -27,6 +29,8 @@ mod_expression_ui <- function(id){
 #' expression Server Functions
 #'
 #' @noRd 
+#' 
+#' @importFrom ggplot2 ggplot aes geom_point geom_smooth scale_y_log10 facet_wrap
 mod_expression_server <- function(id, rv){
   stopifnot(is.reactivevalues(rv))
   moduleServer( id, function(input, output, session){
@@ -74,6 +78,27 @@ mod_expression_server <- function(id, rv){
         vroom::vroom_write(rv$exp(), file)
       }
     )
+    
+    # Display selected row in separate table
+    output$plot <- renderPlot({
+      # Get selected data
+      selected_rows <- input$table_rows_selected
+      req(selected_rows)
+      selected <- rv$exp_nested() %>%
+        dplyr::filter(dplyr::row_number() %in% selected_rows)
+      
+      # Plot selected data
+      p <- selected %>%
+        tidyr::unnest(.data$data) %>%
+        ggplot(aes(x = .data$rna_expression, y = .data$response)) +
+        geom_point(alpha = 0.6) +
+        geom_smooth(method = "lm", se = FALSE) +
+        facet_wrap(~.data$gene_name)
+      
+      if (input$log) { p <- p + scale_y_log10() }
+      
+      p
+    }, res = 96)
     
   })
 }
