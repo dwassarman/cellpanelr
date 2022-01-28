@@ -13,6 +13,7 @@ mod_01_upload_ui <- function(id){
     h4("Single value"),
     sidebarLayout(
       sidebarPanel(
+        checkboxInput(ns("example"), "Use example data?"),
         fileInput(ns("file"), "Upload data"),
         selectInput(ns("cell"), "Cell line column", choices = NULL),
         selectInput(ns("response"), "Response column", choices = NULL),
@@ -37,9 +38,14 @@ mod_01_upload_server <- function(id, rv){
     
     # Load data file
     rv$upload <- reactive({
-      if (is.null(input$file)) {
-        return(NULL)
+      # Enable/disable file input depending on example checkbox
+      shinyjs::toggleElement("file", condition = !input$example)
+      # Load example data
+      if (input$example) {
+        return(.dasatinib_single)
       }
+      # Load user file
+      req(input$file)
       allowed <- c("tsv", "csv")
       datapath <- input$file$datapath
       ext <- tools::file_ext(datapath)
@@ -48,11 +54,8 @@ mod_01_upload_server <- function(id, rv){
       shinyFeedback::feedbackDanger("file",
                                     show = !ok,
                                     text = paste0("Allowed file types: ", txt))
-      if (ok) {
-        vroom::vroom(datapath)
-      } else {
-        NULL
-      }
+      req(ok)
+      vroom::vroom(datapath)
     })
     
     # Display uploaded data
@@ -66,7 +69,13 @@ mod_01_upload_server <- function(id, rv){
       choices <- names(rv$upload())
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)
-    })
+      
+      # If using example data select useful columns
+      if (input$example) {
+        updateSelectInput(session, "cell", selected = "cell_line")
+        updateSelectInput(session, "response", selected = "log_ic50")
+      }
+    }) %>% bindEvent(rv$upload())
     
     # Wait until button is pushed to process data
     rv$data <- reactive({
@@ -96,6 +105,14 @@ mod_01_upload_server <- function(id, rv){
       }
       paste0(m1, ann_len, "/", upload_unique, " cell lines identified")
     }) %>% bindEvent(input$go)
+    
+    # # Use example data
+    # observe({
+    #   if (input$example) {
+    #     f <- system.file("extdata", "dasatinib_raw.tsv", package = "cellpanelr")
+    #     rv$upload <- reactive(vroom::vroom(f))
+    #   }
+    # }) %>% bindEvent(input$example)
   })
 }
     

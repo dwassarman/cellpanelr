@@ -10,7 +10,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Enable packages with extra UI features
     shinyFeedback::useShinyFeedback(),
-    # shinyjs::useShinyjs(),
+    shinyjs::useShinyjs(),
     # Your application UI logic 
     fluidPage(
       navbarPage("cellpanelr",
