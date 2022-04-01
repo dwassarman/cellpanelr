@@ -1,6 +1,6 @@
 #' The application User-Interface
-#' 
-#' @param request Internal parameter for `{shiny}`. 
+#'
+#' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @noRd
@@ -11,71 +11,75 @@ app_ui <- function(request) {
     # Enable packages with extra UI features
     shinyFeedback::useShinyFeedback(),
     shinyjs::useShinyjs(),
-    # Your application UI logic 
+    # Your application UI logic
     fluidPage(
-      navbarPage("cellpanelr",
+      navbarPage(
+        "cellpanelr",
+
         # Home page
-        tabPanel("Home",
-          titlePanel("Welcome to cellpanelr"),
+        tabPanel(
+          "Home",
+          titlePanel("Welcome to cellpanelr")
         ),
+
         # Upload data
-        tabPanel("Upload",
+        tabPanel(
+          "Upload",
           tabsetPanel(
             tabPanel(
               "Single value",
-              mod_upload_ui("upload_ui_1"),
+              mod_upload_ui("upload_ui_1")
             ),
-            tabPanel(
-              "Fit curves",
-              h4("Fit curves"),
-            ),
+            tabPanel("Fit curves"),
           ),
         ),
+
         # Analyze data with DepMap data sets
-        tabPanel("Analyze",
+        tabPanel(
+          "Analyze",
           tabsetPanel(
-            tabPanel("Annotations",
-                     h4("Annotations"),
-                     mod_annotation_ui("annotation_ui_1")),
-            tabPanel("Gene expression",
-                     h4("Gene expression"),
-                     mod_expression_ui("expression_ui_1")),
-            tabPanel("Copy number",
-                     h4("Copy number")),
-            tabPanel("Mutations",
-                     h4("Mutations")),
+            tabPanel(
+              "Annotations",
+              mod_annotation_ui("annotation_ui_1")
+            ),
+            tabPanel(
+              "Gene expression",
+              mod_expression_ui("expression_ui_1")
+            ),
+            tabPanel("Copy number"),
+            tabPanel("Mutations"),
           ),
         ),
         # Extra information and resources
-        tabPanel("Resources",
-                 mod_resources_ui("resources_ui_1")),
+        tabPanel(
+          "Resources",
+          mod_resources_ui("resources_ui_1")
+        ),
       ),
     )
   )
 }
 
 #' Add external Resources to the Application
-#' 
-#' This function is internally used to add external 
-#' resources inside the Shiny application. 
-#' 
+#'
+#' This function is internally used to add external
+#' resources inside the Shiny application.
+#'
 #' @import shiny
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
 #' @noRd
-golem_add_external_resources <- function(){
-  
+golem_add_external_resources <- function() {
   add_resource_path(
-    'www', app_sys('app/www')
+    "www", app_sys("app/www")
   )
- 
+
   tags$head(
     favicon(),
     bundle_resources(
-      path = app_sys('app/www'),
-      app_title = 'cellpanelr'
+      path = app_sys("app/www"),
+      app_title = "cellpanelr"
     )
     # Add here other external resources
-    # for example, you can add shinyalert::useShinyalert() 
+    # for example, you can add shinyalert::useShinyalert()
   )
 }
-

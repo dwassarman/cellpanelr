@@ -11,6 +11,7 @@ expression <- depmap::depmap_TPM()
   dplyr::select(cell_line, log_ic50, area_under_curve)
 
 usethis::use_data(.exp_ids,
-                  .dasatinib_single,
-                  internal = TRUE,
-                  overwrite = TRUE)
+  .dasatinib_single,
+  internal = TRUE,
+  overwrite = TRUE
+)

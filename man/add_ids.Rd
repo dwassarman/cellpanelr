@@ -18,7 +18,7 @@ Tibble with new column appended named depmap_id
 Matches cell lines from the given column to DepMap IDs using the
   \code{\link[cellpanelr]{annotations}} data set. Matching is performed after
   removing all non-alphanumeric characters from the provided names. \code{NA}
-  will be produced when the cell line cannot be found in the 
+  will be produced when the cell line cannot be found in the
   \code{\link[cellpanelr]{annotations}} data set or when there are non-unique
    cell-ID pairs.
 }
