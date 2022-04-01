@@ -39,7 +39,7 @@ mod_resources_server <- function(id){
 }
     
 ## To be copied in the UI
-# mod_resources_ui("resources_1")
+# mod_resources_ui("resources_ui_1")
     
 ## To be copied in the server
-# mod_resources_server("resources_1")
+# mod_resources_server("resources_ui_1")

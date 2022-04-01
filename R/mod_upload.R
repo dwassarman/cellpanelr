@@ -1,4 +1,4 @@
-#' 01_upload UI Function
+#' upload UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,12 +7,19 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_01_upload_ui <- function(id){
+mod_upload_ui <- function(id){
   ns <- NS(id)
   tagList(
     h4("Single value"),
     sidebarLayout(
       sidebarPanel(
+        # tags$body(
+        #   p(strong("Instructions")),
+        #   p("Upload a tsv or csv data file, which includes:"),
+        #   p("  - Column containing cell line names"),
+        #   p("  - Column(s) containing observed values"),
+        # ),
+        # hr(),
         checkboxInput(ns("example"), "Use example data?"),
         fileInput(ns("file"), "Upload data"),
         selectInput(ns("cell"), "Cell line column", choices = NULL),
@@ -27,11 +34,11 @@ mod_01_upload_ui <- function(id){
   )
 }
     
-#' 01_upload Server Functions
+#' upload Server Functions
 #'
 #' @noRd 
 #' @importFrom rlang .data
-mod_01_upload_server <- function(id, rv){
+mod_upload_server <- function(id, rv){
   stopifnot(is.reactivevalues(rv))
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -117,7 +124,7 @@ mod_01_upload_server <- function(id, rv){
 }
     
 ## To be copied in the UI
-# mod_01_upload_ui("01_upload_ui_1")
+# mod_upload_ui("upload_ui_1")
     
 ## To be copied in the server
-# mod_01_upload_server("01_upload_ui_1")
+# mod_upload_server("upload_ui_1")
