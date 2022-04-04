@@ -8,55 +8,78 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    # Enable packages with extra UI features
-    shinyFeedback::useShinyFeedback(),
-    shinyjs::useShinyjs(),
+    
     # Your application UI logic
     fluidPage(
       navbarPage(
+        id = "main_navbar",
         "cellpanelr",
-
-        # Home page
         tabPanel(
           "Home",
-          titlePanel("Welcome to cellpanelr")
+          mod_home_ui("home_1")
         ),
-
-        # Upload data
         tabPanel(
-          "Upload",
-          tabsetPanel(
-            tabPanel(
-              "Single value",
-              mod_upload_ui("upload_ui_1")
-            ),
-            tabPanel("Fit curves"),
-          ),
+          "Upload"
         ),
-
-        # Analyze data with DepMap data sets
         tabPanel(
-          "Analyze",
-          tabsetPanel(
-            tabPanel(
-              "Annotations",
-              mod_annotation_ui("annotation_ui_1")
-            ),
-            tabPanel(
-              "Gene expression",
-              mod_expression_ui("expression_ui_1")
-            ),
-            tabPanel("Copy number"),
-            tabPanel("Mutations"),
-          ),
-        ),
-        # Extra information and resources
-        tabPanel(
-          "Resources",
-          mod_resources_ui("resources_ui_1")
-        ),
-      ),
+          "Analyze"
+        )
+      )
     )
+    
+    ####################
+    ## OLD CODE ##
+    #####################
+    # 
+    # # Enable packages with extra UI features
+    # shinyFeedback::useShinyFeedback(),
+    # shinyjs::useShinyjs(),
+    # # Your application UI logic
+    # fluidPage(
+    #   navbarPage(
+    #     "cellpanelr",
+    # 
+    #     # Home page
+    #     tabPanel(
+    #       "Home",
+    #       titlePanel("Welcome to cellpanelr")
+    #     ),
+    # 
+    #     # Upload data
+    #     tabPanel(
+    #       "Upload",
+    #       tabsetPanel(
+    #         tabPanel(
+    #           "Single value",
+    #           mod_upload_ui("upload_ui_1")
+    #         ),
+    #         tabPanel("Fit curves"),
+    #       ),
+    #     ),
+    # 
+    #     # Analyze data with DepMap data sets
+    #     tabPanel(
+    #       "Analyze",
+    #       tabsetPanel(
+    #         tabPanel(
+    #           "Annotations",
+    #           mod_annotation_ui("annotation_ui_1")
+    #         ),
+    #         tabPanel(
+    #           "Gene expression",
+    #           mod_expression_ui("expression_ui_1")
+    #         ),
+    #         tabPanel("Copy number"),
+    #         tabPanel("Mutations"),
+    #       ),
+    #     ),
+    #     # Extra information and resources
+    #     tabPanel(
+    #       "Resources",
+    #       mod_resources_ui("resources_ui_1")
+    #     ),
+    #   ),
+    # )
   )
 }
 

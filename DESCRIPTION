@@ -13,7 +13,6 @@ Description: A Shiny app and R package for analyzing response data collected
 License: GPL (>= 3)
 biocViews:
 Imports: 
-    broom,
     config (>= 0.3.1),
     depmap,
     dplyr,
@@ -21,15 +20,8 @@ Imports:
     ggplot2,
     golem (>= 0.3.1),
     magrittr,
-    pkgload,
-    progress,
     purrr,
-    rlang,
     shiny (>= 1.7.1),
-    shinycssloaders,
-    shinyFeedback,
-    shinyjs,
-    shinyWidgets,
     tibble,
     tidyr,
     vroom
