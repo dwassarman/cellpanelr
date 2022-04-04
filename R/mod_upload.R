@@ -10,7 +10,20 @@
 mod_upload_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    
+    titlePanel("Upload your data"),
+    hr(),
+    p(tags$b("What type of data do you have for each cell line?")),
+    tabsetPanel(
+      id = ns("upload_type"),
+      type = "pills",
+      tabPanel(
+        "Single",
+        mod_upload_single_ui(ns("upload_single_1"))
+      ),
+      tabPanel(
+        "Curve"
+      )
+    )
   )
     
     ##################################
@@ -37,9 +50,14 @@ mod_upload_ui <- function(id) {
 #'
 #' @noRd
 mod_upload_server <- function(id, rv) {
+  # Make sure rv is a list of reactive values
   stopifnot(is.reactivevalues(rv))
+  
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
+    # Call sub-modules
+    mod_upload_single_server("upload_single_1", rv)
     
     ##################################
     ## OLD CODE ##

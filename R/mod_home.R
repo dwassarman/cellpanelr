@@ -12,9 +12,12 @@ mod_home_ui <- function(id){
   tagList(
     titlePanel("Welcome to cellpanelr"),
     hr(),
+    # Place some descriptive text here with instructions, etc.
+    
+    # Button to navigate to data upload
     fluidRow(
       align = "center",
-      actionButton(ns("go_to_upload"), "Get started")
+      actionButton(ns("go_to_upload"), "Get started", class = "btn-primary btn-lg")
     )
   )
 }

@@ -9,6 +9,10 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     
+    # Enable packages with extra UI features
+    shinyFeedback::useShinyFeedback(),
+    shinyjs::useShinyjs(),
+    
     # Your application UI logic
     fluidPage(
       navbarPage(
@@ -19,11 +23,18 @@ app_ui <- function(request) {
           mod_home_ui("home_1")
         ),
         tabPanel(
-          "Upload"
+          "Upload",
+          mod_upload_ui("upload_ui_1")
         ),
         tabPanel(
-          "Analyze"
-        )
+          "Analyze",
+          # Debugging
+          DT::DTOutput("data")
+        ),
+        # footer = tagList(
+        #   hr(),
+        #   "cellpanelr is maintained by Douglas Wassarman"
+        # )
       )
     )
     

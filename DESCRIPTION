@@ -22,6 +22,8 @@ Imports:
     magrittr,
     purrr,
     shiny (>= 1.7.1),
+    shinycssloaders,
+    shinyjs,
     tibble,
     tidyr,
     vroom

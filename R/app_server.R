@@ -7,6 +7,10 @@
 app_server <- function(input, output, session) {
   # List of all reactive values shared by modules
   rv <- reactiveValues()
+  # Variable contained in rv
+  # navbar_tab - active tab on top navbar
+  # cell_col - name of user-selected cell line column
+  # response_col - name of user-selected response column
   
   # Update main navbar tab anytime rv$navbar_tab is changed
   rv$navbar_tab <- reactive("Home")
@@ -16,6 +20,10 @@ app_server <- function(input, output, session) {
   
   # Module servers
   mod_home_server("home_1", rv)
+  mod_upload_server("upload_ui_1", rv)
+  
+  # Debugging
+  output$data <- DT::renderDT(rv$data())
   
   
   
