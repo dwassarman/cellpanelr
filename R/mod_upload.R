@@ -21,7 +21,8 @@ mod_upload_ui <- function(id) {
         mod_upload_single_ui(ns("upload_single_1"))
       ),
       tabPanel(
-        "Curve"
+        "Curve",
+        mod_upload_curve_ui(ns("upload_curve_1"))
       )
     )
   )
@@ -58,6 +59,7 @@ mod_upload_server <- function(id, rv) {
 
     # Call sub-modules
     mod_upload_single_server("upload_single_1", rv)
+    mod_upload_curve_server("upload_curve_1", rv)
 
     ##################################
     ## OLD CODE ##

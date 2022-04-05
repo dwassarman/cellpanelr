@@ -68,7 +68,7 @@ mod_upload_single_server <- function(id, rv) {
       n_unique <- uploaded()[[input$cell]] %>% dplyr::n_distinct()
       matched <- add_ids(uploaded(), input$cell)
       n_matched <- matched[["depmap_id"]] %>% dplyr::n_distinct()
-      txt <- paste0(n_matched, " / ", n_unique, " identified")
+      txt <- paste0(n_matched, " / ", n_unique, " cell lines identified")
       shinyFeedback::hideFeedback("cell")
       shinyFeedback::showFeedback(
         "cell",
