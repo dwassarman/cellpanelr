@@ -4,10 +4,10 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
-mod_upload_single_ui <- function(id){
+#' @importFrom shiny NS tagList
+mod_upload_single_ui <- function(id) {
   ns <- NS(id)
   tagList(
     br(),
@@ -26,18 +26,18 @@ mod_upload_single_ui <- function(id){
     )
   )
 }
-    
+
 #' upload_single Server Functions
 #'
-#' @noRd 
+#' @noRd
 #' @importFrom rlang .data :=
-mod_upload_single_server <- function(id, rv){
+mod_upload_single_server <- function(id, rv) {
   # Make sure rv is a list of reactive values
   stopifnot(is.reactivevalues(rv))
-  
-  moduleServer(id, function(input, output, session){
+
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     # Upload the file
     uploaded <- reactive(
       upload_file_with_feedback(input = input, id = "file")
@@ -48,14 +48,14 @@ mod_upload_single_server <- function(id, rv){
       uploaded(),
       options = list("scrollX" = TRUE)
     ))
-    
+
     # Update column selection options when uploaded file changes
     observe({
       choices <- names(uploaded())
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)
     }) %>% bindEvent(uploaded())
-    
+
     # Check how many cell lines the cell line column matches to
     observe({
       # Is this a character column?
@@ -75,8 +75,8 @@ mod_upload_single_server <- function(id, rv){
         txt
       )
     }) %>% bindEvent(input$cell)
-    
-    
+
+
     # Response column must be numeric
     response_ok <- reactive({
       response_col <- uploaded()[[input$response]]
@@ -88,21 +88,21 @@ mod_upload_single_server <- function(id, rv){
       )
       ok
     }) %>% bindEvent(input$response)
-    
+
     # Activate analyze button when ready
     observe({
       shinyjs::toggleState("button", condition = response_ok())
     })
-    
+
     # When button is pushed, prepare data for later modules and advance tabPanel
     observe({
       cell <- input$cell
       response <- input$response
-      
+
       # Save column names to use again down the line
       rv$cell_col <- reactive(cell)
       rv$response_col <- reactive(response)
-      
+
       # Prepare data tibble for analysis
       rv$data <- reactive({
         uploaded() %>%
@@ -118,18 +118,18 @@ mod_upload_single_server <- function(id, rv){
           # add depmap IDs in new column at end
           add_ids(name_col = rv$cell_col())
       })
-      
+
       # Print message to user if replicate averaging occurs
-      
+
       # Change tab
       # Could put loading icon or slight delay for user satisfaction
       rv$navbar_tab <- reactive("Analyze")
     }) %>% bindEvent(input$button)
   })
 }
-    
+
 ## To be copied in the UI
 # mod_upload_single_ui("upload_single_1")
-    
+
 ## To be copied in the server
 # mod_upload_single_server("upload_single_1")

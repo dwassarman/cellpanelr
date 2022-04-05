@@ -8,11 +8,11 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    
+
     # Enable packages with extra UI features
     shinyFeedback::useShinyFeedback(),
     shinyjs::useShinyjs(),
-    
+
     # Your application UI logic
     fluidPage(
       navbarPage(
@@ -37,11 +37,11 @@ app_ui <- function(request) {
         # )
       )
     )
-    
+
     ####################
     ## OLD CODE ##
     #####################
-    # 
+    #
     # # Enable packages with extra UI features
     # shinyFeedback::useShinyFeedback(),
     # shinyjs::useShinyjs(),
@@ -49,13 +49,13 @@ app_ui <- function(request) {
     # fluidPage(
     #   navbarPage(
     #     "cellpanelr",
-    # 
+    #
     #     # Home page
     #     tabPanel(
     #       "Home",
     #       titlePanel("Welcome to cellpanelr")
     #     ),
-    # 
+    #
     #     # Upload data
     #     tabPanel(
     #       "Upload",
@@ -67,7 +67,7 @@ app_ui <- function(request) {
     #         tabPanel("Fit curves"),
     #       ),
     #     ),
-    # 
+    #
     #     # Analyze data with DepMap data sets
     #     tabPanel(
     #       "Analyze",
