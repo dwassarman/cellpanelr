@@ -116,7 +116,7 @@ mod_upload_single_server <- function(id, rv) {
           dplyr::group_by(.data[[cell]]) %>%
           dplyr::summarise(!!response := mean(.data[[response]], na.rm = TRUE)) %>%
           # add depmap IDs in new column at end
-          add_ids(name_col = rv$cell_col())
+          add_ids(cell_col = rv$cell_col())
       })
 
       # Print message to user if replicate averaging occurs

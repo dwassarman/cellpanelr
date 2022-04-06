@@ -1,0 +1,64 @@
+```{r}
+golem::document_and_reload()
+
+cell_col <- "cell_line"
+dose_cols <- c("0.000390625", "0.00078125", "0.0015625", "0.003125", "0.00625", 
+"0.0125", "0.025", "0.05", "0.1")
+
+df <- vroom::vroom("~/Documents/r-projects/sample_data/RapaLink_example.csv") %>%
+  # dplyr::filter(cell_line %in% c("SCaBER", "MCF7")) %>%
+  fit_curves_pipeline(cell_col, dose_cols)
+
+df
+```
+
+
+
+
+
+
+```{r}
+cell_col <- "cell_line"
+dose_cols <- c("0.000390625", "0.00078125", "0.0015625", "0.003125", "0.00625", 
+"0.0125", "0.025", "0.05", "0.1")
+
+df <- vroom::vroom("~/Documents/r-projects/sample_data/RapaLink_example.csv") %>%
+  add_ids(cell_col) %>%
+  tidyr::pivot_longer(
+    cols = dose_cols,
+    names_to = "dose",
+    values_to = "response"
+  ) %>%
+  dplyr::mutate(dose = as.numeric(dose)) %>%
+  dplyr::filter(cell_line %in% c("SW 780")) %>%
+  # Nest data in list-column
+  tidyr::nest(data = c(.data[["dose"]], .data[["response"]])) %>%
+  # Fit models
+  dplyr::mutate(
+    model = purrr::map(data, test_model),
+    # tidy = purrr::map(model, broom::tidy)
+  )
+
+```
+
+```{r}
+test_model <- function(df) {
+  nls(
+    formula = response ~ SSlogis(log10(dose), Asym, xmid, scal),
+    data = df,
+    control = nls.control(warnOnly = TRUE)
+  )
+}
+
+purrr::map(df$data, test_model)
+```
+
+```{r}
+df %>%
+  dplyr::mutate(
+    ic50 = purrr::map(model, purrr::pluck, "par") %>%
+      purrr::map_dbl(purrr::pluck, "log_ic50") %>%
+      10 ^ .
+  )
+```
+

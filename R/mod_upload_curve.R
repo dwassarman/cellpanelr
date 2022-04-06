@@ -12,17 +12,34 @@ mod_upload_curve_ui <- function(id){
   tagList(
     br(),
     p("[Description of curve data]"),
+    p("Doses must be the titles of columns and non-log-transformed. Response 
+      data should be normalized between 0 and 1."),
     hr(),
+    # Upload UI
     sidebarLayout(
       sidebarPanel(
         fileInput(ns("file"), "Upload data"),
         selectInput(ns("cell"), "Cell line column", choices = NULL),
         selectInput(ns("doses"), "Response columns", multiple = TRUE, choices = NULL),
         # checkboxInput(ns("long_form"), "My data is in long form"),
-        actionButton(ns("fit"), "Fit Curves", class = "btn-primary btn-lg") %>% shinyjs::disabled()
+        actionButton(ns("fit"), "Fit Curves", class = "btn-primary btn-lg") %>% shinyjs::disabled(),
       ),
       mainPanel(
         DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner()
+      )
+    ),
+    
+    # Plot UI
+    shinyjs::hidden(
+      hr(),
+      titlePanel("Plot Curves"),
+      sidebarLayout(
+        sidebarPanel(
+          
+        ),
+        mainPanel(
+          
+        )
       )
     )
   )
@@ -95,6 +112,17 @@ mod_upload_curve_server <- function(id, rv){
     observe({
       shinyjs::toggleState("fit", doses_ok())
     }) %>% bindEvent(doses_ok())
+    
+    # Fit curves when button is pushed
+    observe({
+      new_table <- uploaded() %>%
+        fit_curves_pipeline(cell_col = input$cell, dose_cols = input$doses)
+      
+       output$table <- DT::renderDT(DT::datatable(
+        new_table,
+        options = list("scrollX" = TRUE)
+      ))
+    }) %>% bindEvent(input$fit)
  
   })
 }

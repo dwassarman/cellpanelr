@@ -3,6 +3,8 @@
 export("%>%")
 export(add_ids)
 export(cor_expression)
+export(fit_curves_pipeline)
+export(fit_sigmoid)
 export(run_app)
 import(shiny)
 importFrom(ggplot2,aes)
