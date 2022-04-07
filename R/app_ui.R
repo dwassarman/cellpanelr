@@ -32,15 +32,19 @@ app_ui <- function(request) {
               mod_upload_single_ui("upload_single_1")
             ),
             tabPanel(
-              "Dose-response curve"
+              "Dose-response curve",
+              p("[Feature not ready yet]")
             ),
           ),
         ),
         tabPanel(
           "Analyze",
+          titlePanel("Find correlations in your data"),
+          hr(),
           tabsetPanel(
+            id = "analysis_panel",
             tabPanel(
-              "Annotations",
+              "Cell line annotations",
               mod_annotation_ui("annotation_1")
             ),
             tabPanel(

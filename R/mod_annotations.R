@@ -10,15 +10,18 @@
 mod_annotation_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    br(),
+    p("[Description of \"cell line annotations\"]"),
     sidebarLayout(
       sidebarPanel(
-        selectInput(ns("feature"),
-          "Feature",
+        selectInput(
+          ns("feature"),
+          "Select a cell line annotation",
           choices = names(cellpanelr::annotations),
           selected = "primary_disease"
         ),
         checkboxInput(ns("log"), "Plot in log-scale"),
-        downloadButton(ns("dl"), "Download"),
+        downloadButton(ns("dl"), "Download with annotations"),
       ),
       mainPanel(
         plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
@@ -30,7 +33,7 @@ mod_annotation_ui <- function(id) {
 #' annotation Server Functions
 #'
 #' @noRd
-#' @importFrom ggplot2 ggplot aes geom_boxplot coord_flip xlab scale_y_log10 geom_point
+#' @import ggplot2
 #' @importFrom rlang .data
 mod_annotation_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
@@ -55,11 +58,11 @@ mod_annotation_server <- function(id, rv) {
             ggplot() +
             geom_boxplot(aes(
               x = stats::reorder(.data[[input$feature]],
-                .data[["response"]],
+                .data[[rv$response_col()]],
                 FUN = stats::median,
                 na.rm = TRUE
               ),
-              y = .data[["response"]]
+              y = .data[[rv$response_col()]]
             )) +
             coord_flip() +
             xlab(input$feature)
@@ -68,7 +71,7 @@ mod_annotation_server <- function(id, rv) {
             ggplot() +
             geom_point(aes(
               x = .data[[input$feature]],
-              y = .data[["response"]]
+              y = .data[[rv$response_col]]
             )) +
             xlab(input$feature)
         }
@@ -81,7 +84,7 @@ mod_annotation_server <- function(id, rv) {
         p
       },
       height = function() {
-        0.75 * session$clientData[["output_annotation_ui_1-plot_width"]]
+        0.75 * session$clientData[["output_annotation_1-plot_width"]]
       },
       res = 96
     )
