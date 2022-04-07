@@ -4,12 +4,12 @@
 \alias{add_ids}
 \title{Add column containing DepMap IDs}
 \usage{
-add_ids(data, name_col)
+add_ids(data, cell_col)
 }
 \arguments{
 \item{data}{Tibble with one column that contains cell line names}
 
-\item{name_col}{Name of column containing cell line names}
+\item{cell_col}{Name of column containing cell line names}
 }
 \value{
 Tibble with new column appended named depmap_id

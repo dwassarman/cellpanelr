@@ -4,12 +4,12 @@
 \alias{remove_multi_id}
 \title{Remove IDs that map to the same cell line}
 \usage{
-remove_multi_id(data, name_col, id_col = "depmap_id")
+remove_multi_id(data, cell_col, id_col = "depmap_id")
 }
 \arguments{
 \item{data}{Tibble}
 
-\item{name_col}{Name of column containing cell line names}
+\item{cell_col}{Name of column containing cell line names}
 
 \item{id_col}{Name of column containing IDs}
 }
