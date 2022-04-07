@@ -1,7 +1,7 @@
 #' Upload a file with feedback to fileInput UI element
 #'
-#' @param input
-#' @param id
+#' @param input reactive values list of inputs from module UI
+#' @param id Name of input UI element
 #'
 #' @return Tibble
 upload_file_with_feedback <- function(input, id) {

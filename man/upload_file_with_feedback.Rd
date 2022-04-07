@@ -7,9 +7,9 @@
 upload_file_with_feedback(input, id)
 }
 \arguments{
-\item{input}{}
+\item{input}{reactive values list of inputs from module UI}
 
-\item{id}{}
+\item{id}{Name of input UI element}
 }
 \value{
 Tibble
