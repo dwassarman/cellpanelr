@@ -14,37 +14,38 @@ app_ui <- function(request) {
     # Your application UI logic
     fluidPage(
       navbarPage(
+        id = "main_navbar",
         "cellpanelr",
-
-        # Home page
         tabPanel(
           "Home",
-          titlePanel("Welcome to cellpanelr")
+          mod_home_ui("home_1")
         ),
-
-        # Upload data
         tabPanel(
           "Upload",
+          titlePanel("Upload your data"),
+          hr(),
+          p(tags$b("What kind of data do you have for each cell line?")),
           tabsetPanel(
+            type = "pills",
             tabPanel(
               "Single value",
-              mod_upload_ui("upload_ui_1")
+              mod_upload_single_ui("upload_single_1")
             ),
-            tabPanel("Fit curves"),
+            tabPanel(
+              "Dose-response curve"
+            ),
           ),
         ),
-
-        # Analyze data with DepMap data sets
         tabPanel(
           "Analyze",
           tabsetPanel(
             tabPanel(
               "Annotations",
-              mod_annotation_ui("annotation_ui_1")
+              mod_annotation_ui("annotation_1")
             ),
             tabPanel(
               "Gene expression",
-              mod_expression_ui("expression_ui_1")
+              mod_expression_ui("expression_1")
             ),
             tabPanel("Copy number"),
             tabPanel("Mutations"),
@@ -53,7 +54,7 @@ app_ui <- function(request) {
         # Extra information and resources
         tabPanel(
           "Resources",
-          mod_resources_ui("resources_ui_1")
+          mod_resources_ui("resources_1")
         ),
       ),
     )

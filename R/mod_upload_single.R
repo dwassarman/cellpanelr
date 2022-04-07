@@ -7,7 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_upload_ui <- function(id) {
+mod_upload_single_ui <- function(id) {
   ns <- NS(id)
   tagList(
     sidebarLayout(
@@ -30,7 +30,7 @@ mod_upload_ui <- function(id) {
 #'
 #' @noRd
 #' @importFrom rlang .data
-mod_upload_server <- function(id, rv) {
+mod_upload_single_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -110,6 +110,7 @@ mod_upload_server <- function(id, rv) {
         ""
       }
       paste0(m1, ann_len, "/", upload_unique, " cell lines identified")
+      
     }) %>% bindEvent(input$go)
 
     # # Use example data
@@ -123,7 +124,7 @@ mod_upload_server <- function(id, rv) {
 }
 
 ## To be copied in the UI
-# mod_upload_ui("upload_ui_1")
+# mod_upload_single_ui("upload_single_ui_1")
 
 ## To be copied in the server
-# mod_upload_server("upload_ui_1")
+# mod_upload_single_server("upload_single_ui_1")
