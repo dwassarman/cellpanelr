@@ -10,11 +10,11 @@
 mod_resources_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    tags$b("Data:"), br(),
+    strong("Data:"), br(),
     a("DepMap - Broad Institute", href = "https://depmap.org/portal/"), br(),
     a("depmap R-pkg", href = "https://github.com/UCLouvain-CBIO/depmap"), br(),
     hr(),
-    tags$b("R and shiny references:"), br(),
+    strong("R and shiny references:"), br(),
     a("\"R for Data Science\" by Hadley Wickham and Garrett Grolemund"), br(),
     a("\"Mastering Shiny\" by Hadley Wickham", href = "https://mastering-shiny.org"), br(),
     a("\"Engineering Production-Grade Shiny Apps\" by Colin Fay, S\u00E9bastien Rochette, Vincent Guyader and Cervan Girard.",
@@ -22,7 +22,7 @@ mod_resources_ui <- function(id) {
     ), br(),
     a("\"R packages\" by Hadley Wickham and Jenny Bryan", href = "https://r-pkgs.org"),
     hr(),
-    tags$b("Thank you:"),
+    strong("Thank you:"),
     br("Taia Wu")
   )
 }

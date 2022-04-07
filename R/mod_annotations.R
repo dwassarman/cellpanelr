@@ -14,14 +14,15 @@ mod_annotation_ui <- function(id) {
     p("[Description of \"cell line annotations\"]"),
     sidebarLayout(
       sidebarPanel(
+        h4("Plot options"),
         selectInput(
           ns("feature"),
           "Select a cell line annotation",
           choices = names(cellpanelr::annotations),
           selected = "primary_disease"
         ),
-        checkboxInput(ns("log"), "Plot in log-scale"),
-        downloadButton(ns("dl"), "Download with annotations"),
+        checkboxInput(ns("log"), strong("Plot in log-scale")),
+        downloadButton(ns("dl"), "Download data")
       ),
       mainPanel(
         plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
@@ -52,6 +53,7 @@ mod_annotation_server <- function(id, rv) {
     # Generate boxplot or scatterplot depending on feature
     output$plot <- renderPlot(
       {
+        req(rv$data)
         discreet <- annotated()[[input$feature]] %>% is.character()
         if (discreet) {
           p <- annotated() %>%
@@ -68,11 +70,12 @@ mod_annotation_server <- function(id, rv) {
             xlab(input$feature)
         } else {
           p <- annotated() %>%
-            ggplot() +
-            geom_point(aes(
+            ggplot(aes(
               x = .data[[input$feature]],
-              y = .data[[rv$response_col]]
+              y = .data[[rv$response_col()]]
             )) +
+            geom_point() +
+            geom_smooth() +
             xlab(input$feature)
         }
 

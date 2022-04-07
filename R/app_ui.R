@@ -24,7 +24,7 @@ app_ui <- function(request) {
           "Upload",
           titlePanel("Upload your data"),
           hr(),
-          p(tags$b("What kind of data do you have for each cell line?")),
+          p(strong("What kind of data do you have for each cell line?")),
           tabsetPanel(
             type = "pills",
             tabPanel(
