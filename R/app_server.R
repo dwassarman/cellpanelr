@@ -10,6 +10,9 @@ app_server <- function(input, output, session) {
   rv$active_tab <- reactive("Home")
   # Contents of rv:
   ## active_tab: name of active tab in the main navbar
+  ## cell_col: name of cell line column
+  ## response_col: name of response column
+  ## data: uploaded data with columns cell line, response, "depmap_id"
   
   # Module server functions
   mod_home_server("home_1", rv)
