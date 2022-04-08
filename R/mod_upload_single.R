@@ -16,11 +16,11 @@ mod_upload_single_ui <- function(id) {
     hr(),
     sidebarLayout(
       sidebarPanel(
-        h4("Provide a data set"),
+        h4(strong("Provide a data set")),
         checkboxInput(ns("example"), strong("Use example data")),
         p("--or--", align = "center"),
         fileInput(ns("file"), "Upload file"),
-        h4("Select data columns"),
+        h4(strong("Select data columns")),
         selectInput(ns("cell"), "Cell line column", choices = NULL),
         selectInput(ns("response"), "Response column", choices = NULL),
         actionButton(ns("button"), "Analyze", class = "btn-primary btn-lg") %>%

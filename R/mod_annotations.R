@@ -25,7 +25,9 @@ mod_annotation_ui <- function(id) {
         downloadButton(ns("dl"), "Download data")
       ),
       mainPanel(
-        plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
+        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
+        # # Provide hover info
+        # tableOutput(ns("info")),
       ),
     )
   )
@@ -50,15 +52,15 @@ mod_annotation_server <- function(id, rv) {
         )
     })
 
+    discrete <- reactive(annotated()[[input$feature]] %>% is.character())
+
     # Generate boxplot or scatterplot depending on feature
     output$plot <- renderPlot(
       {
         req(rv$data)
-        discreet <- annotated()[[input$feature]] %>% is.character()
-        if (discreet) {
+        if (discrete()) {
           p <- annotated() %>%
-            ggplot() +
-            geom_boxplot(aes(
+            ggplot(aes(
               x = stats::reorder(.data[[input$feature]],
                 .data[[rv$response_col()]],
                 FUN = stats::median,
@@ -66,6 +68,8 @@ mod_annotation_server <- function(id, rv) {
               ),
               y = .data[[rv$response_col()]]
             )) +
+            # geom_boxplot() +
+            geom_boxplot() +
             coord_flip() +
             xlab(input$feature)
         } else {
@@ -91,6 +95,12 @@ mod_annotation_server <- function(id, rv) {
       },
       res = 96
     )
+
+    # # Provide info with hover
+    # output$info <- renderTable({
+    #   req(input$plot_hover)
+    #   nearPoints(annotated(), input$plot_hover, xvar = input$feature, yvar = rv$response_col())
+    # })
 
     output$dl <- downloadHandler(
       filename = function() {
