@@ -4,19 +4,17 @@
 \alias{cor_expression}
 \title{Calculate Spearman correlation between response and gene expression}
 \usage{
-cor_expression(data, response = "response", return_nested = FALSE)
+cor_expression(df, response_col)
 }
 \arguments{
-\item{data}{Tibble}
+\item{df}{Tibble. Must have depmap_id column}
 
-\item{response}{character; Name of column containing response data}
-
-\item{return_nested}{bool: Whether or not the returned tibble includes the
-data list-column, which holds the cell-line level expression and response
-data}
+\item{response_col}{Name of column containing response data}
 }
 \value{
-Tibble
+Nested tibble organized by gene_name with response vs. rna_expression
+data in the "data" list-column and the rho & p.value values in the "model" 
+list-column
 }
 \description{
 Calculate Spearman correlation between response and gene expression

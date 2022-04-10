@@ -1,0 +1,52 @@
+```{r}
+cell_col <- "CellLine"
+response_col <- "AUC"
+# exp <- depmap::depmap_TPM() %>%
+#   dplyr::select(depmap_id, gene_name, rna_expression)
+
+# Setup data
+df <- vroom::vroom("~/Documents/r-projects/sample_data/RL1_sample.tsv") %>%
+  dplyr::group_by(CellLine) %>%
+  dplyr::summarise(AUC = mean(AUC)) %>%
+  add_ids(cell_col)
+```
+
+```{r}
+cor_spearman <- function(data, x, y) {
+  stats::cor.test(
+    x = data[[x]],
+    y = data[[y]],
+    method = "spearman",
+    na.action = stats::na.omit(),
+    exact = FALSE
+  ) %>%
+    broom::tidy() %>%
+    dplyr::select(estimate, p.value)
+}
+```
+
+
+```{r}
+merged <- df %>%
+  dplyr::inner_join(exp,
+    by = "depmap_id",
+    suffix = c("", ".depmap")
+  )
+
+nested <- merged %>%
+  tidyr::nest(data = -c("gene_name"))
+
+modeled <- nested %>%
+  dplyr::mutate(
+    model = purrr::map(.data$data, cor_spearman, "rna_expression", response_col),
+  )
+
+unnested <- modeled %>%
+  tidyr::unnest(model) %>%
+  dplyr::rename(rho = estimate)
+```
+
+```{r}
+test_output <- cor_expression(df, "AUC")
+```
+

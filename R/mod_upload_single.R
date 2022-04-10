@@ -73,10 +73,7 @@ mod_upload_single_server <- function(id, rv) {
       txt <- paste0(n_matched, " / ", n_unique, " cell lines identified")
       # Must hide and reshow feedback to update with each input$cell change
       shinyFeedback::hideFeedback("cell")
-      shinyFeedback::showFeedback(
-        "cell",
-        txt
-      )
+      shinyFeedback::showFeedback("cell", txt)
     }) %>% bindEvent(input$cell)
 
 
