@@ -25,18 +25,18 @@
 add_ids <- function(data, cell_col) {
   id_df <- dplyr::select(
     cellpanelr::annotations,
-    .data[["stripped_name"]],
+    .data[["stripped_cell_line_name"]],
     .data[["depmap_id"]]
   )
   data %>%
     dplyr::mutate(
-      stripped_name = gsub("[^[:alnum:]]", "", .data[[cell_col]]) %>% toupper()
+      stripped_cell_line_name = gsub("[^[:alnum:]]", "", .data[[cell_col]]) %>% toupper()
     ) %>%
     dplyr::left_join(id_df,
-      by = c("stripped_name"),
+      by = c("stripped_cell_line_name"),
       suffix = c("", ".depmap")
     ) %>%
-    dplyr::select(-.data[["stripped_name"]]) %>%
+    dplyr::select(-.data[["stripped_cell_line_name"]]) %>%
     remove_multi_id(cell_col) %>%
     remove_multi_cell(cell_col)
 }
