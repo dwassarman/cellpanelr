@@ -131,15 +131,17 @@ mod_expression_server <- function(id, rv) {
           vroom::vroom_write(file)
       }
     )
+    
+    # Debounce selected rows to prevent plot lagging
+    selected_rows_d <- reactive(input$table_rows_selected) %>% debounce(1000)
 
     # Display selected row in separate table
     output$plot <- renderPlot(
       {
         # Get selected data
-        selected_rows <- input$table_rows_selected
-        req(selected_rows)
+        req(selected_rows_d())
         selected <- nested() %>%
-          dplyr::filter(dplyr::row_number() %in% selected_rows)
+          dplyr::filter(dplyr::row_number() %in% selected_rows_d())
 
         # Plot selected data
         p <- selected %>%
