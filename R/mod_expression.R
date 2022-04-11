@@ -35,7 +35,7 @@ mod_expression_ui <- function(id) {
     col_8(
       id = ns("plot_col"),
       h3("Plot individual genes"),
-      h5("Hover mouse to identify cell lines."),
+      h5("Hover mouse to identify cell lines. [TO DO]"),
       plotOutput(ns("plot")) %>% shinycssloaders::withSpinner()
     )
     # sidebarLayout(

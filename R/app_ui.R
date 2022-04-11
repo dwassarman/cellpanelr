@@ -33,7 +33,8 @@ app_ui <- function(request) {
             ),
             tabPanel(
               "Dose-response curve",
-              p("[Feature not ready yet]")
+              br(),
+              p("[TO DO]")
             ),
           ),
         ),
