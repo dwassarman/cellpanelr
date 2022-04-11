@@ -79,7 +79,8 @@ mod_expression_server <- function(id, rv) {
       shinyjs::enable("go")
       shinyjs::show("dl")
       nested
-    }) %>% bindEvent(input$go)
+    }) %>%
+      bindEvent(input$go)
     
     # Display results of correlation in table
     output$table <- DT::renderDT({
@@ -153,6 +154,9 @@ mod_expression_server <- function(id, rv) {
         # }
 
         p
+      },
+      height = function() {
+        0.75 * session$clientData[["output_expression_1-plot_width"]]
       },
       res = 96
     )
