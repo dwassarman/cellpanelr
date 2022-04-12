@@ -166,7 +166,7 @@ mod_expression_server <- function(id, rv) {
 }
 
 ## To be copied in the UI
-# mod_expression_ui("expression_ui_1")
+# mod_expression_ui("expression_1")
 
 ## To be copied in the server
-# mod_expression_server("expression_ui_1")
+# mod_expression_server("expression_1")

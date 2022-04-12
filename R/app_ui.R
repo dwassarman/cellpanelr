@@ -22,31 +22,18 @@ app_ui <- function(request) {
         ),
         tabPanel(
           "Upload",
-          titlePanel("Upload your data"),
-          hr(),
-          p(strong("What kind of data do you have for each cell line?")),
-          tabsetPanel(
-            type = "pills",
-            tabPanel(
-              "Single value",
-              mod_upload_single_ui("upload_single_1")
-            ),
-            tabPanel(
-              "Dose-response curve",
-              br(),
-              p("[TO DO]")
-            ),
-          ),
+          mod_upload_single_ui("upload_single_1")
         ),
         tabPanel(
           "Analyze",
-          titlePanel("Find correlations in your data"),
-          hr(),
+          titlePanel("Correlate your data with DepMap data sets"),
+          br(),
+          h3("Choose a DepMap data set to analyze"),
           tabsetPanel(
-            id = "analysis_panel",
+            type = "pills",
             tabPanel(
               "Cell line annotations",
-              mod_annotation_ui("annotation_1")
+              mod_annotations_ui("annotations_1")
             ),
             tabPanel(
               "Gene expression",

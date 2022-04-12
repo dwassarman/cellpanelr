@@ -7,14 +7,13 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-mod_annotation_ui <- function(id) {
+mod_annotations_ui <- function(id) {
   ns <- NS(id)
   tagList(
     br(),
-    p("[Description of \"cell line annotations\"]"),
     sidebarLayout(
       sidebarPanel(
-        h4("Plot options"),
+        h3("Plot options"),
         selectInput(
           ns("feature"),
           "Select a cell line annotation",
@@ -22,7 +21,8 @@ mod_annotation_ui <- function(id) {
           selected = "primary_disease"
         ),
         checkboxInput(ns("log"), strong("Plot in log-scale")),
-        downloadButton(ns("dl"), "Download data")
+        h3("Downloads"),
+        downloadButton(ns("dl"), "Download .tsv")
       ),
       mainPanel(
         plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
@@ -38,7 +38,7 @@ mod_annotation_ui <- function(id) {
 #' @noRd
 #' @import ggplot2
 #' @importFrom rlang .data
-mod_annotation_server <- function(id, rv) {
+mod_annotations_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
@@ -91,7 +91,7 @@ mod_annotation_server <- function(id, rv) {
         p
       },
       height = function() {
-        0.75 * session$clientData[["output_annotation_1-plot_width"]]
+        0.75 * session$clientData[["output_annotations_1-plot_width"]]
       },
       res = 96
     )
@@ -114,7 +114,7 @@ mod_annotation_server <- function(id, rv) {
 }
 
 ## To be copied in the UI
-# mod_annotation_ui("annotation_ui_1")
+# mod_annotations_ui("annotations_1")
 
 ## To be copied in the server
-# mod_annotation_server("annotation_ui_1")
+# mod_annotations_server("annotations_1")

@@ -17,11 +17,11 @@ app_server <- function(input, output, session) {
   # Module server functions
   mod_home_server("home_1", rv)
   mod_upload_single_server("upload_single_1", rv)
-  mod_annotation_server("annotation_1", rv)
+  mod_annotations_server("annotations_1", rv)
   mod_expression_server("expression_1", rv)
   mod_resources_server("resources_1")
 
-  # Naviage main tabs via wizard
+  # Navigate main tabs via wizard
   observe({
     updateNavbarPage(session, "main_navbar", selected = rv$active_tab())
   })

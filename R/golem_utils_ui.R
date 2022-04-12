@@ -287,6 +287,10 @@ col_6 <- function(...) {
   column(6, ...)
 }
 
+#' @importFrom shiny column
+col_5 <- function(...) {
+  column(5, ...)
+}
 
 #' @importFrom shiny column
 col_4 <- function(...) {

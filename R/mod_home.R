@@ -11,9 +11,8 @@ mod_home_ui <- function(id) {
   ns <- NS(id)
   tagList(
     titlePanel("Welcome to cellpanelr"),
-    hr(),
     p("[Introduction and description of workflow.]"),
-    hr(),
+    br(),
     col_12(
       align = "center",
       actionButton(ns("button"), "Get started", class = "btn-primary btn-lg")

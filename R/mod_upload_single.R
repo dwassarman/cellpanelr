@@ -10,19 +10,28 @@
 mod_upload_single_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    br(),
-    p("[Description of single data point]. Make note that replicates will be
-      averaged automatically"),
-    hr(),
+    # titlePanel("Upload your data"),
+    # p("[Description of single data point]. Make note that replicates will be
+    #   averaged automatically"),
+    # br(),
+    titlePanel("Upload your data"),
     sidebarLayout(
       sidebarPanel(
-        h4(strong("Provide a data set")),
-        checkboxInput(ns("example"), strong("Use example data")),
-        p("--or--", align = "center"),
-        fileInput(ns("file"), "Upload file"),
-        h4(strong("Select data columns")),
-        selectInput(ns("cell"), "Cell line column", choices = NULL),
-        selectInput(ns("response"), "Response column", choices = NULL),
+        h3("Provide data or use example data"),
+        fluidRow(
+          col_8(
+            fileInput(ns("file"), "Upload file")
+          ),
+          col_4(
+            br(),
+            checkboxInput(ns("example"), "Use example"),
+          )
+        ),
+        # p("--or--", align = "center"),
+        # hr(),
+        h3("Choose columns for analysis"),
+        selectInput(ns("cell"), "Cell lines", choices = NULL),
+        selectInput(ns("response"), "Response", choices = NULL),
         actionButton(ns("button"), "Analyze", class = "btn-primary btn-lg") %>%
           shinyjs::disabled()
       ),
@@ -70,7 +79,12 @@ mod_upload_single_server <- function(id, rv) {
       matched <- add_ids(uploaded(), input$cell)
       n_matched <- matched[["depmap_id"]] %>% dplyr::n_distinct()
 
-      txt <- paste0(n_matched, " / ", n_unique, " cell lines identified")
+      txt <- paste0(
+        n_matched,
+        "/",
+        n_unique,
+        " of the names in this column can be matched to cell lines in the DepMap database."
+      )
       # Must hide and reshow feedback to update with each input$cell change
       shinyFeedback::hideFeedback("cell")
       shinyFeedback::showFeedback("cell", txt)
@@ -84,7 +98,7 @@ mod_upload_single_server <- function(id, rv) {
       shinyFeedback::feedbackDanger(
         "response",
         show = !ok,
-        "Column contains non-numeric values."
+        "This column has values that are not numbers. Please select another column or fix the non-number values in your data file."
       )
       ok
     }) %>% bindEvent(input$response)
