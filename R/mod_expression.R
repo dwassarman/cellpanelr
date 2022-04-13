@@ -64,7 +64,8 @@ mod_expression_server <- function(id, rv) {
         br(),
         DT::DTOutput(ns("table")),
         h3("Downloads"),
-        downloadButton(ns("dl_tsv"), "Download .tsv")
+        downloadButton(ns("dl_tsv"), "Download .tsv"),
+        downloadButton(ns("dl_rds"), "Download .RData")
       )
     })
     
@@ -97,10 +98,21 @@ mod_expression_server <- function(id, rv) {
       content = function(file) {
         req(nested())
         nested() %>%
-          dplyr::select(gene_name, model) %>%
-          tidyr::unnest(model) %>%
+          dplyr::select(.data[["gene_name"]], .data[["model"]]) %>%
+          tidyr::unnest(.data[["model"]]) %>%
           dplyr::arrange(.data[["rho"]]) %>%
           vroom::vroom_write(file)
+      }
+    )
+    
+    # .RData download
+    output$dl_rds <- downloadHandler(
+      filename = function() {
+        paste0(Sys.Date(), "_expression.rds")
+      },
+      content = function(file) {
+        nested() %>%
+          saveRDS(file, compress = FALSE)
       }
     )
     
