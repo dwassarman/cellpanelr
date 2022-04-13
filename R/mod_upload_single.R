@@ -10,23 +10,26 @@
 mod_upload_single_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    titlePanel("Upload your data"),
+    # titlePanel("Upload data"),
+    # br(),
     sidebarLayout(
       sidebarPanel(
-        h3("Provide data or use example data"),
-        fluidRow(
-          col_8(
-            fileInput(ns("file"), "Upload file")
-          ),
-          col_4(
-            br(),
-            checkboxInput(ns("example"), "Use example"),
-          )
-        ),
+        h3("Upload your data"),
+        fileInput(ns("file"), "Upload file"),
+        # # UNCOMMENT to use example data checkbox
+        # fluidRow(
+        #   col_8(
+        #     fileInput(ns("file"), "Upload file")
+        #   ),
+        #   col_4(
+        #     br(),
+        #     checkboxInput(ns("example"), "Use example"),
+        #   )
+        # ),
         h3("Choose columns for analysis"),
         selectInput(ns("cell"), "Cell lines", choices = NULL),
         selectInput(ns("response"), "Response", choices = NULL),
-        actionButton(ns("button"), "Analyze", class = "btn-primary btn-lg") %>%
+        actionButton(ns("button"), "Submit for analysis", class = "btn-primary btn-lg") %>%
           shinyjs::disabled()
       ),
       mainPanel(
@@ -47,13 +50,15 @@ mod_upload_single_server <- function(id, rv) {
 
     # Generate Tibble from uploaded data or example data
     uploaded <- reactive({
-      # df <- upload_file_with_feedback(input = input, id = "file")
-      if (input$example) {
-        df <- .dasatinib_single
-      } else {
-        df <- upload_file_with_feedback(input, "file")
-      }
-
+      df <- upload_file_with_feedback(input = input, id = "file")
+      
+      # # UNCOMMENT to use example data checkbox
+      # if (input$example) {
+      #   df <- .dasatinib_single
+      # } else {
+      #   df <- upload_file_with_feedback(input, "file")
+      # }
+      
       choices <- names(df)
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)
