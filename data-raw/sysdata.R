@@ -1,6 +1,8 @@
 # list of unique cell line IDs contained in the gene expression data set
 expression <- depmap::depmap_TPM()
 .exp_ids <- expression$depmap_id %>% unique()
+.exp_short <- expression %>%
+  head(n = 20000)
 
 # example data for Shiny app
 # Single value
@@ -12,6 +14,7 @@ expression <- depmap::depmap_TPM()
 
 usethis::use_data(.exp_ids,
   .dasatinib_single,
+  .exp_short,
   internal = TRUE,
   overwrite = TRUE
 )

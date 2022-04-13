@@ -10,7 +10,7 @@
 cor_expression <- function(df, response_col) {
   
   # Load expression data from DepMap
-  exp <- depmap::depmap_TPM() %>%
+  exp <- .exp_short %>%
     dplyr::select(
       .data[["depmap_id"]], 
       .data[["gene_name"]], 
@@ -31,12 +31,6 @@ cor_expression <- function(df, response_col) {
       model = purrr::map(.data$data, cor_spearman, "rna_expression", response_col)
     )
 
-  # # Inform user how many cell lines were successfully matched
-  # n_matched <- merged %>%
-  #   dplyr::pull("depmap_id") %>%
-  #   dplyr::n_distinct()
-  # message(paste0(n_matched, " cell lines found"))
-  # 
   # # # UNCOMMENT for progress bar
   # # # Initialize progress bar
   # # pb <- progress::progress_bar$new(total = dplyr::n_distinct(merged$gene_name),
