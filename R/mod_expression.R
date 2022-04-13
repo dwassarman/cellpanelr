@@ -74,8 +74,10 @@ mod_expression_server <- function(id, rv) {
       req(nested())
       tagList(
         h3("Correlation plot for selected genes"),
-        h5("Hover mouse to identify cell lines. [TO DO]"),
-        plotOutput(ns("plot")) %>% shinycssloaders::withSpinner()
+        h5("Hover mouse to identify cell lines."),
+        h5("Right-click to save image of plot."),
+        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
+        uiOutput(ns("hover_info"), style = "pointer-events: none")
       )
     })
     
@@ -89,6 +91,48 @@ mod_expression_server <- function(id, rv) {
         options = list("scrollX" = TRUE, "scrollY" = TRUE)
       )
     })
+    
+    # Create tooltip for hovering over points in plot
+    # See here for reference: https://gitlab.com/-/snippets/16220
+    output$hover_info <- renderUI({
+      req(input$plot_hover)
+      hover <- input$plot_hover
+      # Find point near hover
+      df <- nested() %>%
+        dplyr::filter(.data[[hover$mapping$panelvar1]] == hover$panelvar1) %>%
+        tidyr::unnest(.data[["data"]])
+      point <- nearPoints(df, hover, xvar = "rna_expression", yvar = rv$response_col(), threshold = 5, maxpoints = 1, addDist = TRUE)
+      
+      if (nrow(point) == 0) return(NULL)
+      
+      left_px <- hover$coords_css$x
+      top_px <- hover$coords_css$y
+      
+      # create style property for tooltip
+      # background color is set so tooltip is a bit transparent
+      # z-index is set so we are sure are tooltip will be on top
+      style <- paste0("position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
+                      "left:", left_px, "px; top:", top_px, "px;")
+      
+      # actual tooltip created as wellPanel
+      wellPanel(
+        style = style,
+        strong(point[[rv$cell_col()]])
+      )
+    })
+    
+    
+    # # Hover tool
+    # output$hover_text <- renderPrint({
+    #   req(input$hover)
+    #   # nearPoints(nested(), input$hover)
+    #   h <- input$hover
+    #   df <- nested() %>%
+    #     dplyr::filter(.data[[h$mapping$panelvar1]] == h$panelvar1) %>%
+    #     tidyr::unnest(.data[["data"]])
+    #   nearPoints(df, h, xvar = "rna_expression", yvar = rv$response_col())
+    #   # df
+    # })
 
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
