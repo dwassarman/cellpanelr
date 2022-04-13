@@ -11,12 +11,18 @@ app_ui <- function(request) {
     # Enable packages with extra UI features
     shinyFeedback::useShinyFeedback(),
     shinyjs::useShinyjs(),
+    # Pad page for fixed-top navbar
+    tags$style(type="text/css", "body {padding-top: 70px;}"),
     # Your application UI logic
     fluidPage(
       navbarPage(
         id = "main_navbar",
-        "cellpanelr",
+        title = "cellpanelr",
+        inverse = TRUE,
+        collapsible = TRUE,
+        position = "fixed-top",
         tabPanel(
+          id = "home",
           "Home",
           mod_home_ui("home_1")
         ),
@@ -26,9 +32,9 @@ app_ui <- function(request) {
         ),
         tabPanel(
           "Analyze",
-          titlePanel("Correlate your data with DepMap data sets"),
-          br(),
-          h3("Choose a DepMap data set to analyze"),
+          # titlePanel("Correlate your data with DepMap data sets"),
+          # br(),
+          h3("Choose DepMap data set to correlate with your data"),
           tabsetPanel(
             type = "pills",
             tabPanel(
@@ -38,9 +44,7 @@ app_ui <- function(request) {
             tabPanel(
               "Gene expression",
               mod_expression_ui("expression_1")
-            ),
-            tabPanel("Copy number"),
-            tabPanel("Mutations"),
+            )
           ),
         ),
         # Extra information and resources

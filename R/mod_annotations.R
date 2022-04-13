@@ -16,7 +16,7 @@ mod_annotations_ui <- function(id) {
         h3("Plot options"),
         selectInput(
           ns("feature"),
-          "Select a cell line annotation",
+          "Cell line annotation",
           choices = names(cellpanelr::annotations),
           selected = "primary_disease"
         ),

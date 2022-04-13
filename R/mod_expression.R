@@ -43,7 +43,7 @@ mod_expression_server <- function(id, rv) {
         intersect(.exp_ids) %>%
         length()
       
-      paste0(n_matched, " cell lines with expression data")
+      paste0(n_matched, " cell lines from your data with expression data")
     })
     
     # Do correlation when button is pushed
@@ -134,10 +134,6 @@ mod_expression_server <- function(id, rv) {
           geom_point(alpha = 0.6) +
           geom_smooth(method = "lm", se = FALSE) +
           facet_wrap(~ .data$gene_name)
-
-        # if (input$log) {
-        #   p <- p + scale_y_log10()
-        # }
 
         p
       },
