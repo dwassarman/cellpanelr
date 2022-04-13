@@ -10,10 +10,6 @@
 mod_upload_single_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # titlePanel("Upload your data"),
-    # p("[Description of single data point]. Make note that replicates will be
-    #   averaged automatically"),
-    # br(),
     titlePanel("Upload your data"),
     sidebarLayout(
       sidebarPanel(
@@ -27,8 +23,6 @@ mod_upload_single_ui <- function(id) {
             checkboxInput(ns("example"), "Use example"),
           )
         ),
-        # p("--or--", align = "center"),
-        # hr(),
         h3("Choose columns for analysis"),
         selectInput(ns("cell"), "Cell lines", choices = NULL),
         selectInput(ns("response"), "Response", choices = NULL),
@@ -83,7 +77,7 @@ mod_upload_single_server <- function(id, rv) {
         n_matched,
         "/",
         n_unique,
-        " of the names in this column can be matched to cell lines in the DepMap database."
+        " names in this column can be matched to cell lines in the DepMap database."
       )
       # Must hide and reshow feedback to update with each input$cell change
       shinyFeedback::hideFeedback("cell")

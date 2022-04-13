@@ -11,44 +11,18 @@ mod_expression_ui <- function(id) {
   ns <- NS(id)
   tagList(
     br(),
-    p("[Description of expression analysis]"),
-    br(),
-    col_12(
-      align = "center",
-      actionButton(ns("go"), "Submit", class = "btn-primary btn-lg"),
-      p(strong("Note: "), "Analysis will take several minutes."),
-      textOutput(ns("matched"))
-    ),
-    br(),
-    hr(),
-    col_4(
-      id = ns("table_col"),
-      h3("Gene correlations"),
-      h5("Select genes to plot on right."),
-      DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner(),
-      col_12(
-        align = "right",
-        downloadButton(ns("dl"), "Download .tsv", class = "btn-primary") %>%
-          shinyjs::hidden()
+    sidebarLayout(
+      sidebarPanel(
+        h3("Correlate with gene expression"),
+        textOutput(ns("matched")),
+        p(strong("Note: "), "Analysis will take several minutes."),
+        shinyFeedback::loadingButton(ns("go"), "Go!", class = "btn-primary btn-lg", loadingLabel = "Calculating..."),
+        uiOutput(ns("side"))
+      ),
+      mainPanel(
+        uiOutput(ns("main"))
       )
-    ),
-    col_8(
-      id = ns("plot_col"),
-      h3("Plot individual genes"),
-      h5("Hover mouse to identify cell lines. [TO DO]"),
-      plotOutput(ns("plot")) %>% shinycssloaders::withSpinner()
     )
-    # sidebarLayout(
-    #   sidebarPanel(
-    #     h5("Note: this analysis may take several minutes"),
-    #     checkboxInput(ns("log"), "log-scale y-axis"),
-    #     downloadButton(ns("dl"), "Download tsv"),
-    #   ),
-    #   mainPanel(
-    #     DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner(),
-    #     plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
-    #   ),
-    # ),
   )
 }
 
@@ -74,13 +48,35 @@ mod_expression_server <- function(id, rv) {
     
     # Do correlation when button is pushed
     nested <- reactive({
-      shinyjs::disable("go")
       nested <- cor_expression(rv$data(), rv$response_col())
-      shinyjs::enable("go")
-      shinyjs::show("dl")
+      shinyFeedback::resetLoadingButton("go")
       nested
-    }) %>%
-      bindEvent(input$go)
+    }) %>% bindEvent(input$go)
+    
+    ## Dynamic UI Elements
+    # Display correlations in side panel
+    output$side <- renderUI({
+      req(nested())
+      tagList(
+        hr(),
+        h3("Results"),
+        h4("Select genes to plot on right"),
+        br(),
+        DT::DTOutput(ns("table")),
+        h3("Downloads"),
+        downloadButton(ns("dl_tsv"), "Download .tsv")
+      )
+    })
+    
+    # Display plot in main panel
+    output$main <- renderUI({
+      req(nested())
+      tagList(
+        h3("Correlation plot for selected genes"),
+        h5("Hover mouse to identify cell lines. [TO DO]"),
+        plotOutput(ns("plot")) %>% shinycssloaders::withSpinner()
+      )
+    })
     
     # Display results of correlation in table
     output$table <- DT::renderDT({
@@ -92,50 +88,26 @@ mod_expression_server <- function(id, rv) {
         options = list("scrollX" = TRUE, "scrollY" = TRUE)
       )
     })
-    
-    # # Things that need to happen when Submit button is pushed
-    # observe({
-    #   # Save nested data
-    #   rv$exp_nested <- reactive(cor_expression(rv$data(),
-    #     response = rv$response(),
-    #     return_nested = TRUE
-    #   ))
-    #   # Save flat data
-    #   rv$exp <- reactive({
-    #     rv$exp_nested() %>%
-    #       dplyr::select(-.data$data)
-    #   })
-    # }) %>% bindEvent(input$go)
-    # 
-    # # Display table
-    # output$table <- DT::renderDT({
-    #   if (isTruthy(rv$exp)) {
-    #     DT::datatable(rv$exp(),
-    #       options = list("scrollX" = TRUE, "scrollY" = TRUE)
-    #     )
-    #   } else {
-    #     NULL
-    #   }
-    # })
 
-    # Manage data download
-    output$dl <- downloadHandler(
+    # Manage tsv download
+    output$dl_tsv <- downloadHandler(
       filename = function() {
         paste0(Sys.Date(), "_expression.tsv")
       },
       content = function(file) {
-        req(nested)
+        req(nested())
         nested() %>%
           dplyr::select(gene_name, model) %>%
           tidyr::unnest(model) %>%
+          dplyr::arrange(.data[["rho"]]) %>%
           vroom::vroom_write(file)
       }
     )
     
     # Debounce selected rows to prevent plot lagging
-    selected_rows_d <- reactive(input$table_rows_selected) %>% debounce(1000)
+    selected_rows_d <- reactive(input$table_rows_selected) %>% debounce(500)
 
-    # Display selected row in separate table
+    # Display selected rows in a plot
     output$plot <- renderPlot(
       {
         # Get selected data
