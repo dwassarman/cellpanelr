@@ -84,8 +84,8 @@ mod_expression_server <- function(id, rv) {
       req(nested)
       DT::datatable(
         data = nested() %>%
-          dplyr::select(gene_name, model) %>%
-          tidyr::unnest(model),
+          dplyr::select(.data[["gene_name"]], .data[["model"]]) %>%
+          tidyr::unnest(.data[["model"]]),
         options = list("scrollX" = TRUE, "scrollY" = TRUE)
       )
     })

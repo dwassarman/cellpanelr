@@ -3,7 +3,6 @@ Lifecycle
 RStudio
 Tibble
 UI
-bool
 depmap
 dwassarman
 fileInput
@@ -11,5 +10,7 @@ golem
 https
 io
 magrittr
+rna
 shinyapps
+spearman
 tibble

@@ -11,7 +11,11 @@ cor_expression <- function(df, response_col) {
   
   # Load expression data from DepMap
   exp <- depmap::depmap_TPM() %>%
-    dplyr::select(depmap_id, gene_name, rna_expression)
+    dplyr::select(
+      .data[["depmap_id"]], 
+      .data[["gene_name"]], 
+      .data[["rna_expression"]]
+    )
   
   # Pipeline
   df %>%
@@ -83,8 +87,8 @@ cor_spearman <- function(data, x, y) {
     exact = FALSE
   ) %>%
     broom::tidy() %>%
-    dplyr::select(estimate, p.value) %>%
-    dplyr::rename(rho = estimate)
+    dplyr::select(.data[["estimate"]], .data[["p.value"]]) %>%
+    dplyr::rename(rho = .data[["estimate"]])
 }
 
 # cor.spearman_pb <- function(data, x, y, pb) {
