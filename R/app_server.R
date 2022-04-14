@@ -13,6 +13,11 @@ app_server <- function(input, output, session) {
   ## cell_col: name of cell line column
   ## response_col: name of response column
   ## data: uploaded data with columns cell line, response, "depmap_id"
+  
+  # # Load datasets as reactives
+  # annotations_file <- system.file("extdata", "annotations.rds", package = "cellpanelr")
+  # rv$expression <- reactive(readRDS(expression_file))
+  # rv$annotations <- reactive(readRDS(annotations_file))
 
   # Module server functions
   mod_home_server("home_1", rv)

@@ -11,16 +11,15 @@ Description: A Shiny app and R package for analyzing response data collected
   available from [DepMap](<https://depmap.org/portal/>) to identify features that
   correlate with user-provided data.
 License: GPL (>= 3)
-biocViews:
 Imports: 
     broom,
     config (>= 0.3.1),
-    depmap,
     dplyr,
     DT,
     ggplot2,
     golem (>= 0.3.1),
     magrittr,
+    memoise,
     pkgload,
     progress,
     purrr,
@@ -44,4 +43,4 @@ Language: en-US
 URL: https://github.com/dwassarman/cellpanelr
 BugReports: https://github.com/dwassarman/cellpanelr/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
