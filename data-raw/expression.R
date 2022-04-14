@@ -14,7 +14,7 @@ fix_names <- function(name) {
   str_split(name, " ")[[1]][[1]]
 }
 
-names(expression) <- names
+names(expression) <- lapply(names, fix_names) %>% as.character()
 
 # Save file in most compressed RDS format in extdata/
 saveRDS(expression, "./inst/extdata/expression.rds", compress = "xz")
