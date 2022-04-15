@@ -2,9 +2,9 @@
 
 export("%>%")
 export(add_ids)
-export(annotations)
 export(cor_expression)
-export(expression)
+export(data_annotations)
+export(data_expression)
 export(run_app)
 import(ggplot2)
 import(shiny)

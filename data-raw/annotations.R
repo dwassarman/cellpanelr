@@ -5,7 +5,7 @@ library(tidyverse)
 library(vroom)
 
 # Read in from .csv file
-annotations <- vroom::vroom("../DepMap data/22Q1/sample_info.csv")
+annotations <- vroom::vroom("../DepMap raw/22Q1/sample_info.csv")
 
 # Fix column names
 annotations <- annotations %>%
@@ -13,7 +13,4 @@ annotations <- annotations %>%
   select(-c(CCLE_Name, alias, COSMICID, RRID, WTSI_Master_Cell_ID, Sanger_Model_ID, depmap_public_comments, ))
 
 # Save as RDS in extdata
-saveRDS(annotations, "./inst/extdata/annotations.rds")
-
-# # Save as RDS in data
-# usethis::use_data(annotations, overwrite = TRUE)
+saveRDS(annotations, "../cellpanelr data/22Q1/annotations.rds")

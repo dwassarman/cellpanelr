@@ -10,7 +10,7 @@
 cor_expression <- function(df, response_col) {
 
   # Load expression data from DepMap
-  exp <- cellpanelr::expression() %>%
+  exp <- cellpanelr::data_expression() %>%
     dplyr::select(
       .data[["depmap_id"]],
       .data[["gene_name"]],

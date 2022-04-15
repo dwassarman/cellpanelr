@@ -24,7 +24,7 @@
 #' add_ids(data, "CellLine")
 add_ids <- function(data, cell_col) {
   id_df <- dplyr::select(
-    annotations(),
+    data_annotations(),
     .data[["stripped_cell_line_name"]],
     .data[["depmap_id"]]
   )
