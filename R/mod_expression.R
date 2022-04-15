@@ -108,12 +108,14 @@ mod_expression_server <- function(id, rv) {
     output$hover_info <- renderUI({
       req(input$plot_hover)
       hover <- input$plot_hover
+      
       # Find point near hover
-      df <- nested() %>%
-        dplyr::filter(.data[[hover$mapping$panelvar1]] == hover$panelvar1) %>%
-        tidyr::unnest(.data[["data"]])
+      df <- merged() %>%
+        dplyr::filter(.data[[hover$mapping$panelvar1]] == hover$panelvar1)
+
       point <- nearPoints(df, hover, xvar = "rna_expression", yvar = rv$response_col(), threshold = 5, maxpoints = 1, addDist = TRUE)
 
+      
       if (nrow(point) == 0) {
         return(NULL)
       }
