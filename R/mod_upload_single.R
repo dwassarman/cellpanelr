@@ -51,14 +51,14 @@ mod_upload_single_server <- function(id, rv) {
     # Generate Tibble from uploaded data or example data
     uploaded <- reactive({
       df <- upload_file_with_feedback(input = input, id = "file")
-      
+
       # # UNCOMMENT to use example data checkbox
       # if (input$example) {
       #   df <- .dasatinib_single
       # } else {
       #   df <- upload_file_with_feedback(input, "file")
       # }
-      
+
       choices <- names(df)
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)

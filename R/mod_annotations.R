@@ -17,7 +17,7 @@ mod_annotations_ui <- function(id) {
         selectInput(
           ns("feature"),
           "Cell line annotation",
-          choices = names(cellpanelr::annotations),
+          choices = names(annotations()),
           selected = "primary_disease"
         ),
         checkboxInput(ns("log"), strong("Plot in log-scale")),
@@ -46,7 +46,7 @@ mod_annotations_server <- function(id, rv) {
     # Merge with annotations
     annotated <- reactive({
       rv$data() %>%
-        dplyr::left_join(cellpanelr::annotations,
+        dplyr::left_join(annotations(),
           by = "depmap_id",
           suffix = c("", ".depmap")
         )
