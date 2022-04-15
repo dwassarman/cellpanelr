@@ -52,6 +52,16 @@ mod_expression_server <- function(id, rv) {
       shinyFeedback::resetLoadingButton("go")
       result
     }) %>% bindEvent(input$go)
+    
+    # Merged user data with expression data
+    merged <- reactive({
+      rv$data() %>%
+        dplyr::inner_join(
+          cellpanelr::data_expression(),
+          by = "depmap_id",
+          suffix = c("", ".depmap")
+        )
+    }) %>% bindEvent(input$go)
 
     ## Dynamic UI Elements
     # Display correlations in side panel
@@ -71,7 +81,7 @@ mod_expression_server <- function(id, rv) {
 
     # Display plot in main panel
     output$main <- renderUI({
-      req(nested())
+      req(merged())
       tagList(
         h3("Correlation plot for selected genes"),
         h5("Hover mouse to identify cell lines."),
@@ -125,20 +135,7 @@ mod_expression_server <- function(id, rv) {
         strong(point[[rv$cell_col()]])
       )
     })
-
-
-    # # Hover tool
-    # output$hover_text <- renderPrint({
-    #   req(input$hover)
-    #   # nearPoints(nested(), input$hover)
-    #   h <- input$hover
-    #   df <- nested() %>%
-    #     dplyr::filter(.data[[h$mapping$panelvar1]] == h$panelvar1) %>%
-    #     tidyr::unnest(.data[["data"]])
-    #   nearPoints(df, h, xvar = "rna_expression", yvar = rv$response_col())
-    #   # df
-    # })
-
+    
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
       filename = function() {
@@ -173,12 +170,14 @@ mod_expression_server <- function(id, rv) {
       {
         # Get selected data
         req(selected_rows_d())
-        selected <- nested() %>%
-          dplyr::filter(dplyr::row_number() %in% selected_rows_d())
+        genes <- gene_cor() %>%
+          dplyr::filter(dplyr::row_number() %in% selected_rows_d()) %>%
+          dplyr::pull(.data$gene)
+        selected <- merged() %>%
+          dplyr::filter(.data$gene %in% genes)
 
         # Plot selected data
         p <- selected %>%
-          tidyr::unnest(.data$data) %>%
           ggplot(aes(x = .data$rna_expression, y = .data[[rv$response_col()]])) +
           geom_point(alpha = 0.6) +
           geom_smooth(method = "lm", se = FALSE) +
