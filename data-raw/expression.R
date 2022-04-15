@@ -17,7 +17,4 @@ fix_names <- function(name) {
 names(expression) <- lapply(names, fix_names) %>% as.character()
 
 # Save file in most compressed RDS format in extdata/
-saveRDS(expression, "./inst/extdata/expression.rds", compress = "xz")
-
-# # Save RDS file in data/
-# usethis::use_data(expression, compress = "xz")
+saveRDS(expression, "../cellpanelr data/22Q1/expression.rds")
