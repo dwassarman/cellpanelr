@@ -97,7 +97,8 @@ mod_expression_server <- function(id, rv) {
       # Create data table
       DT::datatable(
         data = gene_cor(),
-        options = list("scrollX" = TRUE, "scrollY" = TRUE)
+        options = list("scrollX" = TRUE, "scrollY" = TRUE),
+        rownames = FALSE
       ) %>%
         # Round to 3 digits
         DT::formatRound(columns = "rho", digits = 3)

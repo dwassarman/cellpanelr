@@ -69,7 +69,8 @@ mod_upload_single_server <- function(id, rv) {
     # Display uploaded data
     output$table <- DT::renderDT(DT::datatable(
       uploaded(),
-      options = list("scrollX" = TRUE)
+      options = list("scrollX" = TRUE),
+      rownames = FALSE
     ))
 
     # Check how many cell lines the cell line column matches to
