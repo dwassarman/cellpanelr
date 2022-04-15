@@ -8,7 +8,7 @@ data_expression()
 }
 \value{
 Tibble with 26,713561 rows and 3 columns. The columns are
-\code{depmap_id}, \code{gene_name}, and \code{rna_expression} which is
+\code{depmap_id}, \code{gene}, and \code{rna_expression} which is
 expressed as \code{log2(TPM + 1)} where TPM is transcripts per million. There
 are 19,177 unique genes and 1393 cell lines included in this data set.
 }

@@ -3,7 +3,7 @@
   readRDS(url("https://www.dropbox.com/s/9aq6vzzwvywy60k/expression.rds?dl=1")) %>%
     tidyr::pivot_longer(
       cols = -.data[["depmap_id"]],
-      names_to = "gene_name",
+      names_to = "gene",
       values_to = "rna_expression"
     )
 }
@@ -14,7 +14,7 @@
 #' download the data from DropBox and cache it in memory for subsequent calls.
 #' 
 #' @return Tibble with 26,713561 rows and 3 columns. The columns are
-#' \code{depmap_id}, \code{gene_name}, and \code{rna_expression} which is
+#' \code{depmap_id}, \code{gene}, and \code{rna_expression} which is
 #' expressed as \code{log2(TPM + 1)} where TPM is transcripts per million. There
 #' are 19,177 unique genes and 1393 cell lines included in this data set.
 #' 
