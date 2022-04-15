@@ -1,10 +1,10 @@
 library(tidyverse)
-
+# 
 # list of unique cell line IDs contained in the gene expression data set
-expression <- depmap::depmap_TPM() %>%
-  dplyr::select(depmap_id, gene_name, rna_expression)
-.exp_ids <- expression$depmap_id %>% unique()
-.exp_short <- head(expression, n = 20000)
+# expression <- depmap::depmap_TPM() %>%
+#   dplyr::select(depmap_id, gene_name, rna_expression)
+.exp_ids <- cellpanelr::data_expression()$depmap_id %>% unique()
+# .exp_short <- head(expression, n = 20000)
 
 # # UNCOMMENT TO USE SAMPLE DATA
 # # example data for Shiny app
@@ -18,7 +18,7 @@ expression <- depmap::depmap_TPM() %>%
 usethis::use_data(
   .exp_ids,
   # .dasatinib_single,
-  .exp_short,
+  # .exp_short,
   internal = TRUE,
   overwrite = TRUE
 )
