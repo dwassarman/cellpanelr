@@ -6,7 +6,7 @@
 #' @return Tibble
 upload_file_with_feedback <- function(input, id) {
   # Can update this to expand allowed file types
-  allowed <- c("tsv", "csv")
+  allowed <- c("tsv", "csv", "xls", "xlsx")
 
   req(input[[id]])
   datapath <- input[[id]][["datapath"]]
@@ -18,5 +18,9 @@ upload_file_with_feedback <- function(input, id) {
     text = paste0("Allowed file types: ", txt)
   )
   req(ok)
-  vroom::vroom(datapath)
+  if (ext %in% c("xls", "xlsx")) {
+    readxl::read_excel(datapath)
+  } else {
+    vroom::vroom(datapath)
+  }
 }

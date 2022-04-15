@@ -23,6 +23,7 @@ Imports:
     pkgload,
     progress,
     purrr,
+    readxl,
     rlang,
     shiny (>= 1.7.1),
     shinycssloaders,
