@@ -17,7 +17,7 @@ mod_expression_ui <- function(id) {
         textOutput(ns("matched")),
         p(strong("Note: "), "Analysis will take several minutes."),
         shinyFeedback::loadingButton(ns("go"), "Go!", class = "btn-primary btn-lg", loadingLabel = "Calculating..."),
-        uiOutput(ns("side")) %>% shinycssloaders::withSpinner()
+        uiOutput(ns("side"))
       ),
       mainPanel(
         uiOutput(ns("main"))
@@ -69,8 +69,7 @@ mod_expression_server <- function(id, rv) {
       req(gene_cor())
       tagList(
         hr(),
-        h3("Results"),
-        h4("Select genes to plot on right"),
+        h3("Select genes to plot on right"),
         br(),
         DT::DTOutput(ns("table")),
         h3("Downloads"),
@@ -83,7 +82,7 @@ mod_expression_server <- function(id, rv) {
     output$main <- renderUI({
       req(merged())
       tagList(
-        h3("Correlation plot for selected genes"),
+        h3("Correlation plot of selected genes"),
         h5("Hover mouse to identify cell lines."),
         h5("Right-click to save image of plot."),
         plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
