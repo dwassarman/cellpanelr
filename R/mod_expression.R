@@ -30,7 +30,7 @@ mod_expression_ui <- function(id) {
 #'
 #' @noRd
 #'
-#' @import ggplot2 
+#' @import ggplot2
 mod_expression_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
@@ -42,17 +42,17 @@ mod_expression_server <- function(id, rv) {
       n_matched <- rv$data()$depmap_id %>%
         intersect(.exp_ids) %>%
         length()
-      
+
       paste0(n_matched, " cell lines from your data with expression data")
     })
-    
+
     # Do correlation when button is pushed
     nested <- reactive({
       nested <- cor_expression(rv$data(), rv$response_col())
       shinyFeedback::resetLoadingButton("go")
       nested
     }) %>% bindEvent(input$go)
-    
+
     ## Dynamic UI Elements
     # Display correlations in side panel
     output$side <- renderUI({
@@ -68,7 +68,7 @@ mod_expression_server <- function(id, rv) {
         downloadButton(ns("dl_rds"), "Download .RData")
       )
     })
-    
+
     # Display plot in main panel
     output$main <- renderUI({
       req(nested())
@@ -80,7 +80,7 @@ mod_expression_server <- function(id, rv) {
         uiOutput(ns("hover_info"), style = "pointer-events: none")
       )
     })
-    
+
     # Display results of correlation in table
     output$table <- DT::renderDT({
       req(nested)
@@ -91,7 +91,7 @@ mod_expression_server <- function(id, rv) {
         options = list("scrollX" = TRUE, "scrollY" = TRUE)
       )
     })
-    
+
     # Create tooltip for hovering over points in plot
     # See here for reference: https://gitlab.com/-/snippets/16220
     output$hover_info <- renderUI({
@@ -102,26 +102,30 @@ mod_expression_server <- function(id, rv) {
         dplyr::filter(.data[[hover$mapping$panelvar1]] == hover$panelvar1) %>%
         tidyr::unnest(.data[["data"]])
       point <- nearPoints(df, hover, xvar = "rna_expression", yvar = rv$response_col(), threshold = 5, maxpoints = 1, addDist = TRUE)
-      
-      if (nrow(point) == 0) return(NULL)
-      
+
+      if (nrow(point) == 0) {
+        return(NULL)
+      }
+
       left_px <- hover$coords_css$x
       top_px <- hover$coords_css$y
-      
+
       # create style property for tooltip
       # background color is set so tooltip is a bit transparent
       # z-index is set so we are sure are tooltip will be on top
-      style <- paste0("position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
-                      "left:", left_px, "px; top:", top_px, "px;")
-      
+      style <- paste0(
+        "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
+        "left:", left_px, "px; top:", top_px, "px;"
+      )
+
       # actual tooltip created as wellPanel
       wellPanel(
         style = style,
         strong(point[[rv$cell_col()]])
       )
     })
-    
-    
+
+
     # # Hover tool
     # output$hover_text <- renderPrint({
     #   req(input$hover)
@@ -148,7 +152,7 @@ mod_expression_server <- function(id, rv) {
           vroom::vroom_write(file)
       }
     )
-    
+
     # .RData download
     output$dl_rds <- downloadHandler(
       filename = function() {
@@ -159,7 +163,7 @@ mod_expression_server <- function(id, rv) {
           saveRDS(file, compress = FALSE)
       }
     )
-    
+
     # Debounce selected rows to prevent plot lagging
     selected_rows_d <- reactive(input$table_rows_selected) %>% debounce(500)
 

@@ -4,19 +4,19 @@
 #' @param response_col Name of column containing response data
 #'
 #' @return Nested tibble organized by gene_name with response vs. rna_expression
-#' data in the "data" list-column and the rho & p.value values in the "model" 
+#' data in the "data" list-column and the rho & p.value values in the "model"
 #' list-column
 #' @export
 cor_expression <- function(df, response_col) {
-  
+
   # Load expression data from DepMap
   exp <- cellpanelr::expression() %>%
     dplyr::select(
-      .data[["depmap_id"]], 
-      .data[["gene_name"]], 
+      .data[["depmap_id"]],
+      .data[["gene_name"]],
       .data[["rna_expression"]]
     )
-  
+
   # Pipeline
   df %>%
     # Join with expression data
@@ -36,7 +36,7 @@ cor_expression <- function(df, response_col) {
   # # pb <- progress::progress_bar$new(total = dplyr::n_distinct(merged$gene_name),
   # #                                  format = "  correlating genes [:bar] :current/:total  eta: :eta")
   # # pb$tick(0)
-  # 
+  #
   # # Calculate model
   # nested <- merged %>%
   #   tidyr::nest(data = -c("gene_name")) %>%
@@ -54,9 +54,9 @@ cor_expression <- function(df, response_col) {
   #     .data$p.value,
   #     .data$data
   #   )
-  # 
+  #
   # # TODO: filter out bad fits (genes with no expression data)
-  # 
+  #
   # if (return_nested) {
   #   nested
   # } else {

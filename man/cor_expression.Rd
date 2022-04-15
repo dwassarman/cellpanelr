@@ -13,7 +13,7 @@ cor_expression(df, response_col)
 }
 \value{
 Nested tibble organized by gene_name with response vs. rna_expression
-data in the "data" list-column and the rho & p.value values in the "model" 
+data in the "data" list-column and the rho & p.value values in the "model"
 list-column
 }
 \description{

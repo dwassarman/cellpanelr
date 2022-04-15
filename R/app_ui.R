@@ -12,7 +12,7 @@ app_ui <- function(request) {
     shinyFeedback::useShinyFeedback(),
     shinyjs::useShinyjs(),
     # Pad page for fixed-top navbar
-    tags$style(type="text/css", "body {padding-top: 70px;}"),
+    tags$style(type = "text/css", "body {padding-top: 70px;}"),
     # Your application UI logic
     fluidPage(
       navbarPage(
