@@ -32,8 +32,6 @@ app_ui <- function(request) {
         ),
         tabPanel(
           "Analyze",
-          # titlePanel("Correlate your data with DepMap data sets"),
-          # br(),
           h3("Choose DepMap data set to correlate with your data"),
           tabsetPanel(
             type = "pills",
