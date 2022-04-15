@@ -9,15 +9,15 @@
 }
 
 #' Gene expression data
-#' 
+#'
 #' Function that returns gene expression data. First call will
 #' download the data from DropBox and cache it in memory for subsequent calls.
-#' 
+#'
 #' @return Tibble with 26,713561 rows and 3 columns. The columns are
 #' \code{depmap_id}, \code{gene}, and \code{rna_expression} which is
 #' expressed as \code{log2(TPM + 1)} where TPM is transcripts per million. There
 #' are 19,177 unique genes and 1393 cell lines included in this data set.
-#' 
+#'
 #' @export
 data_expression <- memoise::memoise(.expression)
 
@@ -29,15 +29,15 @@ data_expression <- memoise::memoise(.expression)
 
 
 #' Cell line annotations
-#' 
+#'
 #' Function that returns cell line annotations. First call will download the
 #' data from DropBox and cache it in memory for subsequent calls.
-#' 
+#'
 #' @return Tibble with 1,829 rows and 15 columns. Each row represents a unique
 #' DepMap cell line. Columns included are depmap_id, cell_line_name,
 #' stripped_cell_line_name, sex, source, sample_collection_site,
 #' primary_or_metastasis, primary_disease, Subtype, age, lineage, lineage_subtype,
 #' lineage_sub_subtype, lineage_molecular_subtype, and culture_type.
-#' 
+#'
 #' @export
 data_annotations <- memoise::memoise(.annotations)

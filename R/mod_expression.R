@@ -52,7 +52,7 @@ mod_expression_server <- function(id, rv) {
       shinyFeedback::resetLoadingButton("go")
       result
     }) %>% bindEvent(input$go)
-    
+
     # Merged user data with expression data
     merged <- reactive({
       rv$data() %>%
@@ -108,14 +108,14 @@ mod_expression_server <- function(id, rv) {
     output$hover_info <- renderUI({
       req(input$plot_hover)
       hover <- input$plot_hover
-      
+
       # Find point near hover
       df <- merged() %>%
         dplyr::filter(.data[[hover$mapping$panelvar1]] == hover$panelvar1)
 
       point <- nearPoints(df, hover, xvar = "rna_expression", yvar = rv$response_col(), threshold = 5, maxpoints = 1, addDist = TRUE)
 
-      
+
       if (nrow(point) == 0) {
         return(NULL)
       }
@@ -137,7 +137,7 @@ mod_expression_server <- function(id, rv) {
         strong(point[[rv$cell_col()]])
       )
     })
-    
+
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
       filename = function() {

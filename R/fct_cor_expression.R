@@ -6,8 +6,8 @@
 #'
 #' @return Tibble with two columns: \code{gene} and \code{rho}
 #' @export
-#' 
-#' @examples 
+#'
+#' @examples
 #' # Setup example data set
 #' df <- tibble::tribble(
 #'   ~"CellLine", ~"DepMapID", ~"logIC50",
@@ -15,14 +15,13 @@
 #'   "253-J", "ACH-000011", -4.04,
 #'   "NIH:OVCAR-3", "ACH-000001", NA
 #' )
-#' 
+#'
 #' correlations <- cor_expression(
 #'   data = df,
 #'   response = "logIC50",
 #'   ids = "DepMapID"
 #' )
 cor_expression <- function(data, response, ids = "depmap_id") {
-
   data %>%
     # Join with gene expression data set
     dplyr::inner_join(
@@ -41,7 +40,7 @@ cor_expression <- function(data, response, ids = "depmap_id") {
         na.action = stats::na.omit(),
         method = "spearman"
       )) %>%
-      purrr::pluck("estimate")
+        purrr::pluck("estimate")
     ) %>%
     dplyr::arrange(dplyr::desc(.data[["rho"]]))
 
