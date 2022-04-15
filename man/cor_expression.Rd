@@ -30,7 +30,7 @@ df <- tibble::tribble(
 
 correlations <- cor_expression(
   data = df,
-  ids = "DepMapID",
-  response = "logIC50"
+  response = "logIC50",
+  ids = "DepMapID"
 )
 }

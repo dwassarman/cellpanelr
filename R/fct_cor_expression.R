@@ -18,8 +18,8 @@
 #' 
 #' correlations <- cor_expression(
 #'   data = df,
-#'   ids = "DepMapID",
-#'   response = "logIC50"
+#'   response = "logIC50",
+#'   ids = "DepMapID"
 #' )
 cor_expression <- function(data, response, ids = "depmap_id") {
 
@@ -27,7 +27,8 @@ cor_expression <- function(data, response, ids = "depmap_id") {
     # Join with gene expression data set
     dplyr::inner_join(
       cellpanelr::data_expression(),
-      by = stats::setNames(ids, "depmap_id"),
+      # Note order needs to be flipped in setNames (yvar, xvar)
+      by = stats::setNames("depmap_id", ids),
       suffix = c("", ".depmap")
     ) %>%
     # Group by gene
@@ -37,7 +38,7 @@ cor_expression <- function(data, response, ids = "depmap_id") {
       rho = suppressWarnings(stats::cor.test(
         x = .data[[response]],
         y = .data[["rna_expression"]],
-        na.action = na.omit(),
+        na.action = stats::na.omit(),
         method = "spearman"
       )) %>%
       purrr::pluck("estimate")
