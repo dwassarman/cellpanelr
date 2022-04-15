@@ -17,7 +17,7 @@ mod_expression_ui <- function(id) {
         textOutput(ns("matched")),
         p(strong("Note: "), "Analysis will take several minutes."),
         shinyFeedback::loadingButton(ns("go"), "Go!", class = "btn-primary btn-lg", loadingLabel = "Calculating..."),
-        uiOutput(ns("side"))
+        uiOutput(ns("side")) %>% shinycssloaders::withSpinner()
       ),
       mainPanel(
         uiOutput(ns("main"))
@@ -75,7 +75,7 @@ mod_expression_server <- function(id, rv) {
         DT::DTOutput(ns("table")),
         h3("Downloads"),
         downloadButton(ns("dl_tsv"), "Download .tsv"),
-        downloadButton(ns("dl_rds"), "Download .RData")
+        downloadButton(ns("dl_rds"), "Download .rds")
       )
     })
 
@@ -144,12 +144,7 @@ mod_expression_server <- function(id, rv) {
         paste0(Sys.Date(), "_expression.tsv")
       },
       content = function(file) {
-        req(nested())
-        nested() %>%
-          dplyr::select(.data[["gene"]], .data[["model"]]) %>%
-          tidyr::unnest(.data[["model"]]) %>%
-          dplyr::arrange(.data[["rho"]]) %>%
-          vroom::vroom_write(file)
+        vroom::vroom_write(gene_cor(), file)
       }
     )
 
@@ -159,8 +154,13 @@ mod_expression_server <- function(id, rv) {
         paste0(Sys.Date(), "_expression.rds")
       },
       content = function(file) {
-        nested() %>%
-          saveRDS(file, compress = FALSE)
+        merged() %>%
+          dplyr::left_join(
+            gene_cor(),
+            by = "gene"
+          ) %>%
+          tidyr::nest(data = -c("gene", "rho")) %>%
+          saveRDS(file)
       }
     )
 
