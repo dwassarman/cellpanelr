@@ -47,16 +47,16 @@ mod_expression_server <- function(id, rv) {
     })
 
     # Do correlation when button is pushed
-    nested <- reactive({
-      nested <- cor_expression(rv$data(), rv$response_col())
+    gene_cor <- reactive({
+      result <- cor_expression(rv$data(), rv$response_col())
       shinyFeedback::resetLoadingButton("go")
-      nested
+      result
     }) %>% bindEvent(input$go)
 
     ## Dynamic UI Elements
     # Display correlations in side panel
     output$side <- renderUI({
-      req(nested())
+      req(gene_cor())
       tagList(
         hr(),
         h3("Results"),
@@ -83,13 +83,14 @@ mod_expression_server <- function(id, rv) {
 
     # Display results of correlation in table
     output$table <- DT::renderDT({
-      req(nested)
+      req(gene_cor())
+      # Create data table
       DT::datatable(
-        data = nested() %>%
-          dplyr::select(.data[["gene_name"]], .data[["model"]]) %>%
-          tidyr::unnest(.data[["model"]]),
+        data = gene_cor(),
         options = list("scrollX" = TRUE, "scrollY" = TRUE)
-      )
+      ) %>%
+        # Round to 3 digits
+        DT::formatRound(columns = "rho", digits = 3)
     })
 
     # Create tooltip for hovering over points in plot
@@ -146,7 +147,7 @@ mod_expression_server <- function(id, rv) {
       content = function(file) {
         req(nested())
         nested() %>%
-          dplyr::select(.data[["gene_name"]], .data[["model"]]) %>%
+          dplyr::select(.data[["gene"]], .data[["model"]]) %>%
           tidyr::unnest(.data[["model"]]) %>%
           dplyr::arrange(.data[["rho"]]) %>%
           vroom::vroom_write(file)
@@ -181,7 +182,7 @@ mod_expression_server <- function(id, rv) {
           ggplot(aes(x = .data$rna_expression, y = .data[[rv$response_col()]])) +
           geom_point(alpha = 0.6) +
           geom_smooth(method = "lm", se = FALSE) +
-          facet_wrap(~ .data$gene_name)
+          facet_wrap(~ .data$gene)
 
         p
       },

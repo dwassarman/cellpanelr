@@ -4,18 +4,33 @@
 \alias{cor_expression}
 \title{Calculate Spearman correlation between response and gene expression}
 \usage{
-cor_expression(df, response_col)
+cor_expression(data, response, ids = "depmap_id")
 }
 \arguments{
-\item{df}{Tibble. Must have depmap_id column}
+\item{data}{Tibble containing data}
 
-\item{response_col}{Name of column containing response data}
+\item{response}{Column containing response values}
+
+\item{ids}{Column containing DepMap IDs}
 }
 \value{
-Nested tibble organized by gene_name with response vs. rna_expression
-data in the "data" list-column and the rho & p.value values in the "model"
-list-column
+Tibble with two columns: \code{gene} and \code{rho}
 }
 \description{
 Calculate Spearman correlation between response and gene expression
+}
+\examples{
+# Setup example data set
+df <- tibble::tribble(
+  ~"CellLine", ~"DepMapID", ~"logIC50",
+  "LS513", "ACH-000007", -2.8,
+  "253-J", "ACH-000011", -4.04,
+  "NIH:OVCAR-3", "ACH-000001", NA
+)
+
+correlations <- cor_expression(
+  data = df,
+  ids = "DepMapID",
+  response = "logIC50"
+)
 }

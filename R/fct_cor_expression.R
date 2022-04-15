@@ -1,35 +1,48 @@
 #' Calculate Spearman correlation between response and gene expression
 #'
-#' @param df Tibble. Must have depmap_id column
-#' @param response_col Name of column containing response data
+#' @param data Tibble containing data
+#' @param response Column containing response values
+#' @param ids Column containing DepMap IDs
 #'
-#' @return Nested tibble organized by gene_name with response vs. rna_expression
-#' data in the "data" list-column and the rho & p.value values in the "model"
-#' list-column
+#' @return Tibble with two columns: \code{gene} and \code{rho}
 #' @export
-cor_expression <- function(df, response_col) {
+#' 
+#' @examples 
+#' # Setup example data set
+#' df <- tibble::tribble(
+#'   ~"CellLine", ~"DepMapID", ~"logIC50",
+#'   "LS513", "ACH-000007", -2.8,
+#'   "253-J", "ACH-000011", -4.04,
+#'   "NIH:OVCAR-3", "ACH-000001", NA
+#' )
+#' 
+#' correlations <- cor_expression(
+#'   data = df,
+#'   ids = "DepMapID",
+#'   response = "logIC50"
+#' )
+cor_expression <- function(data, response, ids = "depmap_id") {
 
-  # Load expression data from DepMap
-  exp <- cellpanelr::data_expression() %>%
-    dplyr::select(
-      .data[["depmap_id"]],
-      .data[["gene_name"]],
-      .data[["rna_expression"]]
-    )
-
-  # Pipeline
-  df %>%
-    # Join with expression data
-    dplyr::inner_join(exp,
-      by = "depmap_id",
+  data %>%
+    # Join with gene expression data set
+    dplyr::inner_join(
+      cellpanelr::data_expression(),
+      by = stats::setNames(ids, "depmap_id"),
       suffix = c("", ".depmap")
     ) %>%
-    # Nest by gene_name
-    tidyr::nest(data = -c("gene_name")) %>%
+    # Group by gene
+    dplyr::group_by(.data[["gene"]]) %>%
     # Do spearman correlation for each gene
-    dplyr::mutate(
-      model = purrr::map(.data$data, cor_spearman, "rna_expression", response_col)
-    )
+    dplyr::summarise(
+      rho = suppressWarnings(stats::cor.test(
+        x = .data[[response]],
+        y = .data[["rna_expression"]],
+        na.action = na.omit(),
+        method = "spearman"
+      )) %>%
+      purrr::pluck("estimate")
+    ) %>%
+    dplyr::arrange(dplyr::desc(.data[["rho"]]))
 
   # # # UNCOMMENT for progress bar
   # # # Initialize progress bar

@@ -61,3 +61,19 @@ fit %>%
   arrange(desc(spearman_rho))
 ```
 
+## Test package function
+
+```{r}
+data <- vroom::vroom("~/Documents/r-projects/sample_data/RL1_sample.tsv") %>%
+  add_ids("CellLine")
+
+ids <- "depmap_id"
+
+test <- data %>%
+  dplyr::left_join(
+      cellpanelr::data_expression(),
+      by = stats::setNames(ids, "depmap_id"),
+      suffix = c("", ".depmap")
+    )
+```
+
