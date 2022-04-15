@@ -15,5 +15,5 @@ lineage_sub_subtype, lineage_molecular_subtype, and culture_type.
 }
 \description{
 Function that returns cell line annotations. First call will download the
-data from DropBox and chache it in memory for subsequent calls.
+data from DropBox and cache it in memory for subsequent calls.
 }

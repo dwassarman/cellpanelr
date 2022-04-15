@@ -1,6 +1,9 @@
 DepMap
+DropBox
 Lifecycle
 RStudio
+Subtype
+TPM
 Tibble
 UI
 depmap
@@ -13,4 +16,5 @@ magrittr
 rna
 shinyapps
 spearman
+subtype
 tibble

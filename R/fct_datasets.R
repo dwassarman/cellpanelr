@@ -31,7 +31,7 @@ data_expression <- memoise::memoise(.expression)
 #' Cell line annotations
 #' 
 #' Function that returns cell line annotations. First call will download the
-#' data from DropBox and chache it in memory for subsequent calls.
+#' data from DropBox and cache it in memory for subsequent calls.
 #' 
 #' @return Tibble with 1,829 rows and 15 columns. Each row represents a unique
 #' DepMap cell line. Columns included are depmap_id, cell_line_name,
