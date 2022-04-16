@@ -51,6 +51,22 @@ app_ui <- function(request) {
           mod_resources_ui("resources_1")
         ),
       ),
+      div(
+        align = "center",
+        hr(),
+        span(
+          "cellpanelr, version 0.0.9001",
+      #     br(),
+      #     "See GitHub for ",
+      #     tags$a(href = "https://github.com/dwassarman/cellpanelr", "source code"),
+      #     " and ",
+      #     tags$a(href = "https://github.com/dwassarman/cellpanelr/issues", "bug reports"),
+      #     br(),
+      #     "Data used from ",
+      #     tags$a(href = "https://depmap.org/portal/", "DepMap"),
+      #     " under a CC BY 4.0 license",
+        )
+      )
     )
   )
 }
