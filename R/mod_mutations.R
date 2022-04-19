@@ -17,11 +17,10 @@ mod_mutations_ui <- function(id){
         textOutput(ns("matched")),
         p(strong("Note: "), "Analysis may take several minutes."),
         shinyFeedback::loadingButton(ns("go"), "Go!", class = "btn-primary btn-lg", loadingLabel = "Calculating..."),
-        DT::DTOutput(ns("table"))
+        uiOutput(ns("side"))
       ),
       mainPanel(
-        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
-        uiOutput(ns("hover_info"), style = "pointer-events: none")
+        uiOutput(ns("main"))
       )
     )
   )
@@ -35,6 +34,25 @@ mod_mutations_server <- function(id, rv){
   stopifnot(is.reactivevalues(rv))
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    # UI outputs
+    output$side <- renderUI({
+      req(gene_cor())
+      tagList(
+        hr(),
+        h3("Results"),
+        DT::DTOutput(ns("table"))
+      )
+    })
+    
+    output$main <- renderUI({
+      req(gene_cor())
+      tagList(
+        h3("Plot"),
+        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
+        uiOutput(ns("hover_info"), style = "pointer-events: none")
+      )
+    })
     
     # Let user know how many cell lines can be analyzed
     output$matched <- renderText({
