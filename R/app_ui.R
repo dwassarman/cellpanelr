@@ -42,6 +42,10 @@ app_ui <- function(request) {
             tabPanel(
               "Gene expression",
               mod_expression_ui("expression_1")
+            ),
+            tabPanel(
+              "Mutations",
+              mod_mutations_ui("mutations_1")
             )
           ),
         ),

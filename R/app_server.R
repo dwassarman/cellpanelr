@@ -19,6 +19,7 @@ app_server <- function(input, output, session) {
   mod_upload_single_server("upload_single_1", rv)
   mod_annotations_server("annotations_1", rv)
   mod_expression_server("expression_1", rv)
+  mod_mutations_server("mutations_1", rv)
   mod_resources_server("resources_1")
 
   # Navigate main tabs via wizard
