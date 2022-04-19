@@ -41,3 +41,24 @@ data_expression <- memoise::memoise(.expression)
 #'
 #' @export
 data_annotations <- memoise::memoise(.annotations)
+
+
+#' @noRd
+.mutations <- function() {
+  readRDS(url("https://www.dropbox.com/s/t4s463e0x3po9hy/mutations.rds?dl=1")) %>%
+    tidyr::pivot_longer(
+      cols = -.data$gene,
+      names_to = "depmap_id",
+      values_to = "mutant"
+    )
+}
+
+#' Cell line mutations
+#' 
+#' Function that returns cell line annotations. First call will download the
+#' data from DropBox and cache it in memory for subsequent calls.
+#' 
+#' @return Tibble with 34,365,583 rows and 3 columns. Columns are gene
+#' <character>, depmap_id <character>, and mutant <logical>
+#' @export
+data_mutations <- memoise::memoise(.mutations)
