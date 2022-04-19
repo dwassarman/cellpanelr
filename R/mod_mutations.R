@@ -40,8 +40,10 @@ mod_mutations_server <- function(id, rv){
       req(gene_cor())
       tagList(
         hr(),
+        # h3("Select genes to plot individually"),
         h3("Results"),
         DT::DTOutput(ns("table")),
+        h3("Downloads"),
         downloadButton(ns("dl_tsv"), "Download .tsv"),
         downloadButton(ns("dl_rds"), "Download .rds")
       )
@@ -50,9 +52,13 @@ mod_mutations_server <- function(id, rv){
     output$main <- renderUI({
       req(gene_cor())
       tagList(
-        h3("Plot"),
-        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
-        uiOutput(ns("hover_info"), style = "pointer-events: none")
+        h3("Volcano plot: all mutations"),
+        h5("Hover mouse to identify gene. Right-click to save image of plot."),
+        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+        uiOutput(ns("hover_info"), style = "pointer-events: none"),
+        # hr(),
+        # h3("Individual genes: mutant vs. wild-type"),
+        # plotOutput(ns("plot_2"), height = "100%") %>% shinycssloaders::withSpinner()
       )
     })
     
@@ -92,7 +98,6 @@ mod_mutations_server <- function(id, rv){
       # Round to 3 digits
       DT::formatSignif(columns = c("effect", "p.value"), digits = 3)
     })
-    
     
     # Volcano plot
     output$plot <- renderPlot({
@@ -146,6 +151,25 @@ mod_mutations_server <- function(id, rv){
         strong(point$gene)
       )
     })
+    
+    # output$plot_2 <- renderPlot({
+    #   req(gene_cor())
+    #   gene_cor() %>%
+    #     # DEBUG
+    #     dplyr::filter(gene %in% c("PLXND1", "PUS7", "KRAS")) %>%
+    #     dplyr::inner_join(data_mutations(), by = "gene") %>%
+    #     dplyr::inner_join(rv$data(), by = "depmap_id") %>%
+    #     dplyr::filter(!is.na(.data$p.value)) %>%
+    #     ggplot(aes(x = .data$mutant, y = .data[[rv$response_col()]])) +
+    #     geom_violin() +
+    #     facet_wrap(~ .data$gene)
+    # },
+    # height = function() {
+    #   0.75 * session$clientData[["output_mutations_1-plot_width"]]
+    # },
+    # res = 96
+    # )
+    
     
     # Manage downloads
     output$dl_tsv <- downloadHandler(
