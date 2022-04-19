@@ -15,7 +15,7 @@ mod_expression_ui <- function(id) {
       sidebarPanel(
         h3("Correlate with gene expression"),
         textOutput(ns("matched")),
-        p(strong("Note: "), "Analysis will take several minutes."),
+        p(strong("Note: "), "Analysis may take several minutes."),
         shinyFeedback::loadingButton(ns("go"), "Go!", class = "btn-primary btn-lg", loadingLabel = "Calculating..."),
         uiOutput(ns("side"))
       ),
