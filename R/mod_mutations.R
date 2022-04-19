@@ -41,7 +41,9 @@ mod_mutations_server <- function(id, rv){
       tagList(
         hr(),
         h3("Results"),
-        DT::DTOutput(ns("table"))
+        DT::DTOutput(ns("table")),
+        downloadButton(ns("dl_tsv"), "Download .tsv"),
+        downloadButton(ns("dl_rds"), "Download .rds")
       )
     })
     
@@ -144,6 +146,36 @@ mod_mutations_server <- function(id, rv){
         strong(point$gene)
       )
     })
+    
+    # Manage downloads
+    output$dl_tsv <- downloadHandler(
+      filename = function() {
+        paste0(Sys.Date(), "_mutations.tsv")
+      },
+      content = function(file) {
+        vroom::vroom_write(gene_cor(), file)
+      }
+    )
+    
+    output$dl_rds <- downloadHandler(
+      filename = function() {
+        paste0(Sys.Date(), "_expression.rds")
+      },
+      content = function(file) {
+        rv$data() %>%
+          dplyr::inner_join(
+            cellpanelr::data_mutations(),
+            by = "depmap_id",
+            suffix = c("", ".depmap")
+          ) %>%
+          tidyr::nest(data = -c("gene")) %>%
+          dplyr::inner_join(
+            gene_cor(),
+            by = "gene"
+          ) %>%
+          saveRDS(file)
+      }
+    )
     
     
   })
