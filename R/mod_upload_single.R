@@ -125,6 +125,8 @@ mod_upload_single_server <- function(id, rv) {
             .data[[cell]],
             .data[[response]]
           ) %>%
+          # Get rid of columns with no response data
+          dplyr::filter(!is.na(.data[[response]])) %>%
           # Average replicates
           dplyr::group_by(.data[[cell]]) %>%
           dplyr::summarise(!!response := mean(.data[[response]], na.rm = TRUE)) %>%
