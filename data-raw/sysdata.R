@@ -4,6 +4,7 @@ library(tidyverse)
 # expression <- depmap::depmap_TPM() %>%
 #   dplyr::select(depmap_id, gene_name, rna_expression)
 .exp_ids <- cellpanelr::data_expression()$depmap_id %>% unique()
+.mut_ids <- cellpanelr::data_mutations()$depmap_id %>% unique()
 # .exp_short <- head(expression, n = 20000)
 
 # # UNCOMMENT TO USE SAMPLE DATA
@@ -17,6 +18,7 @@ library(tidyverse)
 
 usethis::use_data(
   .exp_ids,
+  .mut_ids,
   # .dasatinib_single,
   # .exp_short,
   internal = TRUE,
