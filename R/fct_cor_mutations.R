@@ -25,8 +25,8 @@ cor_mutations <- function(data, response, ids = "depmap_id") {
       effect = log2(mean(.data[[response]][.data$mutant == TRUE]) /
         mean(.data[[response]][.data$mutant == FALSE])),
       p.value = ifelse(
-        # For genes with no mutant in data set, let p.value = NA
-        sum(.data$mutant) > 0,
+        # For genes with no mutant or wild-type in data set, let p.value = NA
+        dplyr::n_distinct(.data$mutant) == 2,
         # Use Mann-Whitney (Wilcoxon) U test b/c it doesn't
         # assume normal distribution of data
         stats::wilcox.test(.data[[response]] ~ .data$mutant)[["p.value"]],
