@@ -59,7 +59,7 @@ app_ui <- function(request) {
         align = "center",
         hr(),
         span(
-          "cellpanelr, version 0.0.9001",
+          "cellpanelr, version 0.0.0.9001",
       #     br(),
       #     "See GitHub for ",
       #     tags$a(href = "https://github.com/dwassarman/cellpanelr", "source code"),
