@@ -39,8 +39,7 @@ cor_expression <- function(data, response, ids = "depmap_id") {
         y = .data[["rna_expression"]],
         na.action = stats::na.omit(),
         method = "spearman"
-      )) %>%
-        purrr::pluck("estimate")
+      ))[["estimate"]]
     ) %>%
     dplyr::arrange(dplyr::desc(.data[["rho"]]))
 
@@ -78,25 +77,25 @@ cor_expression <- function(data, response, ids = "depmap_id") {
   # }
 }
 
-#' Do a spearman correlation and clean up output
-#'
-#' @param data tibble of data
-#' @param x Name of column containing x variable
-#' @param y Name of column containing y variable
-#'
-#' @return Tibble with rho and p.value columns
-cor_spearman <- function(data, x, y) {
-  stats::cor.test(
-    x = data[[x]],
-    y = data[[y]],
-    method = "spearman",
-    na.action = stats::na.omit(),
-    exact = FALSE
-  ) %>%
-    broom::tidy() %>%
-    dplyr::select(.data[["estimate"]], .data[["p.value"]]) %>%
-    dplyr::rename(rho = .data[["estimate"]])
-}
+#' #' Do a spearman correlation and clean up output
+#' #'
+#' #' @param data tibble of data
+#' #' @param x Name of column containing x variable
+#' #' @param y Name of column containing y variable
+#' #'
+#' #' @return Tibble with rho and p.value columns
+#' cor_spearman <- function(data, x, y) {
+#'   stats::cor.test(
+#'     x = data[[x]],
+#'     y = data[[y]],
+#'     method = "spearman",
+#'     na.action = stats::na.omit(),
+#'     exact = FALSE
+#'   ) %>%
+#'     broom::tidy() %>%
+#'     dplyr::select(.data[["estimate"]], .data[["p.value"]]) %>%
+#'     dplyr::rename(rho = .data[["estimate"]])
+#' }
 
 # cor.spearman_pb <- function(data, x, y, pb) {
 #   pb$tick()
