@@ -10,25 +10,15 @@
 mod_upload_single_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    # titlePanel("Upload data"),
-    # br(),
     sidebarLayout(
       sidebarPanel(
-        h3("Upload your data"),
+        h3(
+          "Upload your data",
+          helpButton("upload_help", ns)
+        ),
         fileInput(ns("file"), "Upload file"),
-        # # UNCOMMENT to use example data checkbox
-        # fluidRow(
-        #   col_8(
-        #     fileInput(ns("file"), "Upload file")
-        #   ),
-        #   col_4(
-        #     br(),
-        #     checkboxInput(ns("example"), "Use example"),
-        #   )
-        # ),
-        h3("Choose columns for analysis"),
-        selectInput(ns("cell"), "Cell lines", choices = NULL),
-        selectInput(ns("response"), "Response", choices = NULL),
+        selectInput(ns("cell"), "Cell line column", choices = NULL),
+        selectInput(ns("response"), "Response column", choices = NULL),
         actionButton(ns("button"), "Submit for analysis", class = "btn-primary btn-lg") %>%
           shinyjs::disabled()
       ),
@@ -51,14 +41,7 @@ mod_upload_single_server <- function(id, rv) {
     # Generate Tibble from uploaded data or example data
     uploaded <- reactive({
       df <- upload_file_with_feedback(input = input, id = "file")
-
-      # # UNCOMMENT to use example data checkbox
-      # if (input$example) {
-      #   df <- .dasatinib_single
-      # } else {
-      #   df <- upload_file_with_feedback(input, "file")
-      # }
-
+      
       choices <- names(df)
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)
@@ -98,7 +81,8 @@ mod_upload_single_server <- function(id, rv) {
       shinyFeedback::feedbackDanger(
         "response",
         show = !ok,
-        "This column has values that are not numbers. Please select another column or fix the non-number values in your data file."
+        "This column has values that are not numbers. Please select another
+        column or fix the non-number values in your data file."
       )
       ok
     }) %>% bindEvent(input$response)
@@ -138,6 +122,39 @@ mod_upload_single_server <- function(id, rv) {
       # Could put loading icon or slight delay for user satisfaction
       rv$active_tab <- reactive("Analyze")
     }) %>% bindEvent(input$button)
+    
+    # Help button
+    observe({
+      showModal(modalDialog(
+        easyClose = TRUE,
+        size = "l",
+        footer = NULL,
+        h4("Your data should look something like this:"),
+        tags$img(src = "www/upload_example.png", width = "50%"),
+        br(),
+        br(),
+        p(strong("Each row is a different cell line."), "If there are multiple
+        rows with the same cell line, the rows will be averaged for analysis."),
+        p(strong("One column contains cell line names."), "These names will be
+          matched to cell lines in the analysis data sets. Names do not need to 
+          match perfectly. Matching is done using case-insensitive alpha-numeric
+          characters (mcf7 = MCF7 = MCF-7)."),
+        p(strong("One column contains response values."), "Response values are
+          what will be correlated with other data sets in the Analysis tab. The
+          file can contain more than one response column, but only one can be 
+          selected at a time for analysis. Response values are often a 
+          measurement you have collected from each cell line (e.g. fluorescence,
+          IC50, etc.). All the entries in this column must be numbers. Do not 
+          include any units or other text outside of the header."),
+        p(strong("Columns have headers."), "Otherwise the first row of data will
+           be interpreted as the column headers"),
+        p(strong("Data is rectangular."),"There are no extra rows above or
+          below the data with things like a title or notes. Missing values
+          within the data are okay and will be filtered out during analysis.")
+        
+      ))
+    }) %>% bindEvent(input$upload_help)
+    
   })
 }
 
