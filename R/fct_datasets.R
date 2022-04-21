@@ -54,10 +54,10 @@ data_annotations <- memoise::memoise(.annotations)
 }
 
 #' Cell line mutations
-#' 
+#'
 #' Function that returns cell line annotations. First call will download the
 #' data from DropBox and cache it in memory for subsequent calls.
-#' 
+#'
 #' @return Tibble with 34,365,583 rows and 3 columns. Columns are gene
 #' <character>, depmap_id <character>, and mutant <logical>
 #' @export

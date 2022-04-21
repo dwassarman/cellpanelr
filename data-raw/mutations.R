@@ -10,7 +10,9 @@ wide <- data %>%
   pivot_wider(
     names_from = depmap_id,
     values_from = depmap_id,
-    values_fn = function(x) { !is.na(x)},
+    values_fn = function(x) {
+      !is.na(x)
+    },
     values_fill = FALSE
   )
 

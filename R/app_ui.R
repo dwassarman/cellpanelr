@@ -50,9 +50,12 @@ app_ui <- function(request) {
           ),
         ),
         # Extra information and resources
-        tabPanel(
-          "Resources",
-          mod_resources_ui("resources_1")
+        navbarMenu(
+          "About",
+          tabPanel(
+            "Resources",
+            mod_resources_ui("resources_1")
+          )
         ),
       ),
       div(
@@ -60,15 +63,15 @@ app_ui <- function(request) {
         hr(),
         span(
           "cellpanelr, version 0.0.0.9001",
-      #     br(),
-      #     "See GitHub for ",
-      #     tags$a(href = "https://github.com/dwassarman/cellpanelr", "source code"),
-      #     " and ",
-      #     tags$a(href = "https://github.com/dwassarman/cellpanelr/issues", "bug reports"),
-      #     br(),
-      #     "Data used from ",
-      #     tags$a(href = "https://depmap.org/portal/", "DepMap"),
-      #     " under a CC BY 4.0 license",
+          #     br(),
+          #     "See GitHub for ",
+          #     tags$a(href = "https://github.com/dwassarman/cellpanelr", "source code"),
+          #     " and ",
+          #     tags$a(href = "https://github.com/dwassarman/cellpanelr/issues", "bug reports"),
+          #     br(),
+          #     "Data used from ",
+          #     tags$a(href = "https://depmap.org/portal/", "DepMap"),
+          #     " under a CC BY 4.0 license",
         )
       )
     )

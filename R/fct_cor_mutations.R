@@ -8,11 +8,11 @@
 #' columns: gene, effect (log2(mutant/wildtype)), p.value (Mann-Whitney U test),
 #' and significance (determined using Benjamin-Hochberg correction and alpha=
 #' 0.05).
-#' 
+#'
 #' @export
 cor_mutations <- function(data, response, ids = "depmap_id") {
   data %>%
-  # Join with mutation data set
+    # Join with mutation data set
     dplyr::inner_join(
       cellpanelr::data_mutations(),
       # Note order needs to be flipped in setNames (yvar, xvar)
