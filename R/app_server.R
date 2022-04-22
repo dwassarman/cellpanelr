@@ -27,15 +27,7 @@ app_server <- function(input, output, session) {
     updateNavbarPage(session, "main_navbar", selected = rv$active_tab())
   })
   
-  # Data set selection help button
-  # Help button
-  observe({
-    showModal(modalDialog(
-      easyClose = TRUE,
-      size = "l",
-      footer = NULL,
-      dataset_help_message
-    ))
-  }) %>% bindEvent(input$dataset_help)
+  # Help button dialog
+  observe(dataset_help_message()) %>% bindEvent(input$dataset_help)
   
 }

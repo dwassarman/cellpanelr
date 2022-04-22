@@ -74,6 +74,13 @@ mod_mutations_server <- function(id, rv) {
 
     # Do correlation when button is pushed
     gene_cor <- reactive({
+      # Show error message if user hasn't uploaded data
+      if (is.null(rv$data)) {
+        no_upload_error()
+        shinyFeedback::resetLoadingButton("go")
+        return(NULL)
+      }
+      
       result <- cor_mutations(rv$data(), rv$response_col())
       shinyFeedback::resetLoadingButton("go")
       result

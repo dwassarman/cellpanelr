@@ -124,14 +124,7 @@ mod_upload_single_server <- function(id, rv) {
     }) %>% bindEvent(input$button)
 
     # Help button
-    observe({
-      showModal(modalDialog(
-        easyClose = TRUE,
-        size = "l",
-        footer = NULL,
-        upload_help_message
-      ))
-    }) %>% bindEvent(input$upload_help)
+    observe(upload_help_message()) %>% bindEvent(input$upload_help)
   })
 }
 

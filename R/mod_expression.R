@@ -16,7 +16,12 @@ mod_expression_ui <- function(id) {
         h3("Correlate with gene expression"),
         textOutput(ns("matched")),
         p(strong("Note: "), "Analysis may take several minutes."),
-        shinyFeedback::loadingButton(ns("go"), "Go!", class = "btn-primary btn-lg", loadingLabel = "Calculating..."),
+        shinyFeedback::loadingButton(
+          ns("go"),
+          "Go!",
+          class = "btn-primary btn-lg",
+          loadingLabel = "Calculating..."
+        ),
         uiOutput(ns("side"))
       ),
       mainPanel(
@@ -48,6 +53,13 @@ mod_expression_server <- function(id, rv) {
 
     # Do correlation when button is pushed
     gene_cor <- reactive({
+      # Show error message if user hasn't uploaded data
+      if (is.null(rv$data)) {
+        no_upload_error()
+        shinyFeedback::resetLoadingButton("go")
+        return(NULL)
+      }
+  
       result <- cor_expression(rv$data(), rv$response_col())
       shinyFeedback::resetLoadingButton("go")
       result
@@ -55,6 +67,7 @@ mod_expression_server <- function(id, rv) {
 
     # Merged user data with expression data
     merged <- reactive({
+      req(rv$data)
       rv$data() %>%
         dplyr::inner_join(
           cellpanelr::data_expression(),
