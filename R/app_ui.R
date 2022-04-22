@@ -32,7 +32,10 @@ app_ui <- function(request) {
         ),
         tabPanel(
           "Analyze",
-          h3("Choose DepMap data set to correlate with your data"),
+          h3(
+            "Choose DepMap data set to correlate with your data",
+            helpButton("dataset_help")
+          ),
           tabsetPanel(
             type = "pills",
             tabPanel(

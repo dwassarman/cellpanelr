@@ -13,10 +13,9 @@ helpButton <- function(id, ns = NULL) {
   }
 }
 
-upload_help_message <- function() {
-  tagList(
+upload_help_message <- tagList(
     h4("Your data should look something like this:"),
-    tags$img(src = "www/upload_example.png", width = "50%"),
+    tags$img(src = "www/upload_example.jpeg", width = "50%"),
     br(),
     br(),
     p(strong("Each row is a different cell line."), "If there are multiple
@@ -38,4 +37,20 @@ upload_help_message <- function() {
           below the data with things like a title or notes. Missing values
           within the data are okay and will be filtered out during analysis.")
   )
-}
+
+dataset_help_message <- tagList(
+    h4("Cell line annotations"),
+    p("Information about each cell line (e.g. tissue lineage, age and sex
+      of donor, and whether sample was metastatic). Plot your response data
+      against these annotations to identify trends and correlations."),
+    br(),
+    h4("Gene expression"),
+    p("mRNA levels of 19,537 protein-coding genes determined by RNAseq. Identify
+      genes whose expression levels correlate with your response data."),
+    br(),
+    h4("Mutations"),
+    p("Point mutations and indels found in gene regions for each cell line.
+      All mutations and indels to the same gene are grouped together for this
+      analysis. Identify genes where mutations are associated with an increase
+      or decrease in your response data.")
+  )

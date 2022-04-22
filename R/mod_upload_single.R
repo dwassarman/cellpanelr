@@ -129,7 +129,7 @@ mod_upload_single_server <- function(id, rv) {
         easyClose = TRUE,
         size = "l",
         footer = NULL,
-        upload_help_message()
+        upload_help_message
       ))
     }) %>% bindEvent(input$upload_help)
   })
