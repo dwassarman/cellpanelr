@@ -102,24 +102,9 @@ mod_upload_single_server <- function(id, rv) {
       rv$response_col <- reactive(response)
 
       # Prepare data tibble for analysis
-      rv$data <- reactive({
-        uploaded() %>%
-          # Keep only necessary columns
-          dplyr::select(
-            .data[[cell]],
-            .data[[response]]
-          ) %>%
-          # Get rid of columns with no response data
-          dplyr::filter(!is.na(.data[[response]])) %>%
-          # Average replicates
-          dplyr::group_by(.data[[cell]]) %>%
-          dplyr::summarise(!!response := mean(.data[[response]], na.rm = TRUE)) %>%
-          # add depmap IDs in new column at end
-          add_ids(cell_col = rv$cell_col())
-      })
+      rv$data <- reactive(prepare_data(uploaded(), cell, response))
 
-      # Change tab
-      # Could put loading icon or slight delay for user satisfaction
+      # Change tab to Analyze
       rv$active_tab <- reactive("Analyze")
     }) %>% bindEvent(input$button)
 

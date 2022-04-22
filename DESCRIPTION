@@ -33,7 +33,8 @@ RoxygenNote: 7.1.2
 Suggests: 
     spelling,
     testthat (>= 3.0.0),
-    tibble
+    tibble,
+    tidyverse
 Config/testthat/edition: 3
 Language: en-US
 URL: https://github.com/dwassarman/cellpanelr

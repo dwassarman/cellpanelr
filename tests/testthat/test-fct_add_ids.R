@@ -1,3 +1,6 @@
+library(cellpanelr)
+library(tidyverse)
+
 test_that("add_ids() adds IDs", {
   data <- tibble::tibble(names = c("mcf-7", "SCABER", "293-T"))
   sol <- tibble::tibble(
@@ -8,7 +11,19 @@ test_that("add_ids() adds IDs", {
   expect_equal(obj, sol)
 })
 
-test_that("IDs that map to the same cell line are removed", {
+test_that("add_ids() removed improperly repeated names", {
+  a <- tibble(
+    names = c("mcf-7", "SCABER", "MCF7"),
+    response = c(10, 9, 8),
+  )
+  sol <- a %>%
+    mutate(
+      depmap_id = c(NA, "ACH-000839", NA)
+    )
+  expect_equal(add_ids(a, "names"), sol)
+})
+
+test_that("multiple IDs mapping to the same cell line are removed", {
   data <- tibble::tibble(
     cells = c("ABC1", "ABC1", "GHI3", "JKL4"),
     depmap_id = c("001", "002", "003", NA)
