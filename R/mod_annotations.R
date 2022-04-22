@@ -25,7 +25,7 @@ mod_annotations_ui <- function(id) {
         downloadButton(ns("dl"), "Download .tsv")
       ),
       mainPanel(
-        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
+        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
         # # Provide hover info
         # tableOutput(ns("info")),
       ),
@@ -60,6 +60,7 @@ mod_annotations_server <- function(id, rv) {
         req(rv$data)
         if (discrete()) {
           p <- annotated() %>%
+            dplyr::filter(!is.na(.data[[input$feature]])) %>%
             ggplot(aes(
               x = stats::reorder(.data[[input$feature]],
                 .data[[rv$response_col()]],
@@ -95,12 +96,6 @@ mod_annotations_server <- function(id, rv) {
       },
       res = 96
     )
-
-    # # Provide info with hover
-    # output$info <- renderTable({
-    #   req(input$plot_hover)
-    #   nearPoints(annotated(), input$plot_hover, xvar = input$feature, yvar = rv$response_col())
-    # })
 
     output$dl <- downloadHandler(
       filename = function() {

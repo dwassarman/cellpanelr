@@ -82,10 +82,11 @@ mod_expression_server <- function(id, rv) {
     output$main <- renderUI({
       req(merged())
       tagList(
-        h3("Correlation plot of selected genes"),
-        h5("Hover mouse to identify cell lines."),
-        h5("Right-click to save image of plot."),
-        plotOutput(ns("plot"), hover = ns("plot_hover")) %>% shinycssloaders::withSpinner(),
+        fluidRow(
+          h3("Correlation plot of selected genes"),
+          h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
+        ),
+        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
         uiOutput(ns("hover_info"), style = "pointer-events: none")
       )
     })
@@ -166,6 +167,7 @@ mod_expression_server <- function(id, rv) {
 
     # Debounce selected rows to prevent plot lagging
     selected_rows_d <- reactive(input$table_rows_selected) %>% debounce(500)
+
 
     # Display selected rows in a plot
     output$plot <- renderPlot(
