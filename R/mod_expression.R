@@ -59,7 +59,7 @@ mod_expression_server <- function(id, rv) {
         shinyFeedback::resetLoadingButton("go")
         return(NULL)
       }
-  
+
       result <- cor_expression(rv$data(), rv$response_col())
       shinyFeedback::resetLoadingButton("go")
       result

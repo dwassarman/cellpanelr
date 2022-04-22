@@ -38,7 +38,7 @@ mod_upload_single_server <- function(id, rv) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Generate Tibble from uploaded data or example data
+    # Generate Tibble from uploaded data and update column selection input choices
     uploaded <- reactive({
       df <- upload_file_with_feedback(input = input, id = "file")
 
@@ -49,14 +49,14 @@ mod_upload_single_server <- function(id, rv) {
       df
     })
 
-    # Display uploaded data
+    # Display uploaded data in a table in the main panel
     output$table <- DT::renderDT(DT::datatable(
       uploaded(),
-      options = list("scrollX" = TRUE, dom = "flrtip"),
+      options = list("scrollX" = TRUE),
       rownames = FALSE,
     ))
 
-    # Check how many cell lines the cell line column matches to
+    # Display how many cell lines the cell line column matches to
     observe({
       n_unique <- uploaded()[[input$cell]] %>% dplyr::n_distinct()
       matched <- add_ids(uploaded(), input$cell)

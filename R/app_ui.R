@@ -22,7 +22,6 @@ app_ui <- function(request) {
         collapsible = TRUE,
         position = "fixed-top",
         tabPanel(
-          id = "home",
           "Home",
           mod_home_ui("home_1")
         ),
@@ -64,18 +63,7 @@ app_ui <- function(request) {
       div(
         align = "center",
         hr(),
-        span(
-          "cellpanelr, version 0.0.0.9001",
-          #     br(),
-          #     "See GitHub for ",
-          #     tags$a(href = "https://github.com/dwassarman/cellpanelr", "source code"),
-          #     " and ",
-          #     tags$a(href = "https://github.com/dwassarman/cellpanelr/issues", "bug reports"),
-          #     br(),
-          #     "Data used from ",
-          #     tags$a(href = "https://depmap.org/portal/", "DepMap"),
-          #     " under a CC BY 4.0 license",
-        )
+        span("cellpanelr, version 0.0.0.9001")
       )
     )
   )

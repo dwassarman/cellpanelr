@@ -80,7 +80,7 @@ mod_mutations_server <- function(id, rv) {
         shinyFeedback::resetLoadingButton("go")
         return(NULL)
       }
-      
+
       result <- cor_mutations(rv$data(), rv$response_col())
       shinyFeedback::resetLoadingButton("go")
       result

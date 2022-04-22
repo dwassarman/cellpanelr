@@ -105,10 +105,9 @@ mod_annotations_server <- function(id, rv) {
         vroom::vroom_write(annotated(), file)
       }
     )
-    
+
     # Disable download button if no data has been uploaded
     observe(shinyjs::toggleState("dl", condition = !is.null(rv$data)))
-    
   })
 }
 

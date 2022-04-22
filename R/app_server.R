@@ -7,7 +7,6 @@
 app_server <- function(input, output, session) {
   # Your application server logic
   rv <- reactiveValues()
-  rv$active_tab <- reactive("Home")
   # Contents of rv:
   ## active_tab: name of active tab in the main navbar
   ## cell_col: name of cell line column
@@ -23,11 +22,13 @@ app_server <- function(input, output, session) {
   mod_resources_server("resources_1")
 
   # Navigate main tabs via wizard
+  # Initialize on the home tab
+  rv$active_tab <- reactive("Home")
+
   observe({
     updateNavbarPage(session, "main_navbar", selected = rv$active_tab())
   })
-  
-  # Help button dialog
+
+  # Help button dialog within Analyze tab
   observe(dataset_help_message()) %>% bindEvent(input$dataset_help)
-  
 }
