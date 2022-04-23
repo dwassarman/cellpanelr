@@ -17,18 +17,18 @@ mod_annotations_ui <- function(id) {
         selectInput(
           ns("feature"),
           "Cell line annotation",
-          choices = names(data_annotations()),
+          choices = sort(c("sex", "source", "sample_collection_site", "primary_or_metastasis",
+                           "primary_disease", "Subtype", "age", "lineage", "lineage_subtype",
+                           "lineage_sub_subtype", "lineage_molecular_subtype", "culture_type")),
           selected = "primary_disease"
         ),
-        checkboxInput(ns("log"), strong("Plot in log-scale")),
+        checkboxInput(ns("log"), "Plot response in log-scale"),
         h3("Downloads"),
         downloadButton(ns("dl"), "Download .tsv")
       ),
       mainPanel(
-        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-        # # Provide hover info
-        # tableOutput(ns("info")),
-      ),
+        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner()
+      )
     )
   )
 }
@@ -52,51 +52,22 @@ mod_annotations_server <- function(id, rv) {
         )
     })
 
-    discrete <- reactive(annotated()[[input$feature]] %>% is.character())
-
-    # Generate boxplot or scatterplot depending on feature
-    output$plot <- renderPlot(
-      {
-        req(rv$data)
-        if (discrete()) {
-          p <- annotated() %>%
-            dplyr::filter(!is.na(.data[[input$feature]])) %>%
-            ggplot(aes(
-              x = stats::reorder(.data[[input$feature]],
-                .data[[rv$response_col()]],
-                FUN = stats::median,
-                na.rm = TRUE
-              ),
-              y = .data[[rv$response_col()]]
-            )) +
-            # geom_boxplot() +
-            geom_boxplot() +
-            coord_flip() +
-            xlab(input$feature)
-        } else {
-          p <- annotated() %>%
-            ggplot(aes(
-              x = .data[[input$feature]],
-              y = .data[[rv$response_col()]]
-            )) +
-            geom_point() +
-            geom_smooth() +
-            xlab(input$feature)
-        }
-
-        # Scale y axis
-        if (input$log) {
-          p <- p + scale_y_log10()
-        }
-
-        p
-      },
-      height = function() {
-        0.75 * session$clientData[["output_annotations_1-plot_width"]]
-      },
-      res = 96
+    # Generate plot for main panel
+    output$plot <- renderPlot({
+      req(rv$data)
+      p <- annotations_plot(annotated(), input$feature, rv$response_col())
+      # Scale y axis
+      if (input$log) { p <- p + scale_y_log10() }
+      p
+    },
+    # Resize plot based on width of window
+    height = function() {
+      0.75 * session$clientData[["output_annotations_1-plot_width"]]
+    },
+    res = 96
     )
 
+    # Download .tsv file with annotations
     output$dl <- downloadHandler(
       filename = function() {
         paste0(Sys.Date(), "_annotated.tsv")
