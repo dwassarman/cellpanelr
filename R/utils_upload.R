@@ -1,28 +1,19 @@
-#' Upload a file with feedback to fileInput UI element
+#' Upload a file
+#' 
+#' Can handle .csv, .tsv, .xls, and .xlsx files
 #'
-#' @param input reactive values list of inputs from module UI
-#' @param id Name of input UI element
+#' @param file filepath
 #'
 #' @return Tibble
-upload_file_with_feedback <- function(input, id) {
-  # Can update this to expand allowed file types
-  allowed <- c("tsv", "csv", "xls", "xlsx")
-
-  req(input[[id]])
-  datapath <- input[[id]][["datapath"]]
-  ext <- tools::file_ext(datapath)
-  ok <- isTruthy(ext %in% allowed)
-  txt <- paste0(allowed, collapse = ", ")
-  shinyFeedback::feedbackDanger(id,
-    show = !ok,
-    text = paste0("Allowed file types: ", txt)
+load_file <- function(file) {
+  ext <- tools::file_ext(file)
+  switch(ext,
+    csv = vroom::vroom(file, delim = ","),
+    tsv = vroom::vroom(file, delim = "\t"),
+    xls = readxl::read_xls(file, na = c("", "NA")),
+    xlsx = readxl::read_xlsx(file, na = c("", "NA")),
+    validate("Invalid file type. Please upload a .csv, .tsv, .xls, or .xlsx file.")
   )
-  req(ok)
-  if (ext %in% c("xls", "xlsx")) {
-    readxl::read_excel(datapath)
-  } else {
-    vroom::vroom(datapath)
-  }
 }
 
 

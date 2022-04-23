@@ -40,13 +40,22 @@ mod_upload_single_server <- function(id, rv) {
 
     # Generate Tibble from uploaded data and update column selection input choices
     uploaded <- reactive({
-      df <- upload_file_with_feedback(input = input, id = "file")
-
-      choices <- names(df)
+      req(input$file)
+      shinyFeedback::hideFeedback("file")
+      tryCatch(
+        load_file(input$file$datapath),
+        error = function(e) {
+          shinyFeedback::showFeedbackDanger("file", "Allowed: .csv, .tsv, .xls, .xlsx")
+        }
+      )
+    })
+    
+    # Update column names in inputSelect elements
+    observe({
+      req(uploaded())
+      choices <- names(uploaded())
       updateSelectInput(session, "cell", choices = choices)
       updateSelectInput(session, "response", choices = choices)
-
-      df
     })
 
     # Display uploaded data in a table in the main panel
@@ -60,7 +69,7 @@ mod_upload_single_server <- function(id, rv) {
     observe({
       n_unique <- uploaded()[[input$cell]] %>% dplyr::n_distinct()
       matched <- add_ids(uploaded(), input$cell)
-      n_matched <- matched[["depmap_id"]] %>% dplyr::n_distinct()
+      n_matched <- matched$depmap_id %>% dplyr::n_distinct()
 
       txt <- paste0(
         n_matched,
@@ -76,8 +85,7 @@ mod_upload_single_server <- function(id, rv) {
 
     # Response column must be numeric
     response_ok <- reactive({
-      response_col <- uploaded()[[input$response]]
-      ok <- is.numeric(response_col)
+      ok <- uploaded()[[input$response]] %>% is.numeric()
       shinyFeedback::feedbackDanger(
         "response",
         show = !ok,
@@ -94,15 +102,12 @@ mod_upload_single_server <- function(id, rv) {
 
     # Button is pushed, prepare data for later modules and advance navbar
     observe({
-      cell <- input$cell
-      response <- input$response
-
       # Save column names to use again down the line
-      rv$cell_col <- reactive(cell)
-      rv$response_col <- reactive(response)
+      rv$cell_col <- reactive(input$cell)
+      rv$response_col <- reactive(input$response)
 
       # Prepare data tibble for analysis
-      rv$data <- reactive(prepare_data(uploaded(), cell, response))
+      rv$data <- reactive(prepare_data(uploaded(), input$cell, input$response))
 
       # Change tab to Analyze
       rv$active_tab <- reactive("Analyze")
