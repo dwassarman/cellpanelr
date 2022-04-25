@@ -23,30 +23,30 @@ n_exp_matched <- function(data, id = "depmap_id") {
 #'   the nearest point
 exp_tooltip <- function(hover, data, cell, response) {
   # See here for reference: https://gitlab.com/-/snippets/16220
-  
+
   # Filter data to the correct facet
   filtered <- data %>%
     dplyr::filter(.data$gene == hover$panelvar1)
-  
+
   # Find the nearest point
   point <- nearPoints(
-    filtered, 
-    hover, 
+    filtered,
+    hover,
     xvar = "rna_expression",
     yvar = response,
     maxpoints = 1
   )
-  
+
   # Don't show tooltip if there are no nearby points
   if (nrow(point) == 0) {
     return(NULL)
   }
-  
+
   # Find location on the screen for the tooltip
   # (Bug this looks off when there are headers above the)
   left_px <- hover$coords_css$x
   top_px <- hover$coords_css$y
-  
+
   # create style property for tooltip
   # background color is set so tooltip is a bit transparent
   # z-index is set so we are sure are tooltip will be on top
@@ -54,7 +54,7 @@ exp_tooltip <- function(hover, data, cell, response) {
     "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
     "left:", left_px, "px; top:", top_px, "px;"
   )
-  
+
   # actual tooltip created as wellPanel
   wellPanel(
     style = style,

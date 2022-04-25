@@ -49,7 +49,7 @@ mod_upload_single_server <- function(id, rv) {
         }
       )
     })
-    
+
     # Update column names in inputSelect elements
     observe({
       req(uploaded())

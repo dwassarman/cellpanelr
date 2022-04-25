@@ -17,9 +17,11 @@ mod_annotations_ui <- function(id) {
         selectInput(
           ns("feature"),
           "Cell line annotation",
-          choices = sort(c("sex", "source", "sample_collection_site", "primary_or_metastasis",
-                           "primary_disease", "Subtype", "age", "lineage", "lineage_subtype",
-                           "lineage_sub_subtype", "lineage_molecular_subtype", "culture_type")),
+          choices = sort(c(
+            "sex", "source", "sample_collection_site", "primary_or_metastasis",
+            "primary_disease", "Subtype", "age", "lineage", "lineage_subtype",
+            "lineage_sub_subtype", "lineage_molecular_subtype", "culture_type"
+          )),
           selected = "primary_disease"
         ),
         checkboxInput(ns("log"), "Plot response in log-scale"),
@@ -53,18 +55,21 @@ mod_annotations_server <- function(id, rv) {
     })
 
     # Generate plot for main panel
-    output$plot <- renderPlot({
-      req(rv$data)
-      p <- annotations_plot(annotated(), input$feature, rv$response_col())
-      # Scale y axis
-      if (input$log) { p <- p + scale_y_log10() }
-      p
-    },
-    # Resize plot based on width of window
-    height = function() {
-      0.75 * session$clientData[["output_annotations_1-plot_width"]]
-    },
-    res = 96
+    output$plot <- renderPlot(
+      {
+        req(rv$data)
+        p <- annotations_plot(annotated(), input$feature, rv$response_col())
+        # Scale y axis
+        if (input$log) {
+          p <- p + scale_y_log10()
+        }
+        p
+      },
+      # Resize plot based on width of window
+      height = function() {
+        0.75 * session$clientData[["output_annotations_1-plot_width"]]
+      },
+      res = 96
     )
 
     # Download .tsv file with annotations

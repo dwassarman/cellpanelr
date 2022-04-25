@@ -49,7 +49,7 @@ test_that("upload_data() handles all data types", {
   path_tsv <- tempfile(fileext = ".tsv")
   write.csv(df, path_csv, row.names = FALSE)
   write.table(df, path_tsv, sep = "\t", row.names = FALSE)
-  
+
   expect_equal(load_file(path_csv), df)
   expect_equal(load_file(path_tsv), df)
   expect_error(load_file("blah.txt"), "Invalid file")

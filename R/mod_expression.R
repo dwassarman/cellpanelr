@@ -40,7 +40,7 @@ mod_expression_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     ## Dynamic UI Elements
     # Display correlations in side panel
     output$side <- renderUI({
@@ -55,7 +55,7 @@ mod_expression_server <- function(id, rv) {
         downloadButton(ns("dl_rds"), "Download .rds")
       )
     })
-    
+
     # Display plot in main panel
     output$main <- renderUI({
       req(merged())
@@ -118,7 +118,7 @@ mod_expression_server <- function(id, rv) {
       get_selected_genes(gene_cor(), input$table_rows_selected)
     }) %>% debounce(750)
 
-    
+
     # Plot selected rows
     output$plot <- renderPlot(
       {
@@ -132,13 +132,13 @@ mod_expression_server <- function(id, rv) {
       },
       res = 96
     )
-    
+
     # Create tooltip for hovering over points in plot
     output$hover_info <- renderUI({
       req(input$plot_hover)
       exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
     })
-    
+
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
       filename = function() {
@@ -148,7 +148,7 @@ mod_expression_server <- function(id, rv) {
         vroom::vroom_write(gene_cor(), file)
       }
     )
-    
+
     # .RData download
     output$dl_rds <- downloadHandler(
       filename = function() {
@@ -164,7 +164,6 @@ mod_expression_server <- function(id, rv) {
           saveRDS(file)
       }
     )
-    
   })
 }
 

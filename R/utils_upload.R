@@ -1,5 +1,5 @@
 #' Upload a file
-#' 
+#'
 #' Can handle .csv, .tsv, .xls, and .xlsx files
 #'
 #' @param file filepath

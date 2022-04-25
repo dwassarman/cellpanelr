@@ -1,5 +1,5 @@
 #' Plot data based on given cell line feature
-#' 
+#'
 #' Chooses the correct plot (boxplot or scatterplot) based on the type of
 #' feature provided
 #'
@@ -8,13 +8,13 @@
 #' @param y Response value
 #'
 #' @return plot
-#' 
+#'
 #' @import ggplot2
 annotations_plot <- function(data, x, y) {
   # Categorical feature
   if (is.character(data[[x]])) {
     data %>%
-      # remove cell lines that don't have this annotation 
+      # remove cell lines that don't have this annotation
       dplyr::filter(!is.na(.data[[x]])) %>%
       ggplot(aes(
         # reorder annotation based on the median response
@@ -30,8 +30,8 @@ annotations_plot <- function(data, x, y) {
       # Flip for easier label reading
       coord_flip() +
       xlab(x)
-   
-  # Continuous feature   
+
+    # Continuous feature
   } else {
     data %>%
       ggplot(aes(
