@@ -11,7 +11,28 @@ mod_home_ui <- function(id) {
   ns <- NS(id)
   tagList(
     titlePanel("Welcome to cellpanelr"),
-    p("[Introduction and description of workflow.]"),
+    br(),
+    h4("Correlate cell line features like mutations, gene expression, and
+    more with your own data to identify predictive biomarkers."),
+    br(),
+    br(),
+    fluidRow(
+      col_6(
+        wellPanel(
+          h4("Step 1: Upload your data"),
+          p("Upload response data you have collected from a panel of cell lines."),
+          tags$img(src = "www/upload_homepage.jpeg", width = "80%")
+        )
+      ),
+      col_6(
+        wellPanel(
+          h4("Step 2: Find correlations"),
+          p("Correlate your data with one of several data sets and
+        interactively plot the results."),
+          tags$img(src = "www/mutations_example.jpeg", width = "81%")
+        )
+      )
+    ),
     br(),
     col_12(
       align = "center",

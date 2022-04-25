@@ -6,11 +6,11 @@ RStudio
 Subtype
 TPM
 Tibble
-UI
 actionButton
+csv
 depmap
 dwassarman
-fileInput
+filepath
 golem
 https
 inputId
@@ -19,4 +19,10 @@ magrittr
 ns
 shinyapps
 subtype
+tibble
+tooltip
+tsv
+wellPanel
 wildtype
+xls
+xlsx
