@@ -19,7 +19,6 @@ app_server <- function(input, output, session) {
   mod_annotations_server("annotations_1", rv)
   mod_expression_server("expression_1", rv)
   mod_mutations_server("mutations_1", rv)
-  mod_resources_server("resources_1")
 
   # Navigate main tabs via wizard
   # Initialize on the home tab

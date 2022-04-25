@@ -8,11 +8,6 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
-    # Enable packages with extra UI features
-    shinyFeedback::useShinyFeedback(),
-    shinyjs::useShinyjs(),
-    # Pad page for fixed-top navbar
-    tags$style(type = "text/css", "body {padding-top: 70px;}"),
     # Your application UI logic
     fluidPage(
       navbarPage(
@@ -56,7 +51,7 @@ app_ui <- function(request) {
           "About",
           tabPanel(
             "Resources",
-            mod_resources_ui("resources_1")
+            resources_tab
           )
         ),
       ),
@@ -87,8 +82,13 @@ golem_add_external_resources <- function() {
     bundle_resources(
       path = app_sys("app/www"),
       app_title = "cellpanelr"
-    )
-    # Add here other external resources
-    # for example, you can add shinyalert::useShinyalert()
+    ),
+
+    # Enable packages with extra UI features
+    shinyFeedback::useShinyFeedback(),
+    shinyjs::useShinyjs(),
+
+    # Pad page for fixed-top navbar
+    tags$style(type = "text/css", "body {padding-top: 70px;}"),
   )
 }
