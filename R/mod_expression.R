@@ -115,6 +115,7 @@ mod_expression_server <- function(id, rv) {
 
     # Debounce selected genes to prevent plot lagging
     selected_genes <- reactive({
+      req(gene_cor())
       get_selected_genes(gene_cor(), input$table_rows_selected)
     }) %>% debounce(750)
 
