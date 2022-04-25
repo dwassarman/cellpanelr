@@ -40,15 +40,39 @@ mod_expression_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
+    ## Dynamic UI Elements
+    # Display correlations in side panel
+    output$side <- renderUI({
+      req(gene_cor())
+      tagList(
+        hr(),
+        h3("Select genes to plot on right"),
+        br(),
+        DT::DTOutput(ns("table")),
+        h3("Downloads"),
+        downloadButton(ns("dl_tsv"), "Download .tsv"),
+        downloadButton(ns("dl_rds"), "Download .rds")
+      )
+    })
+    
+    # Display plot in main panel
+    output$main <- renderUI({
+      req(merged())
+      tagList(
+        fluidRow(
+          h3("Correlation plot of selected genes"),
+          h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
+        ),
+        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+        uiOutput(ns("hover_info"), style = "pointer-events: none")
+      )
+    })
 
     # Let user know how many cell lines can be analyzed
     output$matched <- renderText({
       req(rv$data)
-      n_matched <- rv$data()$depmap_id %>%
-        intersect(.exp_ids) %>%
-        length()
-
-      paste0(n_matched, " cell lines from your data with expression data")
+      paste0(n_exp_matched(rv$data()), " cell lines from your data with expression data")
     })
 
     # Do correlation when button is pushed
@@ -76,34 +100,6 @@ mod_expression_server <- function(id, rv) {
         )
     }) %>% bindEvent(input$go)
 
-    ## Dynamic UI Elements
-    # Display correlations in side panel
-    output$side <- renderUI({
-      req(gene_cor())
-      tagList(
-        hr(),
-        h3("Select genes to plot on right"),
-        br(),
-        DT::DTOutput(ns("table")),
-        h3("Downloads"),
-        downloadButton(ns("dl_tsv"), "Download .tsv"),
-        downloadButton(ns("dl_rds"), "Download .rds")
-      )
-    })
-
-    # Display plot in main panel
-    output$main <- renderUI({
-      req(merged())
-      tagList(
-        fluidRow(
-          h3("Correlation plot of selected genes"),
-          h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
-        ),
-        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-        uiOutput(ns("hover_info"), style = "pointer-events: none")
-      )
-    })
-
     # Display results of correlation in table
     output$table <- DT::renderDT({
       req(gene_cor())
@@ -117,41 +113,32 @@ mod_expression_server <- function(id, rv) {
         DT::formatRound(columns = "rho", digits = 3)
     })
 
+    # Debounce selected genes to prevent plot lagging
+    selected_genes <- reactive({
+      get_selected_genes(gene_cor(), input$table_rows_selected)
+    }) %>% debounce(750)
+
+    
+    # Plot selected rows
+    output$plot <- renderPlot(
+      {
+        # Make plot
+        req(selected_genes())
+        exp_plot_selected(merged(), selected_genes(), rv$response_col())
+      },
+      # Adjust height to maintain aspect ratio
+      height = function() {
+        0.75 * session$clientData[["output_expression_1-plot_width"]]
+      },
+      res = 96
+    )
+    
     # Create tooltip for hovering over points in plot
-    # See here for reference: https://gitlab.com/-/snippets/16220
     output$hover_info <- renderUI({
       req(input$plot_hover)
-      hover <- input$plot_hover
-
-      # Find point near hover
-      df <- merged() %>%
-        dplyr::filter(.data[[hover$mapping$panelvar1]] == hover$panelvar1)
-
-      point <- nearPoints(df, hover, xvar = "rna_expression", yvar = rv$response_col(), threshold = 5, maxpoints = 1, addDist = TRUE)
-
-
-      if (nrow(point) == 0) {
-        return(NULL)
-      }
-
-      left_px <- hover$coords_css$x
-      top_px <- hover$coords_css$y
-
-      # create style property for tooltip
-      # background color is set so tooltip is a bit transparent
-      # z-index is set so we are sure are tooltip will be on top
-      style <- paste0(
-        "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
-        "left:", left_px, "px; top:", top_px, "px;"
-      )
-
-      # actual tooltip created as wellPanel
-      wellPanel(
-        style = style,
-        strong(point[[rv$cell_col()]])
-      )
+      exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
     })
-
+    
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
       filename = function() {
@@ -161,7 +148,7 @@ mod_expression_server <- function(id, rv) {
         vroom::vroom_write(gene_cor(), file)
       }
     )
-
+    
     # .RData download
     output$dl_rds <- downloadHandler(
       filename = function() {
@@ -177,36 +164,7 @@ mod_expression_server <- function(id, rv) {
           saveRDS(file)
       }
     )
-
-    # Debounce selected rows to prevent plot lagging
-    selected_rows_d <- reactive(input$table_rows_selected) %>% debounce(500)
-
-
-    # Display selected rows in a plot
-    output$plot <- renderPlot(
-      {
-        # Get selected data
-        req(selected_rows_d())
-        genes <- gene_cor() %>%
-          dplyr::filter(dplyr::row_number() %in% selected_rows_d()) %>%
-          dplyr::pull(.data$gene)
-        selected <- merged() %>%
-          dplyr::filter(.data$gene %in% genes)
-
-        # Plot selected data
-        p <- selected %>%
-          ggplot(aes(x = .data$rna_expression, y = .data[[rv$response_col()]])) +
-          geom_point(alpha = 0.6) +
-          geom_smooth(method = "lm", se = FALSE) +
-          facet_wrap(~ .data$gene)
-
-        p
-      },
-      height = function() {
-        0.75 * session$clientData[["output_expression_1-plot_width"]]
-      },
-      res = 96
-    )
+    
   })
 }
 
