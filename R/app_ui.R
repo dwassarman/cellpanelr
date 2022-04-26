@@ -27,7 +27,7 @@ app_ui <- function(request) {
         tabPanel(
           "Analyze",
           h3(
-            "Choose DepMap data set to correlate with your data",
+            "Choose a data set to correlate with your data",
             helpButton("dataset_help")
           ),
           tabsetPanel(
@@ -46,19 +46,17 @@ app_ui <- function(request) {
             )
           ),
         ),
-        # Extra information and resources
-        navbarMenu(
+        tabPanel(
           "About",
-          tabPanel(
-            "Resources",
-            resources_tab
-          )
-        ),
+          about_tab()
+        )
       ),
+
+      # Footer
       div(
         align = "center",
         hr(),
-        span("cellpanelr, version 0.0.0.9001")
+        span("version 0.0.0.9001. April 26, 2022"),
       )
     )
   )

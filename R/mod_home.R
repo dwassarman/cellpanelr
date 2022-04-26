@@ -11,10 +11,9 @@ mod_home_ui <- function(id) {
   ns <- NS(id)
   tagList(
     titlePanel("Welcome to cellpanelr"),
-    br(),
-    h4("Correlate cell line features like mutations, gene expression, and
-    more with your own data to identify predictive biomarkers."),
-    br(),
+    h4("Identify predictive biomarkers from cell line panels. Correlate your data with mutations, gene expression, and more."),
+    # h4("Correlate data from a panel of cell lines with features like mutations, gene expression, and
+    # more to identify predictive biomarkers."),
     br(),
     fluidRow(
       col_6(

@@ -7,9 +7,9 @@
 #' with a bold question mark inside
 helpButton <- function(id, ns = NULL) {
   if (is.null(ns)) {
-    actionButton(id, strong("?"), class = "btn-xs")
+    actionButton(id, label = icon("question"), class = "btn-xs")
   } else {
-    actionButton(ns(id), strong("?"), class = "btn-xs")
+    actionButton(ns(id), icon("question"), class = "btn-xs")
   }
 }
 
@@ -64,7 +64,18 @@ dataset_help_message <- function() {
       p("Point mutations and indels found in gene regions for each cell line.
         All mutations and indels to the same gene are grouped together for this
         analysis. Identify genes where mutations are associated with an increase
-        or decrease in your response data.")
+        or decrease in your response data."),
+      br(),
+      p(
+        "Data sets are adapted from",
+        depmap_link(),
+        "(Broad Institute) and used under the",
+        cc_by_link(),
+        "license."
+        # ". See",
+        # em("About > Data sets"),
+        # "for more information."
+      ),
     )
   ))
 }
