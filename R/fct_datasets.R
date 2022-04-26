@@ -10,13 +10,19 @@
 
 #' Gene expression data
 #'
-#' Function that returns gene expression data. First call will
-#' download the data from DropBox and cache it in memory for subsequent calls.
+#' Function that returns gene expression data for 19,177 genes and 1,393 cell lines.
+#' First call will download the data from DropBox and cache it in memory for subsequent calls.
 #'
-#' @return Tibble with 26,713561 rows and 3 columns. The columns are
-#' \code{depmap_id}, \code{gene}, and \code{rna_expression} which is
-#' expressed as \code{log2(TPM + 1)} where TPM is transcripts per million. There
-#' are 19,177 unique genes and 1393 cell lines included in this data set.
+#' @format Tibble with 26,713561 rows and 3 columns.
+#' \describe{
+#'   \item{depmap_id}{Unique identifier of each cell line. Formatted
+#'   ACH-######.}
+#'   \item{gene}{Hugo gene symbol}
+#'   \item{rna_expression}{RNA expression level expressed as \code{log2(TPM + 1)}
+#'   where TPM is transcripts per million.}
+#' }
+#'
+#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
 #'
 #' @export
 data_expression <- memoise::memoise(.expression)
@@ -30,14 +36,34 @@ data_expression <- memoise::memoise(.expression)
 
 #' Cell line annotations
 #'
-#' Function that returns cell line annotations. First call will download the
-#' data from DropBox and cache it in memory for subsequent calls.
+#' Function that returns cell line annotations for 1,829 cell lines. First call
+#' will download the data from DropBox and cache it in memory for subsequent
+#' calls.
 #'
-#' @return Tibble with 1,829 rows and 15 columns. Each row represents a unique
-#' DepMap cell line. Columns included are depmap_id, cell_line_name,
-#' stripped_cell_line_name, sex, source, sample_collection_site,
-#' primary_or_metastasis, primary_disease, Subtype, age, lineage, lineage_subtype,
-#' lineage_sub_subtype, lineage_molecular_subtype, and culture_type.
+#' @format Tibble with 1,829 rows and 15 columns. Each row represents a unique
+#' DepMap cell line.
+#' \describe{
+#'   \item{depmap_id}{Unique identifier of each cell line. Formatted
+#'   ACH-######.}
+#'   \item{cell_line_name}{Common name of cell line as entered in DepMap}
+#'   \item{stripped_cell_line_name}{Capitalized alpha-numeric name of cell line.
+#'     Frequently used for name matching.}
+#'   \item{sex}{Sex of tissue donor if known.}
+#'   \item{source}{Source of cell line vial used by DepMap}
+#'   \item{sample_collection_site}{Tissue collection site}
+#'   \item{primary_or_metastasis}{Indicated whether tissue sample is from
+#'     primary or metastatic site.}
+#'   \item{primary_disease}
+#'   \item{Subtype}{Cancer lineage categories}
+#'   \item{age}{Age of tissue donor at time of sample collection, if known}
+#'   \item{lineage}
+#'   \item{lineage_subtype}
+#'   \item{lineage_sub_subtype}
+#'   \item{lineage_molecular_subtype}{Cancer type classifications in a standardized from}
+#'   \item{culture_type}{Cell line growth conditions}
+#' }
+#'
+#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
 #'
 #' @export
 data_annotations <- memoise::memoise(.annotations)
@@ -55,10 +81,18 @@ data_annotations <- memoise::memoise(.annotations)
 
 #' Cell line mutations
 #'
-#' Function that returns cell line annotations. First call will download the
+#' Function that returns mutant status for 19.537 genes in 1,759 cell lines. First call will download the
 #' data from DropBox and cache it in memory for subsequent calls.
 #'
-#' @return Tibble with 34,365,583 rows and 3 columns. Columns are gene
-#' <character>, depmap_id <character>, and mutant <logical>
+#' @format Tibble with 34,365,583 rows and 3 columns.
+#' \describe{
+#'   \item{gene}{Hugo gene symbol}
+#'   \item{depmap_id}{Unique identifier of each cell line. Formatted
+#'     ACH-######}
+#'   \item{mutant}{Logical indicating whether  gene is mutated in given cell line}
+#' }
+#'
+#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#'
 #' @export
 data_mutations <- memoise::memoise(.mutations)

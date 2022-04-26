@@ -3,17 +3,38 @@
 \name{data_annotations}
 \alias{data_annotations}
 \title{Cell line annotations}
+\format{
+Tibble with 1,829 rows and 15 columns. Each row represents a unique
+DepMap cell line.
+\describe{
+  \item{depmap_id}{Unique identifier of each cell line. Formatted
+  ACH-######.}
+  \item{cell_line_name}{Common name of cell line as entered in DepMap}
+  \item{stripped_cell_line_name}{Capitalized alpha-numeric name of cell line.
+    Frequently used for name matching.}
+  \item{sex}{Sex of tissue donor if known.}
+  \item{source}{Source of cell line vial used by DepMap}
+  \item{sample_collection_site}{Tissue collection site}
+  \item{primary_or_metastasis}{Indicated whether tissue sample is from
+    primary or metastatic site.}
+  \item{primary_disease}
+  \item{Subtype}{Cancer lineage categories}
+  \item{age}{Age of tissue donor at time of sample collection, if known}
+  \item{lineage}
+  \item{lineage_subtype}
+  \item{lineage_sub_subtype}
+  \item{lineage_molecular_subtype}{Cancer type classifications in a standardized from}
+  \item{culture_type}{Cell line growth conditions}
+}
+}
+\source{
+DepMap (Broad Institute): \url{https://depmap.org/portal/}
+}
 \usage{
 data_annotations()
 }
-\value{
-Tibble with 1,829 rows and 15 columns. Each row represents a unique
-DepMap cell line. Columns included are depmap_id, cell_line_name,
-stripped_cell_line_name, sex, source, sample_collection_site,
-primary_or_metastasis, primary_disease, Subtype, age, lineage, lineage_subtype,
-lineage_sub_subtype, lineage_molecular_subtype, and culture_type.
-}
 \description{
-Function that returns cell line annotations. First call will download the
-data from DropBox and cache it in memory for subsequent calls.
+Function that returns cell line annotations for 1,829 cell lines. First call
+will download the data from DropBox and cache it in memory for subsequent
+calls.
 }

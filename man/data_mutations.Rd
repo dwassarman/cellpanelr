@@ -3,14 +3,22 @@
 \name{data_mutations}
 \alias{data_mutations}
 \title{Cell line mutations}
+\format{
+Tibble with 34,365,583 rows and 3 columns.
+\describe{
+  \item{gene}{Hugo gene symbol}
+  \item{depmap_id}{Unique identifier of each cell line. Formatted
+    ACH-######}
+  \item{mutant}{Logical indicating whether  gene is mutated in given cell line}
+}
+}
+\source{
+DepMap (Broad Institute): \url{https://depmap.org/portal/}
+}
 \usage{
 data_mutations()
 }
-\value{
-Tibble with 34,365,583 rows and 3 columns. Columns are gene
-<character>, depmap_id <character>, and mutant <logical>
-}
 \description{
-Function that returns cell line annotations. First call will download the
+Function that returns mutant status for 19.537 genes in 1,759 cell lines. First call will download the
 data from DropBox and cache it in memory for subsequent calls.
 }

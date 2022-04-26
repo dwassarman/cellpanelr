@@ -28,27 +28,29 @@ about_tab <- function() {
     titlePanel("About cellpanelr"),
     p(
       "cellpanelr is a Shiny app and R package for analyzing response data
-      collected from panels of cell lines. It uses data sets from", depmap_link(),
-      "(Broad Institute) to identify biomarkers that correlate with
-      user-provided data. Its goal is to make -omics level data analysis
-      accessible and open-source for everyone."
+      collected from panels of cell lines. It uses data sets from DepMap to
+      identify biomarkers that correlate with user-provided data. Its goal is
+      to make -omics level data analysis accessible and open-source for everyone."
     ),
-    p("It licensed under the GNU General Public
-      License 3.0."),
-    hr(),
     p(
-      "Please cite the following publication if you use cellpanelr in your work.",
-      br(),
-      "text, link",
+      "It is licensed under the",
+      gpl3_link()
     ),
+    p("Data sets were adapted from", depmap_link(), "and are used under the", cc_by_link()),
+    hr(),
+    # p(
+    #   "Please cite the following publication if you use cellpanelr in your work.",
+    #   br(),
+    #   "text, link",
+    # ),
     p(
       "Source code is available at",
       enurl("https://github.com/dwassarman/cellpanelr", "https://github.com/dwassarman/cellpanelr"),
     ),
-    p(
-      "R package is available from CRAN at",
-      "link",
-    ),
+    # p(
+    #   "R package is available from CRAN at",
+    #   "link",
+    # ),
     p(
       "For support and bug reports please contact",
       enurl("mailto:cellpanelr@gmail.com?", "cellpanelr@gmail.com")
@@ -57,9 +59,13 @@ about_tab <- function() {
 }
 
 depmap_link <- function() {
-  enurl("https://depmap.org/portal/", "DepMap")
+  enurl("https://depmap.org/portal/", "DepMap (Broad Institute)")
 }
 
 cc_by_link <- function() {
-  enurl("https://creativecommons.org/licenses/by/4.0/", "CC BY 4.0")
+  enurl("https://creativecommons.org/licenses/by/4.0/", "CC BY 4.0 License")
+}
+
+gpl3_link <- function() {
+  enurl("https://www.gnu.org/licenses/gpl-3.0.en.html", "GNU General Public License 3.0")
 }

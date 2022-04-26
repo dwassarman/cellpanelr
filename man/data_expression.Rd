@@ -3,16 +3,23 @@
 \name{data_expression}
 \alias{data_expression}
 \title{Gene expression data}
+\format{
+Tibble with 26,713561 rows and 3 columns.
+\describe{
+  \item{depmap_id}{Unique identifier of each cell line. Formatted
+  ACH-######.}
+  \item{gene}{Hugo gene symbol}
+  \item{rna_expression}{RNA expression level expressed as \code{log2(TPM + 1)}
+  where TPM is transcripts per million.}
+}
+}
+\source{
+DepMap (Broad Institute): \url{https://depmap.org/portal/}
+}
 \usage{
 data_expression()
 }
-\value{
-Tibble with 26,713561 rows and 3 columns. The columns are
-\code{depmap_id}, \code{gene}, and \code{rna_expression} which is
-expressed as \code{log2(TPM + 1)} where TPM is transcripts per million. There
-are 19,177 unique genes and 1393 cell lines included in this data set.
-}
 \description{
-Function that returns gene expression data. First call will
-download the data from DropBox and cache it in memory for subsequent calls.
+Function that returns gene expression data for 19,177 genes and 1,393 cell lines.
+First call will download the data from DropBox and cache it in memory for subsequent calls.
 }
