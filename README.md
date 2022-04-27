@@ -9,30 +9,24 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-A Shiny app and R package for analyzing response data collected from
-panels of cell lines.
+Identify predictive biomarkers from cell line panels. Correlate your
+data with mutations, gene expression, and more. The goal of cellpanelr
+is to make “omics” level data analysis accessible and open-source for
+everyone.
 
-It uses data sets and annotations publicly available from
-[DepMap](https://depmap.org/portal/) to identify features that correlate
-with user-provided data. These data sets are used under the [CC BY
+cellpanelr uses data sets adapted from [DepMap (Broad
+Institute)](https://depmap.org/portal/) under the [CC BY
 4.0](https://creativecommons.org/licenses/by/4.0/) license.
 
-## Shiny app
+## Web application
 
-The shiny app is available for use at
+The interactive analysis tool is available at
 <https://dwassarman.shinyapps.io/cellpanelr/>
 
-## Local installation
+## Package installation
 
-You may have a better experience with the app if you run it locally.
-
-To do so, open an interactive R session one of the following ways:
-
-1.  open RStudio
-2.  enter `R` into the command line
-
-Then enter the following command to install the cellpanelr package from
-GitHub:
+To install cellpanelr from GitHub, enter the following command in an
+interactive R session
 
 ``` r
 # install.packages("remotes")
@@ -44,18 +38,44 @@ remotes::install_github("dwassarman/cellpanelr")
     Remove the `#` character from the command above to install the
     `remotes` package.
 
-Once you’ve installed cellpanelr, you can load the package into R and
-open the app like so:
+## Usage
+
+-   `run_app()` runs a local instance of the interactive shiny app
+-   `add_ids()` matches cell line names with DepMap IDs for subsequent
+    analysis
+-   `cor_expression()` and `cor_mutations()` correlate cell line
+    response data with gene expression and gene mutations
+-   `data_annotations()`, `data_expression()`, and `data_mutations()`
+    retrieve modified DepMap data sets for over 1,000 cell lines
 
 ``` r
 library(cellpanelr)
-run_app()
+library(tidyverse) # Read in data, data joining, pipe operator
+
+# Load data
+data <- read_csv("cell_viability.csv")
+
+# Add depmap_id column
+# Example: the "Cell line" column contains the cell line names
+data <- add_ids(data, cell_col = "Cell line")
+
+# Add cell line annotations for each cell line
+annotated <- data %>%
+  left_join(
+    data_annotations(),
+    by = "depmap_id"
+  )
+
+# Correlate response column with gene expression
+# Example: response values are in the "viability" column
+exp_results <- cor_expression(data, response = "viability", ids = "depmap_ids")
+
+# Correlate response column with mutations
+# Example: response values are in the "viability" column
+mut_results <- cor_mutations(data, response = "viability", ids = "depmap_ids")
 ```
 
-## R Package
-
-Fill in additional info here about main functions and usage. Consider
-creating vignettes.
+## Code of Conduct
 
 Please note that the cellpanelr project is released with a [Contributor
 Code of

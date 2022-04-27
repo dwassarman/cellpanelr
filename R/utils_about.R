@@ -28,15 +28,15 @@ about_tab <- function() {
     titlePanel("About cellpanelr"),
     p(
       "cellpanelr is a Shiny app and R package for analyzing response data
-      collected from panels of cell lines. It uses data sets from DepMap to
+      collected from cell line panels. It uses data sets from DepMap to
       identify biomarkers that correlate with user-provided data. Its goal is
-      to make -omics level data analysis accessible and open-source for everyone."
+      to make \"omics\" level data analysis accessible and open-source for everyone."
     ),
     p(
       "It is licensed under the",
       gpl3_link()
     ),
-    p("Data sets were adapted from", depmap_link(), "and are used under the", cc_by_link()),
+    p("Data sets were adapted from", depmap_link(), "and are used under the", cc_by_link(), "license"),
     hr(),
     # p(
     #   "Please cite the following publication if you use cellpanelr in your work.",
@@ -59,11 +59,11 @@ about_tab <- function() {
 }
 
 depmap_link <- function() {
-  enurl("https://depmap.org/portal/", "DepMap (Broad Institute)")
+  enurl("https://depmap.org/portal/", "DepMap")
 }
 
 cc_by_link <- function() {
-  enurl("https://creativecommons.org/licenses/by/4.0/", "CC BY 4.0 License")
+  enurl("https://creativecommons.org/licenses/by/4.0/", "CC BY 4.0")
 }
 
 gpl3_link <- function() {

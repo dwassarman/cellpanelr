@@ -69,12 +69,9 @@ dataset_help_message <- function() {
       p(
         "Data sets are adapted from",
         depmap_link(),
-        "(Broad Institute) and used under the",
+        "and used under the",
         cc_by_link(),
         "license."
-        # ". See",
-        # em("About > Data sets"),
-        # "for more information."
       ),
     )
   ))
