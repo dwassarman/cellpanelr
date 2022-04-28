@@ -13,7 +13,7 @@
 #' Function that returns gene expression data for 19,177 genes and 1,393 cell lines.
 #' First call will download the data from DropBox and cache it in memory for subsequent calls.
 #'
-#' @format Tibble with 26,713561 rows and 3 columns.
+#' @format A tibble with 26,713561 rows and 3 columns.
 #' \describe{
 #'   \item{depmap_id}{Unique identifier of each cell line. Formatted
 #'   ACH-######.}
@@ -40,7 +40,7 @@ data_expression <- memoise::memoise(.expression)
 #' will download the data from DropBox and cache it in memory for subsequent
 #' calls.
 #'
-#' @format Tibble with 1,829 rows and 15 columns. Each row represents a unique
+#' @format A tibble with 1,829 rows and 15 columns. Each row represents a unique
 #' DepMap cell line.
 #' \describe{
 #'   \item{depmap_id}{Unique identifier of each cell line. Formatted
@@ -53,13 +53,9 @@ data_expression <- memoise::memoise(.expression)
 #'   \item{sample_collection_site}{Tissue collection site}
 #'   \item{primary_or_metastasis}{Indicated whether tissue sample is from
 #'     primary or metastatic site.}
-#'   \item{primary_disease}
-#'   \item{Subtype}{Cancer lineage categories}
+#'   \item{primary_disease, Subtype}{Cancer lineage categories}
 #'   \item{age}{Age of tissue donor at time of sample collection, if known}
-#'   \item{lineage}
-#'   \item{lineage_subtype}
-#'   \item{lineage_sub_subtype}
-#'   \item{lineage_molecular_subtype}{Cancer type classifications in a standardized from}
+#'   \item{lineage, lineage_subtype, lineage_sub_subtype, lineage_molecular_subtype}{Cancer type classifications in a standardized from}
 #'   \item{culture_type}{Cell line growth conditions}
 #' }
 #'
@@ -84,7 +80,7 @@ data_annotations <- memoise::memoise(.annotations)
 #' Function that returns mutant status for 19.537 genes in 1,759 cell lines. First call will download the
 #' data from DropBox and cache it in memory for subsequent calls.
 #'
-#' @format Tibble with 34,365,583 rows and 3 columns.
+#' @format A tibble with 34,365,583 rows and 3 columns.
 #' \describe{
 #'   \item{gene}{Hugo gene symbol}
 #'   \item{depmap_id}{Unique identifier of each cell line. Formatted

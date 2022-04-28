@@ -7,7 +7,7 @@
 exp_plot_selected(data, selected, response)
 }
 \arguments{
-\item{data}{Tibble, user data merged with expression data}
+\item{data}{A tibble, user data merged with expression data}
 
 \item{selected}{Character vector with selected gene names}
 

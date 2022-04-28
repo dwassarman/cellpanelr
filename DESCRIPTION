@@ -13,6 +13,7 @@ Description: A Shiny app and R package for analyzing data collected
   analysis accessible and open-source for everyone.
 License: GPL (>= 3)
 Imports: 
+    broom,
     config (>= 0.3.1),
     dplyr,
     DT,

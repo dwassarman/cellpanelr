@@ -4,7 +4,7 @@
 \alias{data_mutations}
 \title{Cell line mutations}
 \format{
-Tibble with 34,365,583 rows and 3 columns.
+A tibble with 34,365,583 rows and 3 columns.
 \describe{
   \item{gene}{Hugo gene symbol}
   \item{depmap_id}{Unique identifier of each cell line. Formatted

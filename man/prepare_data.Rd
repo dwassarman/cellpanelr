@@ -14,7 +14,7 @@ prepare_data(data, cell, response)
 \item{response}{name of column containing response values}
 }
 \value{
-Tibble with only 3 columns: cell line, response, and "depmap_id"
+A tibble with only 3 columns: cell line, response, and "depmap_id"
 }
 \description{
 Removes extra columns, averages the response values between repeated cell

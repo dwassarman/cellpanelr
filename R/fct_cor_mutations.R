@@ -1,16 +1,47 @@
-#' Find mutations that are associated with cell line response
+#' Correlate cell line response with gene mutations
+#' 
+#' For each of the 19.537 genes present in the
+#' \code{\link{data_mutations}} data set, perform a Mann-Whitney test
+#' \code{\link[stats]{wilcox.test}} to determine whether cell lines containing a mutant version of the gene respond
+#' differently than cell lines with the wild-type version of the gene. The Mann-Whitney
+#' test is chosen, rather than the Student's t-test, because it does not
+#' assume that the response values in the two groups are normally distributed.
 #'
-#' @param data Tibble containing data
-#' @param response Name of column containing response data
-#' @param ids Name of column containing depmap_ids of cell lines
+#' @param data A tibble.
+#' @param response Column containing response data
+#' @param ids Column containing DepMap IDs of cell lines
+#' @param fdr False discovery rate. Number between 0 and 1 representing the
+#'   likelihood that a gene predicted to be significant is actually a false-positive.
 #'
-#' @return Tibble with effect size and significance of each gene. Contains the
-#' columns: gene, effect (log2(mutant/wildtype)), p.value (Mann-Whitney U test),
-#' and significance (determined using Benjamin-Hochberg correction and alpha=
-#' 0.05).
+#' @return A tibble with 19,537 rows and 4 columns. Each row contains the
+#'   correlation values for a single gene.
+#' \describe{
+#'   \item{gene}{Hugo gene symbol}
+#'   \item{effect}{The relative increase or decrease in cell line response
+#'     associated with mutation of the gene. Calculated as log2( mutant response / wildtype response )}
+#'   \item{p.value}{Probability that the null hypothesis is true (there is
+#'     no relationship between gene mutation and cell line response)}
+#'   \item{significant}{Whether the correlation is deemed significant after
+#'     multiple hypothesis correction with the given false discovery rate}
+#' }
 #'
 #' @export
-cor_mutations <- function(data, response, ids = "depmap_id") {
+#' 
+#' @examples 
+#' # Setup example data set
+#' df <- tibble::tibble(
+#'   CellLine = c("LS513", "253-J", "NIH:OVCAR-3"),
+#'   DepMapID = c("ACH-000007", "ACH-000011", "ACH-000001"),
+#'   logIC50 = c(-2.8, -4.04, -6.23)
+#' )
+#'
+#' cor_mutations(
+#'   data = df,
+#'   response = "logIC50",
+#'   ids = "DepMapID",
+#'   fdr = 0.01
+#' )
+cor_mutations <- function(data, response, ids = "depmap_id", fdr = 0.05) {
   data %>%
     # Join with mutation data set
     dplyr::inner_join(
@@ -35,14 +66,5 @@ cor_mutations <- function(data, response, ids = "depmap_id") {
     ) %>%
     dplyr::arrange(.data$p.value) %>%
     # Adjust p-values using Benjamini-Hochberg method (https://www2.rockefeller.edu/qbio_sc/resources/l04.pdf)
-    dplyr::mutate(
-      p.adjusted = .data$p.value * length(.data$p.value) / dplyr::row_number(),
-      significant = .data$p.adjusted < 0.05,
-      significant = ifelse(
-        dplyr::row_number() == 1,
-        .data$significant,
-        .data$p.adjusted < 0.05 & dplyr::lag(.data$significant)
-      ),
-      p.adjusted = NULL
-    )
+    dplyr::mutate(significant = stats::p.adjust(.data$p.value, method = "BH") < fdr)
 }

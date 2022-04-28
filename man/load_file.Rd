@@ -10,7 +10,7 @@ load_file(file)
 \item{file}{filepath}
 }
 \value{
-Tibble
+A tibble
 }
 \description{
 Can handle .csv, .tsv, .xls, and .xlsx files

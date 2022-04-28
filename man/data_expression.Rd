@@ -4,7 +4,7 @@
 \alias{data_expression}
 \title{Gene expression data}
 \format{
-Tibble with 26,713561 rows and 3 columns.
+A tibble with 26,713561 rows and 3 columns.
 \describe{
   \item{depmap_id}{Unique identifier of each cell line. Formatted
   ACH-######.}

@@ -4,7 +4,7 @@
 \alias{data_annotations}
 \title{Cell line annotations}
 \format{
-Tibble with 1,829 rows and 15 columns. Each row represents a unique
+A tibble with 1,829 rows and 15 columns. Each row represents a unique
 DepMap cell line.
 \describe{
   \item{depmap_id}{Unique identifier of each cell line. Formatted
@@ -17,13 +17,9 @@ DepMap cell line.
   \item{sample_collection_site}{Tissue collection site}
   \item{primary_or_metastasis}{Indicated whether tissue sample is from
     primary or metastatic site.}
-  \item{primary_disease}
-  \item{Subtype}{Cancer lineage categories}
+  \item{primary_disease, Subtype}{Cancer lineage categories}
   \item{age}{Age of tissue donor at time of sample collection, if known}
-  \item{lineage}
-  \item{lineage_subtype}
-  \item{lineage_sub_subtype}
-  \item{lineage_molecular_subtype}{Cancer type classifications in a standardized from}
+  \item{lineage, lineage_subtype, lineage_sub_subtype, lineage_molecular_subtype}{Cancer type classifications in a standardized from}
   \item{culture_type}{Cell line growth conditions}
 }
 }

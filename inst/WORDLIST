@@ -1,12 +1,13 @@
+ACH
+Benjamini
 DepMap
 DropBox
 Hochberg
 Lifecycle
-RStudio
-Subtype
 TPM
 Tibble
 actionButton
+biomarkers
 csv
 depmap
 dwassarman
@@ -17,8 +18,8 @@ inputId
 io
 magrittr
 ns
+omics
 shinyapps
-subtype
 tibble
 tooltip
 tsv

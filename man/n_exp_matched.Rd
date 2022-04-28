@@ -7,7 +7,7 @@
 n_exp_matched(data, id = "depmap_id")
 }
 \arguments{
-\item{data}{Tibble with "depmap_id" column}
+\item{data}{A tibble with "depmap_id" column}
 
 \item{id}{Column containing DepMap IDs}
 }
