@@ -7,7 +7,7 @@
 remove_multi_cell(data, cell_col, id_col = "depmap_id")
 }
 \arguments{
-\item{data}{Tibble}
+\item{data}{A tibble}
 
 \item{cell_col}{Name of column containing cell line names}
 

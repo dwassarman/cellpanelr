@@ -1,6 +1,6 @@
 #' Number of cell lines present in expression data set
 #'
-#' @param data Tibble with "depmap_id" column
+#' @param data A tibble with "depmap_id" column
 #' @param id Column containing DepMap IDs
 #'
 #' @return integer, number of matching cell lines
@@ -15,7 +15,7 @@ n_exp_matched <- function(data, id = "depmap_id") {
 #' Render a tooltip when user hovers mouse over plot
 #'
 #' @param hover Hover input from plot
-#' @param data Tibble of user-uploaded data
+#' @param data A tibble of user-uploaded data
 #' @param cell Name of cell line column (to be presented)
 #' @param response Name of response column (y-axis on plot)
 #'
@@ -66,7 +66,7 @@ exp_tooltip <- function(hover, data, cell, response) {
 
 #' Get list of selected genes based on row selections from table
 #'
-#' @param data Tibble of data used to make the table
+#' @param data A tibble of data used to make the table
 #' @param selected list of selected row numbers
 #'
 #' @return Character vector of genes
@@ -80,7 +80,7 @@ get_selected_genes <- function(data, selected) {
 
 #' Generate scatterplot expression vs. response, faceted by selected gene
 #'
-#' @param data Tibble, user data merged with expression data
+#' @param data A tibble, user data merged with expression data
 #' @param selected Character vector with selected gene names
 #' @param response Name of response column
 #'

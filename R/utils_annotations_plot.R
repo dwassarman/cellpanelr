@@ -3,7 +3,7 @@
 #' Chooses the correct plot (boxplot or scatterplot) based on the type of
 #' feature provided
 #'
-#' @param data Tibble
+#' @param data A tibble.
 #' @param x Cell line feature
 #' @param y Response value
 #'

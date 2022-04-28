@@ -4,7 +4,7 @@
 #'
 #' @param file filepath
 #'
-#' @return Tibble
+#' @return A tibble
 load_file <- function(file) {
   ext <- tools::file_ext(file)
   switch(ext,
@@ -27,7 +27,7 @@ load_file <- function(file) {
 #' @param cell name of column containing cell line names
 #' @param response name of column containing response values
 #'
-#' @return Tibble with only 3 columns: cell line, response, and "depmap_id"
+#' @return A tibble with only 3 columns: cell line, response, and "depmap_id"
 prepare_data <- function(data, cell, response) {
   data %>%
     # Keep only necessary columns
@@ -38,5 +38,5 @@ prepare_data <- function(data, cell, response) {
     dplyr::group_by(.data[[cell]]) %>%
     dplyr::summarize(!!response := mean(.data[[response]], na.rm = TRUE)) %>%
     # add depmap IDs in new column at end
-    add_ids(cell_col = cell)
+    add_ids(cell = cell)
 }

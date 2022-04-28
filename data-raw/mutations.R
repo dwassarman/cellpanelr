@@ -16,4 +16,4 @@ wide <- data %>%
     values_fill = FALSE
   )
 
-saveRDS(wide, "~/Documents/r-projects/cellpanelr data/22Q1/mutations.rds", compres = "gzip")
+saveRDS(wide, "~/Documents/r-projects/cellpanelr data/22Q1/mutations.rds", compress = "gzip")

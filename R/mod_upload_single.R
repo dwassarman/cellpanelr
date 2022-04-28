@@ -38,7 +38,7 @@ mod_upload_single_server <- function(id, rv) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
 
-    # Generate Tibble from uploaded data and update column selection input choices
+    # Generate tibble from uploaded data and update column selection input choices
     uploaded <- reactive({
       req(input$file)
       shinyFeedback::hideFeedback("file")

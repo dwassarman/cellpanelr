@@ -9,7 +9,7 @@ exp_tooltip(hover, data, cell, response)
 \arguments{
 \item{hover}{Hover input from plot}
 
-\item{data}{Tibble of user-uploaded data}
+\item{data}{A tibble of user-uploaded data}
 
 \item{cell}{Name of cell line column (to be presented)}
 

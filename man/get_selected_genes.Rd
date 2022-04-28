@@ -7,7 +7,7 @@
 get_selected_genes(data, selected)
 }
 \arguments{
-\item{data}{Tibble of data used to make the table}
+\item{data}{A tibble of data used to make the table}
 
 \item{selected}{list of selected row numbers}
 }

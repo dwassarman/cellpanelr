@@ -7,7 +7,7 @@
 annotations_plot(data, x, y)
 }
 \arguments{
-\item{data}{Tibble}
+\item{data}{A tibble.}
 
 \item{x}{Cell line feature}
 

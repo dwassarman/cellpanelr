@@ -2,33 +2,50 @@
 % Please edit documentation in R/fct_cor_expression.R
 \name{cor_expression}
 \alias{cor_expression}
-\title{Calculate Spearman correlation between response and gene expression}
+\title{Calculate cell line response with gene expression}
 \usage{
-cor_expression(data, response, ids = "depmap_id")
+cor_expression(data, response, ids = "depmap_id", fdr = 0.05)
 }
 \arguments{
-\item{data}{Tibble containing data}
+\item{data}{A tibble.}
 
 \item{response}{Column containing response values}
 
-\item{ids}{Column containing DepMap IDs}
+\item{ids}{Column containing DepMap IDs of cell lines}
+
+\item{fdr}{False discovery rate. Number between 0 and 1 representing the
+likelihood that a gene predicted to be significant is actually a false-
+positive.}
 }
 \value{
-Tibble with two columns: \code{gene} and \code{rho}
+A tibble with 19,177 rows and 4 columns. Each row contains the
+  correlation values for a single gene.
+\describe{
+  \item{gene}{Hugo gene symbol}
+  \item{rho}{Spearman's correlation coefficient}
+  \item{p.value}{Probability that the null hypothesis is true (there is
+    no relationship between gene expression and cell line response)}
+  \item{significant}{Whether the correlation is deemed significant after
+    multiple hypothesis correction with the given false discovery rate}
+}
 }
 \description{
-Calculate Spearman correlation between response and gene expression
+For each of the 19.177 genes present in the
+\code{\link{data_expression}} data set, perform Spearman's
+correlation between given response data and RNA expression levels across
+cell lines. The non-parametric Spearman's correlation is chosen, rather than
+Pearson's correlation, because it does not assume a linear relationship
+between the two variables.
 }
 \examples{
 # Setup example data set
-df <- tibble::tribble(
-  ~"CellLine", ~"DepMapID", ~"logIC50",
-  "LS513", "ACH-000007", -2.8,
-  "253-J", "ACH-000011", -4.04,
-  "NIH:OVCAR-3", "ACH-000001", NA
+df <- tibble::tibble(
+  CellLine = c("LS513", "253-J", "NIH:OVCAR-3"),
+  DepMapID = c("ACH-000007", "ACH-000011", "ACH-000001"),
+  logIC50 = c(-2.8, -4.04, -6.23)
 )
 
-correlations <- cor_expression(
+cor_expression(
   data = df,
   response = "logIC50",
   ids = "DepMapID"

@@ -7,14 +7,14 @@
 remove_multi_id(data, cell_col, id_col = "depmap_id")
 }
 \arguments{
-\item{data}{Tibble}
+\item{data}{A tibble}
 
 \item{cell_col}{Name of column containing cell line names}
 
 \item{id_col}{Name of column containing IDs}
 }
 \value{
-Tibble with bad IDs changed to NA
+A tibble with bad IDs changed to NA
 }
 \description{
 Remove IDs that map to the same cell line
