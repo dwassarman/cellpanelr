@@ -1,34 +1,32 @@
 Package: cellpanelr
 Title: Analyze Data from Cell Line Panels
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = c("Douglas", "R"),
            family = "Wassarman",
            role = c("aut", "cre"),
            email = "dwassar@gmail.com")
-Description: A Shiny app and R package for analyzing response data collected
-  from panels of cell lines. It uses data sets and annotations publicly
-  available from [DepMap](<https://depmap.org/portal/>) to identify features that
-  correlate with user-provided data.
+Description: A Shiny app and R package for analyzing data collected
+  from cell line panels. It uses data sets and annotations available from
+  [DepMap (Broad Institute)](<https://depmap.org/portal/>) to identify features
+  that correlate with user-provided data. Its goal is to make "omics" level data
+  analysis accessible and open-source for everyone.
 License: GPL (>= 3)
-biocViews:
 Imports: 
     broom,
     config (>= 0.3.1),
-    depmap,
     dplyr,
     DT,
     ggplot2,
     golem (>= 0.3.1),
     magrittr,
-    pkgload,
-    progress,
-    purrr,
+    memoise,
+    readxl,
     rlang,
     shiny (>= 1.7.1),
     shinycssloaders,
     shinyFeedback,
-    tibble,
+    shinyjs,
     tidyr,
     vroom
 Encoding: UTF-8
@@ -36,10 +34,12 @@ LazyData: true
 RoxygenNote: 7.1.2
 Suggests: 
     spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tibble,
+    tidyverse
 Config/testthat/edition: 3
 Language: en-US
 URL: https://github.com/dwassarman/cellpanelr
 BugReports: https://github.com/dwassarman/cellpanelr/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)

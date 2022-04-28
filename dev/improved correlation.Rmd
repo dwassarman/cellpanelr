@@ -1,0 +1,93 @@
+```{r}
+library(cellpanelr)
+```
+
+```{r}
+data <- vroom::vroom("~/Documents/r-projects/sample_data/RL1_sample.tsv") %>%
+  dplyr::group_by(CellLine) %>%
+  dplyr::summarise(AUC = mean(AUC)) %>%
+  add_ids("CellLine")
+```
+
+```{r}
+cor_expression <- function(data, response, ids = "depmap_id", fdr = 0.05) {
+  data %>%
+    # Join with gene expression data set
+    dplyr::inner_join(
+      cellpanelr::data_expression(),
+      # Note order needs to be flipped in setNames (yvar, xvar)
+      by = stats::setNames("depmap_id", ids),
+      suffix = c("", ".depmap")
+    ) %>%
+    # Group by gene
+    dplyr::group_by(.data$gene) %>%
+    # Do spearman correlation for each gene
+    dplyr::summarise(
+      suppressWarnings(stats::cor.test(
+        x = .data[[response]],
+        y = .data$rna_expression,
+        na.action = stats::na.omit(),
+        method = "spearman"
+      )) %>%
+        broom::tidy()
+    ) %>%
+    dplyr::select(.data$gene, .data$estimate, .data$p.value) %>%
+    dplyr::rename(rho = .data$estimate) %>%
+    dplyr::arrange(.data$rho)
+}
+
+is_significant <- function(x, fdr = 0.05) {
+  adjusted <- x * length(x) / dplyr::row_number(x)
+  significant <- adjusted < fdr
+  
+  significant & dplyr::lag(significant, default = TRUE)
+}
+```
+
+```{r}
+
+cor_expression <- function(data, response, ids = "depmap_id") {
+  data %>%
+    # Join with gene expression data set
+    dplyr::inner_join(
+      cellpanelr::data_expression(),
+      # Note order needs to be flipped in setNames (yvar, xvar)
+      by = stats::setNames("depmap_id", ids),
+      suffix = c("", ".depmap")
+    ) %>%
+    # Group by gene
+    dplyr::nest_by(.data$gene) #%>%
+    # Do spearman correlation for each gene
+    dplyr::summarise(
+      purrr::map(
+        .data$data,
+        {suppressWarnings(stats::cor.test(
+          x = .[[response]],
+          y = .$rna_expression,
+          na.action = stats::na.omit(),
+          method = "spearman"
+        )) %>%
+          broom::tidy()}
+      )
+    ) #%>%
+    # dplyr::select(.data$gene, .data$estimate, .data$p.value) %>%
+    # dplyr::rename(rho = .data$estimate) %>%
+    # dplyr::arrange(.data$rho)
+}
+```
+
+
+```{r}
+system.time({
+  test <- cor_expression(data, "AUC")
+})
+test
+```
+```{r}
+library(tidyverse)
+
+test %>%
+  ggplot(aes(x = rho, y = -log10(p.value))) +
+  geom_point()
+```
+

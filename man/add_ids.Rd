@@ -2,33 +2,30 @@
 % Please edit documentation in R/fct_add_ids.R
 \name{add_ids}
 \alias{add_ids}
-\title{Add column containing DepMap IDs}
+\title{Append new column containing DepMap IDs}
 \usage{
-add_ids(data, name_col)
+add_ids(data, cell)
 }
 \arguments{
-\item{data}{Tibble with one column that contains cell line names}
+\item{data}{A tibble.}
 
-\item{name_col}{Name of column containing cell line names}
+\item{cell}{Name of column containing cell line names}
 }
 \value{
-Tibble with new column appended named depmap_id
+Provided \code{data} tibble with a new \code{depmap_id}` column
 }
 \description{
-Matches cell lines from the given column to DepMap IDs using the
-  \code{\link[cellpanelr]{annotations}} data set. Matching is performed after
-  removing all non-alphanumeric characters from the provided names. \code{NA}
-  will be produced when the cell line cannot be found in the 
-  \code{\link[cellpanelr]{annotations}} data set or when there are non-unique
-   cell-ID pairs.
+Matches cell line names from the given column to unique DepMap IDs. Matching
+is performed using only alpha-numeric characters from the provided
+names. \code{NA} will be produced when the cell line cannot be found in the
+\code{\link{data_annotations}} data set or when there is
+non-unique cell <-> ID mapping.
 }
 \examples{
-data <- tibble::tribble(
-  ~"CellLine", ~"viability",
-  "MCF7", 0.96,
-  "293T", 0.58,
-  "K562", 0.70
+data <- tibble::tibble(
+  CellLine = c("MCF7", "293T", "K562"),
+  viability = c(0.96, 0.58, 0.70)
 )
 
-add_ids(data, "CellLine")
+add_ids(data, cell = "CellLine")
 }

@@ -1,8 +1,16 @@
-annotations <- vroom::vroom("~/tmp/sample_info.csv") %>%
-  dplyr::rename(
-    depmap_id = DepMap_ID,
-    cell_line = cell_line_name,
-    stripped_name = stripped_cell_line_name,
-  )
+# Last run on 04/14/2022
+# Release 22Q1
 
-usethis::use_data(annotations, overwrite = TRUE)
+library(tidyverse)
+library(vroom)
+
+# Read in from .csv file
+annotations <- vroom::vroom("../DepMap raw/22Q1/sample_info.csv")
+
+# Fix column names
+annotations <- annotations %>%
+  rename(depmap_id = DepMap_ID) %>%
+  select(-c(CCLE_Name, alias, COSMICID, RRID, WTSI_Master_Cell_ID, Sanger_Model_ID, depmap_public_comments, ))
+
+# Save as RDS in extdata
+saveRDS(annotations, "../cellpanelr data/22Q1/annotations.rds")

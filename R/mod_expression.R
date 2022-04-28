@@ -4,107 +4,172 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
-mod_expression_ui <- function(id){
+#' @importFrom shiny NS tagList
+mod_expression_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    br(),
     sidebarLayout(
       sidebarPanel(
-        verbatimTextOutput(ns("matched")),
-        actionButton(ns("go"), "Submit"),
-        h5("Note: this analysis may take several minutes"),
-        checkboxInput(ns("log"), "log-scale y-axis"),
-        downloadButton(ns("dl"), "Download tsv"),
+        h3("Correlate with gene expression"),
+        textOutput(ns("matched")),
+        p(strong("Note: "), "Analysis may take several minutes."),
+        shinyFeedback::loadingButton(
+          ns("go"),
+          "Go!",
+          class = "btn-primary btn-lg",
+          loadingLabel = "Calculating..."
+        ),
+        uiOutput(ns("side"))
       ),
       mainPanel(
-        DT::DTOutput(ns("table")) %>% shinycssloaders::withSpinner(),
-        plotOutput(ns("plot")) %>% shinycssloaders::withSpinner(),
-      ),
-    ),
+        uiOutput(ns("main"))
+      )
+    )
   )
 }
-    
+
 #' expression Server Functions
 #'
-#' @noRd 
-#' 
-#' @importFrom ggplot2 ggplot aes geom_point geom_smooth scale_y_log10 facet_wrap
-mod_expression_server <- function(id, rv){
+#' @noRd
+#'
+#' @import ggplot2
+mod_expression_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
-  moduleServer( id, function(input, output, session){
+  moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
+    ## Dynamic UI Elements
+    # Display correlations in side panel
+    output$side <- renderUI({
+      req(gene_cor())
+      tagList(
+        hr(),
+        h3("Select genes to plot on right"),
+        br(),
+        DT::DTOutput(ns("table")),
+        h3("Downloads"),
+        downloadButton(ns("dl_tsv"), "Download .tsv"),
+        downloadButton(ns("dl_rds"), "Download .rds")
+      )
+    })
+
+    # Display plot in main panel
+    output$main <- renderUI({
+      req(merged())
+      tagList(
+        fluidRow(
+          h3("Correlation plot of selected genes"),
+          h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
+        ),
+        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+        uiOutput(ns("hover_info"), style = "pointer-events: none")
+      )
+    })
+
     # Let user know how many cell lines can be analyzed
     output$matched <- renderText({
-      n_matched <- rv$data()$depmap_id %>%
-        intersect(.exp_ids) %>%
-        length()
+      req(rv$data)
+      paste0(n_exp_matched(rv$data()), " cell lines from your data with expression data")
+    })
 
-      paste0(n_matched, " cell lines with expression data")
-    })
-    
-    # Things that need to happen when Submit button is pushed
-    observe({
-      # Save nested data
-      rv$exp_nested <- reactive(cor_expression(rv$data(),
-                                              response = "response",
-                                              return_nested = TRUE))
-      # Save flat data
-      rv$exp <- reactive({
-        rv$exp_nested() %>%
-          dplyr::select(-.data$data)
-     })
-     
-    }) %>% bindEvent(input$go)
-    
-    # Display table
-    output$table <- DT::renderDT({
-      if (isTruthy(rv$exp)) {
-        DT::datatable(rv$exp(),
-                      options = list("scrollX" = TRUE, "scrollY" = TRUE))
-      } else {
-        NULL
+    # Do correlation when button is pushed
+    gene_cor <- reactive({
+      # Show error message if user hasn't uploaded data
+      if (is.null(rv$data)) {
+        no_upload_error()
+        shinyFeedback::resetLoadingButton("go")
+        return(NULL)
       }
+
+      result <- cor_expression(rv$data(), rv$response_col())
+      shinyFeedback::resetLoadingButton("go")
+      result
+    }) %>% bindEvent(input$go)
+
+    # Merged user data with expression data
+    merged <- reactive({
+      req(rv$data)
+      rv$data() %>%
+        dplyr::inner_join(
+          cellpanelr::data_expression(),
+          by = "depmap_id",
+          suffix = c("", ".depmap")
+        )
+    }) %>% bindEvent(input$go)
+
+    # Display results of correlation in table
+    output$table <- DT::renderDT({
+      req(gene_cor())
+      # Create data table
+      DT::datatable(
+        data = gene_cor(),
+        options = list("scrollX" = TRUE, "scrollY" = TRUE),
+        rownames = FALSE
+      ) %>%
+        # Round to 3 digits
+        DT::formatRound(columns = "rho", digits = 3)
     })
-    
-    # Manage data download
-    output$dl <- downloadHandler(
+
+    # Debounce selected genes to prevent plot lagging
+    selected_genes <- reactive({
+      req(gene_cor())
+      get_selected_genes(gene_cor(), input$table_rows_selected)
+    }) %>% debounce(750)
+
+
+    # Plot selected rows
+    output$plot <- renderPlot(
+      {
+        # Make plot
+        req(selected_genes())
+        exp_plot_selected(merged(), selected_genes(), rv$response_col())
+      },
+      # Adjust height to maintain aspect ratio
+      height = function() {
+        0.75 * session$clientData[["output_expression_1-plot_width"]]
+      },
+      res = 96
+    )
+
+    # Create tooltip for hovering over points in plot
+    output$hover_info <- renderUI({
+      req(input$plot_hover)
+      exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
+    })
+
+    # Manage tsv download
+    output$dl_tsv <- downloadHandler(
       filename = function() {
         paste0(Sys.Date(), "_expression.tsv")
       },
       content = function(file) {
-        vroom::vroom_write(rv$exp(), file)
+        vroom::vroom_write(gene_cor(), file)
       }
     )
-    
-    # Display selected row in separate table
-    output$plot <- renderPlot({
-      # Get selected data
-      selected_rows <- input$table_rows_selected
-      req(selected_rows)
-      selected <- rv$exp_nested() %>%
-        dplyr::filter(dplyr::row_number() %in% selected_rows)
-      
-      # Plot selected data
-      p <- selected %>%
-        tidyr::unnest(.data$data) %>%
-        ggplot(aes(x = .data$rna_expression, y = .data$response)) +
-        geom_point(alpha = 0.6) +
-        geom_smooth(method = "lm", se = FALSE) +
-        facet_wrap(~.data$gene_name)
-      
-      if (input$log) { p <- p + scale_y_log10() }
-      
-      p
-    }, res = 96)
-    
+
+    # .RData download
+    output$dl_rds <- downloadHandler(
+      filename = function() {
+        paste0(Sys.Date(), "_expression.rds")
+      },
+      content = function(file) {
+        merged() %>%
+          dplyr::left_join(
+            gene_cor(),
+            by = "gene"
+          ) %>%
+          tidyr::nest(data = -c("gene", "rho")) %>%
+          saveRDS(file)
+      }
+    )
   })
 }
-    
+
 ## To be copied in the UI
-# mod_expression_ui("expression_ui_1")
-    
+# mod_expression_ui("expression_1")
+
 ## To be copied in the server
-# mod_expression_server("expression_ui_1")
+# mod_expression_server("expression_1")

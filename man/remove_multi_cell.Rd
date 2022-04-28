@@ -4,12 +4,12 @@
 \alias{remove_multi_cell}
 \title{Remove IDs that map to more than one cell line}
 \usage{
-remove_multi_cell(data, name_col, id_col = "depmap_id")
+remove_multi_cell(data, cell_col, id_col = "depmap_id")
 }
 \arguments{
-\item{data}{Tibble}
+\item{data}{A tibble}
 
-\item{name_col}{Name of column containing cell line names}
+\item{cell_col}{Name of column containing cell line names}
 
 \item{id_col}{Name of column containing IDs}
 }
