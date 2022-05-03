@@ -1,6 +1,6 @@
 Package: cellpanelr
 Title: Analyze Data from Cell Line Panels
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person(given = c("Douglas", "R"),
            family = "Wassarman",
