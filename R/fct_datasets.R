@@ -92,30 +92,3 @@ data_annotations <- memoise::memoise(.annotations)
 #'
 #' @export
 data_mutations <- memoise::memoise(.mutations)
-
-
-
-.drug_sensitivity <- function() {
-  readRDS(url("https://www.dropbox.com/s/xz2s1rv3c04nz67/drug_sensitivity.rds?dl=1"))
-}
-
-
-#' Drug sensitivity data 
-#'
-#' Function that returns dose-response drug sensitivity data for 398 drugs in
-#' 975 cell lines. First call will download the data from DropBox and cache it
-#' in memory for subsequent calls.
-#'
-#' @format A tibble with 324,205 rows and 5 columns.
-#' \describe{
-#'   \item{drug}{Name of drug}
-#'   \item{depmap_id}{Unique identifier of each cell line. Formatted ACH-######}
-#'   \item{ic50}{Concentration of drug in µM inhibits growth by 50\%}
-#'   \item{auc}{Area under the dose response curve}
-#'   \item{log_ic50}{log10(ic50)}
-#' }
-#'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
-#'
-#' @export
-data_drug_sensitivity <- memoise::memoise(.drug_sensitivity)
