@@ -1,6 +1,8 @@
 ---
 title: "Nutlin-3 example code"
-output: github_document
+output:
+  pdf_document: default
+  github_document: default
 ---
 
 ```{r setup}
