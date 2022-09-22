@@ -63,6 +63,7 @@ mod_expression_server <- function(id, rv) {
         fluidRow(
           h3("Correlation plot of selected genes"),
           h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
+          checkboxInput(ns("log_scale"), "Plot response in log-scale"),
         ),
         plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
         uiOutput(ns("hover_info"), style = "pointer-events: none")
@@ -125,7 +126,7 @@ mod_expression_server <- function(id, rv) {
       {
         # Make plot
         req(selected_genes())
-        exp_plot_selected(merged(), selected_genes(), rv$response_col())
+        exp_plot_selected(merged(), selected_genes(), rv$response_col(), input$log_scale)
       },
       # Adjust height to maintain aspect ratio
       height = function() {

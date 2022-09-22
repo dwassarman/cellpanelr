@@ -83,14 +83,21 @@ get_selected_genes <- function(data, selected) {
 #' @param data A tibble, user data merged with expression data
 #' @param selected Character vector with selected gene names
 #' @param response Name of response column
+#' @param log_scale Plot response in log-scale on y axis.
 #'
 #' @return Scatter plot
 #' @import ggplot2
-exp_plot_selected <- function(data, selected, response) {
-  data %>%
+exp_plot_selected <- function(data, selected, response, log_scale = FALSE) {
+  p <- data %>%
     dplyr::filter(.data$gene %in% selected) %>%
     ggplot(aes(x = .data$rna_expression, y = .data[[response]])) +
     geom_point(alpha = 0.6) +
     geom_smooth(method = "lm", se = FALSE) +
     facet_wrap(~ .data$gene)
+  
+  if (log_scale) {
+    p <- p + ggplot2::scale_y_log10()
+  }
+  
+  p
 }
