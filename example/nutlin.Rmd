@@ -1,18 +1,7 @@
 ---
-title: "nutlin"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{nutlin}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Nutlin-3 example code"
+output: github_document
 ---
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
 ```{r setup}
 library(cellpanelr)
@@ -68,7 +57,7 @@ mut_result <-
   cor_mutations(
     response = "AUC",
     ids = "depmap_id"
-    )
+  )
 
 glimpse(mut_result)
 
@@ -120,4 +109,3 @@ mut_merged %>%
   ggtitle("Significant mutation biomarkers")
 
 ```
-

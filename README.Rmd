@@ -44,6 +44,7 @@ remotes::install_github("dwassarman/cellpanelr")
 - `add_ids()` matches cell line names with DepMap IDs for subsequent analysis
 - `cor_expression()` and `cor_mutations()` correlate cell line response data with gene expression and gene mutations
 - `data_annotations()`, `data_expression()`, and `data_mutations()` retrieve modified DepMap data sets for over 1,000 cell lines
+- `data_nutlin()` provides an example data set containing cell line sensitivity to the drug nutlin-3. See the example folder for a more detailed analysis of this data set.
 
 ```{r, eval = FALSE}
 library(cellpanelr)
