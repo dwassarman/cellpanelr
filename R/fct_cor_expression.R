@@ -62,7 +62,7 @@ cor_expression <- function(data, response, ids = "depmap_id", fdr = 0.05) {
     ) %>%
     dplyr::rename(rho = .data$estimate) %>%
     dplyr::select(.data$gene, .data$rho, .data$p.value) %>%
-    dplyr::arrange(dplyr::desc(.data$p.value)) %>%
+    dplyr::arrange(.data$p.value) %>%
     dplyr::mutate(significant = stats::p.adjust(.data$p.value, "BH") < fdr)
 }
 
