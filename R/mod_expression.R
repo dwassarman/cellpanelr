@@ -62,6 +62,7 @@ mod_expression_server <- function(id, rv) {
       tagList(
         fluidRow(
           h3("Correlation plot of selected genes"),
+          h5("Select genes to plot from table on left."),
           h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
           checkboxInput(ns("log_scale"), "Plot response in log-scale"),
           downloadButton(ns("dl_selected"), "Download plotted data"),

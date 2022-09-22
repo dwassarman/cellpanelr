@@ -91,7 +91,7 @@ mod_mutations_server <- function(id, rv) {
       req(gene_cor())
 
       df <- gene_cor() %>%
-        dplyr::select(.data$gene, .data$effect, .data$p.value) # %>%
+        dplyr::select(.data$gene, .data$effect, .data$adj.p) # %>%
       # # Change to scientific notation
       # dplyr::mutate(
       #   p.value = format(.data$p.value, scientific = TRUE, digits = 3)
@@ -103,7 +103,7 @@ mod_mutations_server <- function(id, rv) {
         rownames = FALSE,
       ) %>%
         # Round to 3 digits
-        DT::formatSignif(columns = c("effect", "p.value"), digits = 3)
+        DT::formatSignif(columns = c("effect", "adj.p"), digits = 3)
     })
 
     # Volcano plot
@@ -111,11 +111,13 @@ mod_mutations_server <- function(id, rv) {
       {
         req(gene_cor())
         gene_cor() %>%
-          dplyr::filter(!is.na(.data$p.value)) %>%
-          ggplot(aes(x = .data$effect, y = -log10(.data$p.value), color = .data$significant)) +
-          geom_point(alpha = 0.4) +
-          xlab("log2(mutant/wildtype)") +
-          ylab("-log10(p.value)")
+          dplyr::filter(!is.na(.data$adj.p)) %>%
+          ggplot(aes(x = .data$effect, y = -log10(.data$adj.p), color = .data$significant)) +
+          geom_point(alpha = 0.4, size = 4) +
+          xlab(bquote(log[2]( mutant / wildtype ))) +
+          ylab(bquote(log[10](adj.p))) +
+          geom_vline(xintercept = 0, linetype = "dashed") +
+          geom_hline(yintercept = -log10(0.05), linetype = "dashed")
       },
       height = function() {
         0.75 * session$clientData[["output_mutations_1-plot_width"]]
@@ -132,10 +134,10 @@ mod_mutations_server <- function(id, rv) {
       # Find point near hover
       df <- gene_cor() %>%
         dplyr::mutate(
-          p.value = -log10(.data$p.value)
+          adj.p = -log10(.data$adj.p)
         )
 
-      point <- nearPoints(df, xvar = "effect", yvar = "p.value", hover, maxpoints = 1)
+      point <- nearPoints(df, xvar = "effect", yvar = "adj.p", hover, maxpoints = 1)
 
 
       if (nrow(point) == 0) {

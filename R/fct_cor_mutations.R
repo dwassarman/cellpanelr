@@ -66,5 +66,6 @@ cor_mutations <- function(data, response, ids = "depmap_id", fdr = 0.05) {
     ) %>%
     dplyr::arrange(.data$p.value) %>%
     # Adjust p-values using Benjamini-Hochberg method (https://www2.rockefeller.edu/qbio_sc/resources/l04.pdf)
-    dplyr::mutate(significant = stats::p.adjust(.data$p.value, method = "BH") < fdr)
+    dplyr::mutate(adj.p = stats::p.adjust(.data$p.value, method = "BH")) %>%
+    dplyr::mutate(significant = adj.p <= fdr)
 }
