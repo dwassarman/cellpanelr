@@ -64,6 +64,7 @@ mod_expression_server <- function(id, rv) {
           h3("Correlation plot of selected genes"),
           h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
           checkboxInput(ns("log_scale"), "Plot response in log-scale"),
+          downloadButton(ns("dl_selected"), "Download plotted data"),
         ),
         plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
         uiOutput(ns("hover_info"), style = "pointer-events: none")
@@ -140,6 +141,21 @@ mod_expression_server <- function(id, rv) {
       req(input$plot_hover)
       exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
     })
+    
+    # Download data underlying plot
+    output$dl_selected <- downloadHandler(
+      filename = function() {
+        "selected_expression.tsv"
+      },
+      content = function(file) {
+        
+        data <- 
+          merged() %>%
+          dplyr::filter(.data[["gene"]] %in% selected_genes())
+        
+        vroom::vroom_write(data, file)
+      }
+    )
 
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
