@@ -24,7 +24,7 @@ DepMap cell line.
 }
 }
 \source{
-DepMap (Broad Institute): \url{https://depmap.org/portal/}
+DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 }
 \usage{
 data_annotations()

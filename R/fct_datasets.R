@@ -22,7 +22,7 @@
 #'   where TPM is transcripts per million.}
 #' }
 #'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 #'
 #' @export
 data_expression <- memoise::memoise(.expression)
@@ -59,7 +59,7 @@ data_expression <- memoise::memoise(.expression)
 #'   \item{culture_type}{Cell line growth conditions}
 #' }
 #'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 #'
 #' @export
 data_annotations <- memoise::memoise(.annotations)
@@ -88,7 +88,7 @@ data_annotations <- memoise::memoise(.annotations)
 #'   \item{mutant}{Logical indicating whether  gene is mutated in given cell line}
 #' }
 #'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 #'
 #' @export
 data_mutations <- memoise::memoise(.mutations)

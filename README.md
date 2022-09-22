@@ -16,7 +16,8 @@ everyone.
 
 cellpanelr uses data sets adapted from [DepMap (Broad
 Institute)](https://depmap.org/portal/) under the [CC BY
-4.0](https://creativecommons.org/licenses/by/4.0/) license.
+4.0](https://creativecommons.org/licenses/by/4.0/) license. The current
+version of cellpanelr uses DepMap release 22Q1.
 
 ## Web application
 
