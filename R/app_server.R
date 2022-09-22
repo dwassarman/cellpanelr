@@ -30,4 +30,7 @@ app_server <- function(input, output, session) {
 
   # Help button dialog within Analyze tab
   observe(dataset_help_message()) %>% bindEvent(input$dataset_help)
+  
+  # Set ggplot theme
+  ggplot2::theme_set(ggplot2::theme_bw())
 }

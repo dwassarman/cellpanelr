@@ -85,7 +85,7 @@ golem_add_external_resources <- function() {
     # Enable packages with extra UI features
     shinyFeedback::useShinyFeedback(),
     shinyjs::useShinyjs(),
-
+    
     # Pad page for fixed-top navbar
     tags$style(type = "text/css", "body {padding-top: 70px;}"),
   )
