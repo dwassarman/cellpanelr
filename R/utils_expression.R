@@ -41,6 +41,22 @@ exp_tooltip <- function(hover, data, cell, response) {
   if (nrow(point) == 0) {
     return(NULL)
   }
+  
+  # output <- paste0(
+  #   point[[cell]], "\n",
+  #   "(", point[["rna_expression"]], ", ", point[[response]], ")" 
+  # )
+  # 
+  # tagList(
+  #   p(point[[cell]]),
+  #   p(
+  #     paste0("(", point[["rna_expression"]]),
+  #     ",",
+  #     paste0(point[[response]], ")")
+  #   ),
+  # )
+  # 
+  # renderText(output)
 
   # Find location on the screen for the tooltip
   # (Bug this looks off when there are headers above the)
@@ -93,7 +109,8 @@ exp_plot_selected <- function(data, selected, response, log_scale = FALSE) {
     ggplot(aes(x = .data$rna_expression, y = .data[[response]])) +
     geom_point(alpha = 0.6) +
     geom_smooth(method = "lm", se = FALSE) +
-    facet_wrap(~ .data$gene)
+    facet_wrap(~ .data$gene, scales = "free") +
+    xlab("RNA expression (log2[TPM + 1])")
   
   if (log_scale) {
     p <- p + ggplot2::scale_y_log10()

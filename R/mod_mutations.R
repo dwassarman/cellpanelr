@@ -52,13 +52,21 @@ mod_mutations_server <- function(id, rv) {
     output$main <- renderUI({
       req(gene_cor())
       tagList(
-        h3("Volcano plot: all mutations"),
-        h5("Hover mouse to identify gene. Right-click to save image of plot."),
-        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-        uiOutput(ns("hover_info"), style = "pointer-events: none"),
-        # hr(),
-        # h3("Individual genes: mutant vs. wild-type"),
-        # plotOutput(ns("plot_2"), height = "100%") %>% shinycssloaders::withSpinner()
+        col_6(
+          h3("Volcano plot: all mutations"),
+          h5(),
+          h5("Hover mouse to identify gene. Right-click to save image of plot."),
+          plotOutput(ns("vol_plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+          uiOutput(ns("hover_info"), style = "pointer-events: none"),
+        ),
+        col_6(
+          h3("Selected genes"),
+          h5("Select genes from table on left."),
+          h5("Hover mouse to identify cell line. Right-click to save image of plot."),
+          plotOutput(ns("selected_plot"), hover = ns("selected_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+          downloadButton(ns("dl_selected"), "Download plotted data"),
+          uiOutput(ns("selected_hover_info"), style = "pointer-events: none"),
+        ),
       )
     })
 
@@ -85,6 +93,17 @@ mod_mutations_server <- function(id, rv) {
       shinyFeedback::resetLoadingButton("go")
       result
     }) %>% bindEvent(input$go)
+    
+    # Merged user data with mutations data
+    merged <- reactive({
+      req(rv$data)
+      rv$data() %>%
+        dplyr::inner_join(
+          cellpanelr::data_mutations(),
+          by = "depmap_id",
+          suffix = c("", ".depmap")
+        )
+    }) %>% bindEvent(input$go)
 
     # Table in side bar
     output$table <- DT::renderDataTable({
@@ -105,9 +124,15 @@ mod_mutations_server <- function(id, rv) {
         # Round to 3 digits
         DT::formatSignif(columns = c("effect", "adj.p"), digits = 3)
     })
+    
+    # Debounce selected genes to prevent plot lagging
+    selected_genes <- reactive({
+      req(gene_cor())
+      get_selected_genes(gene_cor(), input$table_rows_selected)
+    }) %>% debounce(750)
 
     # Volcano plot
-    output$plot <- renderPlot(
+    output$vol_plot <- renderPlot(
       {
         req(gene_cor())
         gene_cor() %>%
@@ -120,7 +145,29 @@ mod_mutations_server <- function(id, rv) {
           geom_hline(yintercept = -log10(0.05), linetype = "dashed")
       },
       height = function() {
-        0.75 * session$clientData[["output_mutations_1-plot_width"]]
+        0.75 * session$clientData[["output_mutations_1-vol_plot_width"]]
+      },
+      res = 96
+    )
+    
+    output$selected_plot <- renderPlot(
+      {
+        # Make plot
+        req(selected_genes())
+        merged() %>%
+          dplyr::filter(.data$gene %in% selected_genes()) %>%
+          dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
+          dplyr::mutate(genotype = factor(genotype, levels = c("Wild-type", "Mutant"))) %>%
+          ggplot2::ggplot(ggplot2::aes(.data$genotype, .data[[rv$response_col()]])) +
+          ggplot2::geom_boxplot(outlier.shape = NA) +
+          ggplot2::geom_jitter(ggplot2::aes(color = .data$genotype), width = 0.2, alpha = 0.4) +
+          ggplot2::facet_wrap(~ .data$gene) +
+          ggplot2::scale_color_viridis_d(option = "C", end = 0.8) +
+          ggplot2::theme(legend.position = "none") +
+          ggplot2::xlab("Genotype")
+      },
+      height = function() {
+        0.75 * session$clientData[["output_mutations_1-selected_plot_width"]]
       },
       res = 96
     )
@@ -161,6 +208,93 @@ mod_mutations_server <- function(id, rv) {
         strong(point$gene)
       )
     })
+    
+    # Create tooltip for hovering over points in plot
+    # See here for reference: https://gitlab.com/-/snippets/16220
+    output$selected_hover_info <- renderUI({
+      req(input$selected_hover)
+      print("In selected_hover_info")
+      hover <- input$selected_hover
+      print("hover:")
+      print(hover)
+      
+      # Filter data to the correct facet
+      filtered <- merged() %>%
+        dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
+        dplyr::mutate(genotype = factor(genotype, levels = c("Wild-type", "Mutant"))) %>%
+        dplyr::filter(.data$gene == hover$panelvar1)
+      
+      # Find the nearest point
+      point <- nearPoints(
+        filtered,
+        hover,
+        xvar = "genotype",
+        yvar = rv$response_col(),
+        maxpoints = 1
+      )
+      print("point:")
+      print(point)
+      
+      # Don't show tooltip if there are no nearby points
+      if (nrow(point) == 0) {
+        return(NULL)
+      }
+      
+      # Find location on the screen for the tooltip
+      # (Bug this looks off when there are headers above the)
+      left_px <- hover$coords_css$x
+      top_px <- hover$coords_css$y
+      
+      # create style property for tooltip
+      # background color is set so tooltip is a bit transparent
+      # z-index is set so we are sure are tooltip will be on top
+      style <- paste0(
+        "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
+        "left:", left_px, "px; top:", top_px, "px;"
+      )
+      
+      print("style:")
+      print(style)
+      
+      print("cell:")
+      print(point[[rv$cell_col()]])
+      
+      # actual tooltip created as wellPanel
+      wellPanel(
+        style = style,
+        strong(point[[rv$cell_col()]])
+      )
+      
+      # exp_tooltip(input$selected_hover, merged(), rv$cell_col(), rv$response_col())
+      # hover <- input$selected_hover
+      # 
+      # # Find point near hover
+      # df <- merged()
+      # 
+      # point <- nearPoints(df, xvar = "mutant", yvar = rv$response_col(), hover, maxpoints = 1)
+      # 
+      # 
+      # if (nrow(point) == 0) {
+      #   return(NULL)
+      # }
+      # 
+      # left_px <- hover$coords_css$x
+      # top_px <- hover$coords_css$y
+      # 
+      # # create style property for tooltip
+      # # background color is set so tooltip is a bit transparent
+      # # z-index is set so we are sure are tooltip will be on top
+      # style <- paste0(
+      #   "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
+      #   "left:", left_px, "px; top:", top_px, "px;"
+      # )
+      # 
+      # # actual tooltip created as wellPanel
+      # wellPanel(
+      #   style = style,
+      #   "Test",
+      #   # strong(point[[rv$cell_col()]])
+    })
 
     # output$plot_2 <- renderPlot({
     #   req(gene_cor())
@@ -179,7 +313,21 @@ mod_mutations_server <- function(id, rv) {
     # },
     # res = 96
     # )
-
+  
+    # Download data underlying plot
+    output$dl_selected <- downloadHandler(
+      filename = function() {
+        "selected_mutations.tsv"
+      },
+      content = function(file) {
+        
+        data <- 
+          merged() %>%
+          dplyr::filter(.data$gene %in% selected_genes())
+        
+        vroom::vroom_write(data, file)
+      }
+    )
 
     # Manage downloads
     output$dl_tsv <- downloadHandler(
@@ -193,7 +341,7 @@ mod_mutations_server <- function(id, rv) {
 
     output$dl_rds <- downloadHandler(
       filename = function() {
-        paste0(Sys.Date(), "_expression.rds")
+        paste0("mutation_correlations.rds")
       },
       content = function(file) {
         rv$data() %>%
