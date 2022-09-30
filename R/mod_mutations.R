@@ -34,6 +34,8 @@ mod_mutations_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
+    ## Dynamic UI elements
 
     # UI outputs
     output$side <- renderUI({
@@ -43,29 +45,27 @@ mod_mutations_server <- function(id, rv) {
         # h3("Select genes to plot individually"),
         h3("Results"),
         DT::DTOutput(ns("table")),
-        h3("Downloads"),
+        br(),
         downloadButton(ns("dl_tsv"), "Download .tsv"),
-        downloadButton(ns("dl_rds"), "Download .rds")
+        # downloadButton(ns("dl_rds"), "Download .rds")
       )
     })
 
     output$main <- renderUI({
-      req(gene_cor())
+      req(merged())
       tagList(
         col_6(
           h3("Volcano plot: all mutations"),
-          h5(),
           h5("Hover mouse to identify gene. Right-click to save image of plot."),
-          plotOutput(ns("vol_plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-          uiOutput(ns("hover_info"), style = "pointer-events: none"),
+          plotOutput(ns("vol_plot"), hover = ns("vol_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+          uiOutput(ns("vol_tip"), style = "pointer-events: none"),
         ),
         col_6(
-          h3("Selected genes"),
-          h5("Select genes from table on left."),
+          h3("Selected genes from table"),
           h5("Hover mouse to identify cell line. Right-click to save image of plot."),
           plotOutput(ns("selected_plot"), hover = ns("selected_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
           downloadButton(ns("dl_selected"), "Download plotted data"),
-          uiOutput(ns("selected_hover_info"), style = "pointer-events: none"),
+          uiOutput(ns("selected_tip"), style = "pointer-events: none"),
         ),
       )
     })
@@ -73,11 +73,7 @@ mod_mutations_server <- function(id, rv) {
     # Let user know how many cell lines can be analyzed
     output$matched <- renderText({
       req(rv$data)
-      n_matched <- rv$data()$depmap_id %>%
-        intersect(.mut_ids) %>%
-        length()
-
-      paste0(n_matched, " cell lines from your data with mutation data")
+      paste0(n_mut_matched(rv$data()), " cell lines from your data with mutation data")
     })
 
     # Do correlation when button is pushed
@@ -109,21 +105,17 @@ mod_mutations_server <- function(id, rv) {
     output$table <- DT::renderDataTable({
       req(gene_cor())
 
-      df <- gene_cor() %>%
-        dplyr::select(.data$gene, .data$effect, .data$adj.p) # %>%
-      # # Change to scientific notation
-      # dplyr::mutate(
-      #   p.value = format(.data$p.value, scientific = TRUE, digits = 3)
-      # )
-
-      DT::datatable(
-        data = df,
-        options = list("scrollX" = TRUE, "scrollY" = TRUE),
-        rownames = FALSE,
-      ) %>%
+      gene_cor() %>%
+        dplyr::select(.data$gene, .data$effect, .data$adj.p) %>%
+        DT::datatable(
+          options = list("scrollX" = TRUE, "scrollY" = TRUE),
+          rownames = FALSE,
+        ) %>%
         # Round to 3 digits
         DT::formatSignif(columns = c("effect", "adj.p"), digits = 3)
     })
+    
+    ## Select individual genes
     
     # Debounce selected genes to prevent plot lagging
     selected_genes <- reactive({
@@ -135,14 +127,15 @@ mod_mutations_server <- function(id, rv) {
     output$vol_plot <- renderPlot(
       {
         req(gene_cor())
-        gene_cor() %>%
-          dplyr::filter(!is.na(.data$adj.p)) %>%
-          ggplot(aes(x = .data$effect, y = -log10(.data$adj.p), color = .data$significant)) +
-          geom_point(alpha = 0.4, size = 4) +
-          xlab(bquote(log[2]( mutant / wildtype ))) +
-          ylab(bquote(log[10](adj.p))) +
-          geom_vline(xintercept = 0, linetype = "dashed") +
-          geom_hline(yintercept = -log10(0.05), linetype = "dashed")
+        volcano_plot(gene_cor())
+        # gene_cor() %>%
+        #   dplyr::filter(!is.na(.data$adj.p)) %>%
+        #   ggplot(aes(x = .data$effect, y = -log10(.data$adj.p), color = .data$significant)) +
+        #   geom_point(alpha = 0.4, size = 4) +
+        #   xlab(bquote(log[2]( mutant / wildtype ))) +
+        #   ylab(bquote(log[10](adj.p))) +
+        #   geom_vline(xintercept = 0, linetype = "dashed") +
+        #   geom_hline(yintercept = -log10(0.05), linetype = "dashed")
       },
       height = function() {
         0.75 * session$clientData[["output_mutations_1-vol_plot_width"]]
@@ -154,17 +147,18 @@ mod_mutations_server <- function(id, rv) {
       {
         # Make plot
         req(selected_genes())
-        merged() %>%
-          dplyr::filter(.data$gene %in% selected_genes()) %>%
-          dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
-          dplyr::mutate(genotype = factor(genotype, levels = c("Wild-type", "Mutant"))) %>%
-          ggplot2::ggplot(ggplot2::aes(.data$genotype, .data[[rv$response_col()]])) +
-          ggplot2::geom_boxplot(outlier.shape = NA) +
-          ggplot2::geom_jitter(ggplot2::aes(color = .data$genotype), width = 0.2, alpha = 0.4) +
-          ggplot2::facet_wrap(~ .data$gene) +
-          ggplot2::scale_color_viridis_d(option = "C", end = 0.8) +
-          ggplot2::theme(legend.position = "none") +
-          ggplot2::xlab("Genotype")
+        mut_plot_selected(merged(), selected_genes(), rv$response_col())
+        # merged() %>%
+        #   dplyr::filter(.data$gene %in% selected_genes()) %>%
+        #   dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
+        #   dplyr::mutate(genotype = factor(genotype, levels = c("Wild-type", "Mutant"))) %>%
+        #   ggplot2::ggplot(ggplot2::aes(.data$genotype, .data[[rv$response_col()]])) +
+        #   ggplot2::geom_boxplot(outlier.shape = NA) +
+        #   ggplot2::geom_jitter(ggplot2::aes(color = .data$genotype), width = 0.2, alpha = 0.4) +
+        #   ggplot2::facet_wrap(~ .data$gene) +
+        #   ggplot2::scale_color_viridis_d(option = "C", end = 0.8) +
+        #   ggplot2::theme(legend.position = "none") +
+        #   ggplot2::xlab("Genotype")
       },
       height = function() {
         0.75 * session$clientData[["output_mutations_1-selected_plot_width"]]

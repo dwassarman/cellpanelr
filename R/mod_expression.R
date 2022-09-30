@@ -67,7 +67,7 @@ mod_expression_server <- function(id, rv) {
         sidebarLayout(
           mainPanel(
             plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-            uiOutput(ns("hover_panel")),
+            uiOutput(ns("hover_tip"), style = "pointer-events: none"),
           ),
           sidebarPanel(
             position = "right",
@@ -148,7 +148,7 @@ mod_expression_server <- function(id, rv) {
     )
 
     # Create tooltip for hovering over points in plot
-    output$hover_panel <- renderUI({
+    output$hover_tip <- renderUI({
       req(input$plot_hover)
       exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
     })
