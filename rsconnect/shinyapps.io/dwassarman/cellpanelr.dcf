@@ -5,9 +5,9 @@ account: dwassarman
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5512079
-bundleId: 5848781
+bundleId: 6365554
 url: https://dwassarman.shinyapps.io/cellpanelr/
-when: 1651185034.36947
-lastSyncTime: 1651185034.36949
+when: 1664837478.59718
+lastSyncTime: 1664837478.59719
 asMultiple: FALSE
 asStatic: FALSE
