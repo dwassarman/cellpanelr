@@ -1,20 +1,20 @@
 # cor_expression() gives consistent result
 
     Code
-      cor_expression(data, response = "auc")
+      cor_expression(data, response = "AUC")
     Output
       # A tibble: 19,177 x 4
-         gene      rho       p.value significant
-         <chr>   <dbl>         <dbl> <lgl>      
-       1 CLCF1  -0.423 0.00000000167 TRUE       
-       2 PLAU   -0.413 0.00000000413 TRUE       
-       3 IL6    -0.402 0.0000000119  TRUE       
-       4 RRAS2  -0.392 0.0000000298  TRUE       
-       5 GLIPR1 -0.381 0.0000000769  TRUE       
-       6 BMP1   -0.379 0.0000000909  TRUE       
-       7 A4GALT -0.376 0.000000111   TRUE       
-       8 NNMT   -0.375 0.000000123   TRUE       
-       9 HDDC3   0.369 0.000000197   TRUE       
-      10 TKFC    0.369 0.000000200   TRUE       
+         gene         rho  p.value significant
+         <chr>      <dbl>    <dbl> <lgl>      
+       1 EDA2R     -0.421 1.32e-30 TRUE       
+       2 RPS27L    -0.393 1.60e-26 TRUE       
+       3 MDM2      -0.367 3.66e-23 TRUE       
+       4 AEN       -0.321 8.74e-18 TRUE       
+       5 ZMAT3     -0.321 1.02e-17 TRUE       
+       6 RPL22L1   -0.317 2.59e-17 TRUE       
+       7 DDB2      -0.311 9.18e-17 TRUE       
+       8 TNFRSF10B -0.310 1.34e-16 TRUE       
+       9 BAX       -0.309 1.65e-16 TRUE       
+      10 CCNG1     -0.300 1.17e-15 TRUE       
       # ... with 19,167 more rows
 

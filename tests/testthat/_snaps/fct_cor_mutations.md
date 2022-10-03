@@ -1,20 +1,20 @@
 # cor_mutations() gives consistent result
 
     Code
-      cor_mutations(data, response = "auc")
+      cor_mutations(data, response = "AUC")
     Output
       # A tibble: 19,537 x 5
-         gene    effect  p.value adj.p significant
-         <chr>    <dbl>    <dbl> <dbl> <lgl>      
-       1 RIMS1    0.234 0.000357 0.988 FALSE      
-       2 TTC29    0.287 0.000474 0.988 FALSE      
-       3 ZNF764  -0.552 0.000514 0.988 FALSE      
-       4 NUFIP1   0.297 0.000975 0.988 FALSE      
-       5 NF2     -0.322 0.00102  0.988 FALSE      
-       6 NLRP12   0.178 0.00108  0.988 FALSE      
-       7 HLTF     0.294 0.00110  0.988 FALSE      
-       8 FRG2B    0.299 0.00169  0.988 FALSE      
-       9 PLEKHA1 -0.797 0.00221  0.988 FALSE      
-      10 C8orf37  0.298 0.00223  0.988 FALSE      
+         gene    effect  p.value    adj.p significant
+         <chr>    <dbl>    <dbl>    <dbl> <lgl>      
+       1 TP53    0.162  1.23e-65 2.39e-61 TRUE       
+       2 RB1     0.0552 1.29e- 8 1.26e- 4 TRUE       
+       3 EHD1   -0.0871 6.43e- 6 4.17e- 2 TRUE       
+       4 GIGYF1 -0.0530 1.27e- 5 6.17e- 2 FALSE      
+       5 PLXNB1 -0.0321 3.02e- 4 6.17e- 1 FALSE      
+       6 RPL22  -0.0456 3.10e- 4 6.17e- 1 FALSE      
+       7 MT-CYB  0.0345 3.67e- 4 6.17e- 1 FALSE      
+       8 ASB11   0.0511 4.09e- 4 6.17e- 1 FALSE      
+       9 FAM83F -0.0527 4.30e- 4 6.17e- 1 FALSE      
+      10 PYCRL  -0.0496 4.72e- 4 6.17e- 1 FALSE      
       # ... with 19,527 more rows
 

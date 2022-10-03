@@ -111,7 +111,7 @@ data_mutations <- memoise::memoise(.mutations)
 #'   \item{AUC}{Area under the dose response curve}
 #' }
 #'
-#' @source The Genomics of Drug Sensitivity in Cancer Project: \url{httpls://cancerrxgene.org}
+#' @source The Genomics of Drug Sensitivity in Cancer Project: \url{https://cancerrxgene.org}
 #'
 #' @export
 data_nutlin <- function() {

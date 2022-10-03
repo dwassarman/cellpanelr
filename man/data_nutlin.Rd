@@ -15,7 +15,7 @@ A tibble with 968 rows and 6 columns.
 }
 }
 \source{
-The Genomics of Drug Sensitivity in Cancer Project: \url{httpls://cancerrxgene.org}
+The Genomics of Drug Sensitivity in Cancer Project: \url{https://cancerrxgene.org}
 }
 \usage{
 data_nutlin()
