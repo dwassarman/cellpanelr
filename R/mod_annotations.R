@@ -29,7 +29,10 @@ mod_annotations_ui <- function(id) {
         downloadButton(ns("dl"), "Download .tsv")
       ),
       mainPanel(
-        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner()
+        h4("Right-click to save image of plot."),
+        col_12(
+          plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner()
+        )
       )
     )
   )
@@ -75,7 +78,7 @@ mod_annotations_server <- function(id, rv) {
     # Download .tsv file with annotations
     output$dl <- downloadHandler(
       filename = function() {
-        paste0(Sys.Date(), "_annotated.tsv")
+        "annotated_data.tsv"
       },
       content = function(file) {
         vroom::vroom_write(annotated(), file)

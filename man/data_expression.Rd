@@ -14,7 +14,7 @@ A tibble with 26,713561 rows and 3 columns.
 }
 }
 \source{
-DepMap (Broad Institute): \url{https://depmap.org/portal/}
+DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 }
 \usage{
 data_expression()

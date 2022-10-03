@@ -1,0 +1,113 @@
+---
+title: "Nutlin-3 example code"
+output:
+  pdf_document: default
+  github_document: default
+---
+
+```{r setup}
+library(cellpanelr)
+library(tidyverse) # convenient functions for data joining and manipulation
+```
+
+```{r load data}
+# Get the nutlin-3 sensitivity data
+nutlin <- data_nutlin()
+
+# Take a look at this tibble
+glimpse(nutlin)
+```
+
+```{r prep data}
+# Clean data for next steps
+nutlin_clean <-
+  nutlin %>%
+  # Add DepMap IDs
+  add_ids(cell = "Cell line") %>%
+  # Remove cell lines that weren't matched to an ID
+  filter(!is.na(depmap_id)) %>%
+  # Remove cell lines without AUC values
+  filter(!is.na(AUC))
+
+glimpse(nutlin_clean)
+```
+
+```{r expression}
+# Correlate gene expression with nutlin-3 AUC
+exp_result <- 
+  nutlin_clean %>%
+  cor_expression(
+    response = "AUC",
+    ids = "depmap_id"
+    )
+
+glimpse(exp_result)
+
+# Merge expression correlations with input nutlin-3 data
+exp_merged <- 
+  nutlin_clean %>%
+  inner_join(data_expression(), by = "depmap_id") %>%
+  left_join(exp_result, by = "gene")
+
+glimpse(exp_merged)
+```
+
+```{r mutation}
+# Correlate gene expression with nutlin-3 AUC
+mut_result <- 
+  nutlin_clean %>%
+  cor_mutations(
+    response = "AUC",
+    ids = "depmap_id"
+  )
+
+glimpse(mut_result)
+
+# Merge expression correlations with input nutlin-3 data
+mut_merged <- 
+  nutlin_clean %>%
+  inner_join(data_mutations(), by = "depmap_id") %>%
+  left_join(mut_result, by = "gene")
+
+glimpse(mut_merged)
+```
+
+```{r plotting}
+# Plot top gene expression biomarkers
+exp_merged %>%
+  # Filter for 12 genes with strongest negative correlation
+  filter(dense_rank(rho) <= 12) %>%
+  # Convert gene to a factor so that faceted plot is sorted by rho
+  mutate(gene = fct_reorder(gene, rho)) %>%
+  # Create plot
+  ggplot(aes(x = rna_expression, y = AUC)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE) +
+  xlab("RNA expression (log2[TPM + 1])") +
+  ylab("Area under curve") +
+  ggtitle("Top sensitizing genes") +
+  facet_wrap(~gene, scales = "free") +
+  theme_bw()
+
+# Plot top mutation biomarkers
+mut_merged %>%
+  # Plot only significant mutations
+  filter(significant) %>%
+  # Convert gene to a factor so that faceted plot is sorted by p.value
+  mutate(gene = fct_reorder(gene, p.value)) %>%
+  # Change naming of mutant to be more explicit
+  mutate(mutant = ifelse(mutant, "Mutant", "Wild-type")) %>%
+  mutate(mutant = factor(mutant, levels = c("Wild-type", "Mutant"))) %>%
+  # Create plot
+  ggplot(aes(x = mutant, y = AUC)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = mutant), width = 0.2, alpha = 0.4) +
+  facet_wrap(~gene) +
+  scale_color_viridis_d(option = "C", end = 0.8) +
+  theme_bw() +
+  theme(legend.position = "none") +
+  xlab("Genotype") +
+  ylab("Area under curve") +
+  ggtitle("Significant mutation biomarkers")
+
+```

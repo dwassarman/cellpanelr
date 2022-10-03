@@ -7,20 +7,17 @@ library(tidyverse)
 .mut_ids <- cellpanelr::data_mutations()$depmap_id %>% unique()
 # .exp_short <- head(expression, n = 20000)
 
-# # UNCOMMENT TO USE SAMPLE DATA
-# # example data for Shiny app
-# # Single value
-# .dasatinib_single <- vroom::vroom("../sample_data/dasatinib.tsv") %>%
-#   # remove cell lines with no data
-#   dplyr::filter(!is.na(auc)) %>%
-#   dplyr::rename(area_under_curve = auc) %>%
-#   dplyr::select(cell_line, log_ic50, area_under_curve)
+# Example data
+.nutlin <-
+  vroom::vroom("../sample_data/nutlin_data.tsv") %>%
+  # remove cell lines with no data
+  dplyr::filter(!is.na(AUC))
 
 usethis::use_data(
   .exp_ids,
-  .mut_ids,
-  # .dasatinib_single,
   # .exp_short,
+  .mut_ids,
+  .nutlin,
   internal = TRUE,
   overwrite = TRUE
 )

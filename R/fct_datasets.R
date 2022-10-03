@@ -22,7 +22,9 @@
 #'   where TPM is transcripts per million.}
 #' }
 #'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
+#'
+#' @importFrom memoise memoise
 #'
 #' @export
 data_expression <- memoise::memoise(.expression)
@@ -59,7 +61,7 @@ data_expression <- memoise::memoise(.expression)
 #'   \item{culture_type}{Cell line growth conditions}
 #' }
 #'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 #'
 #' @export
 data_annotations <- memoise::memoise(.annotations)
@@ -88,7 +90,30 @@ data_annotations <- memoise::memoise(.annotations)
 #'   \item{mutant}{Logical indicating whether  gene is mutated in given cell line}
 #' }
 #'
-#' @source DepMap (Broad Institute): \url{https://depmap.org/portal/}
+#' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
 #'
 #' @export
 data_mutations <- memoise::memoise(.mutations)
+
+
+#' Nutlin-3 data set
+#'
+#' Example data set containing  sensitivity of 968 cell lines to the drug nutlin-3. Nutlin-3 is an MDM2 inhibitor,
+#' which leads to the reactivation of p53 and cell cycle arrest.
+#'
+#' @format A tibble with 968 rows and 6 columns.
+#' \describe{
+#'   \item{Cell line}{Common name of cell line}
+#'   \item{TCGA classification}{Cancer type, annotated by The Cancer Genome Atlas}
+#'   \item{Tissue}{Tissue of origin}
+#'   \item{Tissue sub-type}{More detailed description of tumor type}
+#'   \item{IC50}{Concentration of nutlin-3 (µM) required to inhibit cell growth by 50\%}
+#'   \item{AUC}{Area under the dose response curve}
+#' }
+#'
+#' @source The Genomics of Drug Sensitivity in Cancer Project: \url{https://cancerrxgene.org}
+#'
+#' @export
+data_nutlin <- function() {
+  .nutlin
+}

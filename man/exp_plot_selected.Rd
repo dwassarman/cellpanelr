@@ -4,7 +4,7 @@
 \alias{exp_plot_selected}
 \title{Generate scatterplot expression vs. response, faceted by selected gene}
 \usage{
-exp_plot_selected(data, selected, response)
+exp_plot_selected(data, selected, response, log_scale = FALSE)
 }
 \arguments{
 \item{data}{A tibble, user data merged with expression data}
@@ -12,6 +12,8 @@ exp_plot_selected(data, selected, response)
 \item{selected}{Character vector with selected gene names}
 
 \item{response}{Name of response column}
+
+\item{log_scale}{Plot response in log-scale on y axis.}
 }
 \value{
 Scatter plot

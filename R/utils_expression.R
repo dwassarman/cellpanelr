@@ -42,6 +42,22 @@ exp_tooltip <- function(hover, data, cell, response) {
     return(NULL)
   }
 
+  # output <- paste0(
+  #   point[[cell]], "\n",
+  #   "(", point[["rna_expression"]], ", ", point[[response]], ")"
+  # )
+  #
+  # tagList(
+  #   p(point[[cell]]),
+  #   p(
+  #     paste0("(", point[["rna_expression"]]),
+  #     ",",
+  #     paste0(point[[response]], ")")
+  #   ),
+  # )
+  #
+  # renderText(output)
+
   # Find location on the screen for the tooltip
   # (Bug this looks off when there are headers above the)
   left_px <- hover$coords_css$x
@@ -83,14 +99,22 @@ get_selected_genes <- function(data, selected) {
 #' @param data A tibble, user data merged with expression data
 #' @param selected Character vector with selected gene names
 #' @param response Name of response column
+#' @param log_scale Plot response in log-scale on y axis.
 #'
 #' @return Scatter plot
 #' @import ggplot2
-exp_plot_selected <- function(data, selected, response) {
-  data %>%
+exp_plot_selected <- function(data, selected, response, log_scale = FALSE) {
+  p <- data %>%
     dplyr::filter(.data$gene %in% selected) %>%
     ggplot(aes(x = .data$rna_expression, y = .data[[response]])) +
     geom_point(alpha = 0.6) +
     geom_smooth(method = "lm", se = FALSE) +
-    facet_wrap(~ .data$gene)
+    facet_wrap(~ .data$gene, scales = "free") +
+    xlab("RNA expression (log2[TPM + 1])")
+
+  if (log_scale) {
+    p <- p + ggplot2::scale_y_log10()
+  }
+
+  p
 }

@@ -42,17 +42,18 @@ mod_expression_server <- function(id, rv) {
     ns <- session$ns
 
     ## Dynamic UI Elements
+
     # Display correlations in side panel
     output$side <- renderUI({
       req(gene_cor())
       tagList(
         hr(),
-        h3("Select genes to plot on right"),
+        h3("Results: select genes to plot"),
         br(),
         DT::DTOutput(ns("table")),
-        h3("Downloads"),
-        downloadButton(ns("dl_tsv"), "Download .tsv"),
-        downloadButton(ns("dl_rds"), "Download .rds")
+        br(),
+        downloadButton(ns("dl_tsv"), "Download table (.tsv)"),
+        # downloadButton(ns("dl_rds"), "Download .rds")
       )
     })
 
@@ -60,12 +61,21 @@ mod_expression_server <- function(id, rv) {
     output$main <- renderUI({
       req(merged())
       tagList(
-        fluidRow(
-          h3("Correlation plot of selected genes"),
-          h5("Hover mouse to identify cell lines. Right-click to save image of plot."),
+        h3("Plot of selected genes"),
+        # h5("Select genes to plot from table on left."),
+        h5("Hover cursor to identify cell lines. Right-click to save image of plot."),
+        sidebarLayout(
+          mainPanel(
+            plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+            uiOutput(ns("hover_tip"), style = "pointer-events: none"),
+          ),
+          sidebarPanel(
+            position = "right",
+            h4("Plot options"),
+            checkboxInput(ns("log_scale"), "Plot response in log-scale"),
+            downloadButton(ns("dl_selected"), "Download plot data (.tsv)"),
+          ),
         ),
-        plotOutput(ns("plot"), hover = ns("plot_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-        uiOutput(ns("hover_info"), style = "pointer-events: none")
       )
     })
 
@@ -104,14 +114,17 @@ mod_expression_server <- function(id, rv) {
     output$table <- DT::renderDT({
       req(gene_cor())
       # Create data table
-      DT::datatable(
-        data = gene_cor(),
-        options = list("scrollX" = TRUE, "scrollY" = TRUE),
-        rownames = FALSE
-      ) %>%
+      gene_cor() %>%
+        dplyr::select(-.data$significant) %>%
+        DT::datatable(
+          options = list("scrollX" = TRUE, "scrollY" = TRUE),
+          rownames = FALSE
+        ) %>%
         # Round to 3 digits
-        DT::formatRound(columns = "rho", digits = 3)
+        DT::formatSignif(columns = c("rho", "p.value"), digits = 3)
     })
+
+    ## Select individual genes
 
     # Debounce selected genes to prevent plot lagging
     selected_genes <- reactive({
@@ -123,9 +136,9 @@ mod_expression_server <- function(id, rv) {
     # Plot selected rows
     output$plot <- renderPlot(
       {
-        # Make plot
         req(selected_genes())
-        exp_plot_selected(merged(), selected_genes(), rv$response_col())
+        # Make plot
+        exp_plot_selected(merged(), selected_genes(), rv$response_col(), input$log_scale)
       },
       # Adjust height to maintain aspect ratio
       height = function() {
@@ -135,36 +148,52 @@ mod_expression_server <- function(id, rv) {
     )
 
     # Create tooltip for hovering over points in plot
-    output$hover_info <- renderUI({
+    output$hover_tip <- renderUI({
       req(input$plot_hover)
       exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
     })
 
+    ## Downloads
+
+    # Download data underlying plot
+    output$dl_selected <- downloadHandler(
+      filename = function() {
+        "selected_expression.tsv"
+      },
+      content = function(file) {
+        data <-
+          merged() %>%
+          dplyr::filter(.data[["gene"]] %in% selected_genes())
+
+        vroom::vroom_write(data, file)
+      }
+    )
+
     # Manage tsv download
     output$dl_tsv <- downloadHandler(
       filename = function() {
-        paste0(Sys.Date(), "_expression.tsv")
+        "expression_results.tsv"
       },
       content = function(file) {
         vroom::vroom_write(gene_cor(), file)
       }
     )
 
-    # .RData download
-    output$dl_rds <- downloadHandler(
-      filename = function() {
-        paste0(Sys.Date(), "_expression.rds")
-      },
-      content = function(file) {
-        merged() %>%
-          dplyr::left_join(
-            gene_cor(),
-            by = "gene"
-          ) %>%
-          tidyr::nest(data = -c("gene", "rho")) %>%
-          saveRDS(file)
-      }
-    )
+    # # .RData download
+    # output$dl_rds <- downloadHandler(
+    #   filename = function() {
+    #     "full_expression_results.rds"
+    #   },
+    #   content = function(file) {
+    #     merged() %>%
+    #       dplyr::left_join(
+    #         gene_cor(),
+    #         by = "gene"
+    #       ) %>%
+    #       tidyr::nest(data = -c("gene", "rho")) %>%
+    #       saveRDS(file)
+    #   }
+    # )
   })
 }
 

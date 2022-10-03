@@ -16,7 +16,8 @@ everyone.
 
 cellpanelr uses data sets adapted from [DepMap (Broad
 Institute)](https://depmap.org/portal/) under the [CC BY
-4.0](https://creativecommons.org/licenses/by/4.0/) license.
+4.0](https://creativecommons.org/licenses/by/4.0/) license. The current
+version of cellpanelr uses DepMap release 22Q1.
 
 ## Web application
 
@@ -47,6 +48,9 @@ remotes::install_github("dwassarman/cellpanelr")
     response data with gene expression and gene mutations
 -   `data_annotations()`, `data_expression()`, and `data_mutations()`
     retrieve modified DepMap data sets for over 1,000 cell lines
+-   `data_nutlin()` provides an example data set containing cell line
+    sensitivity to the drug nutlin-3. See the example in the publication
+    folder for a more detailed analysis of this data set.
 
 ``` r
 library(cellpanelr)

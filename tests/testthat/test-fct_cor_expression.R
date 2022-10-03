@@ -1,6 +1,7 @@
 test_that("cor_expression() gives consistent result", {
-  data <- vroom::vroom("~/Documents/r-projects/sample_data/dasatinib.tsv") %>%
-    dplyr::filter(!is.na(.data$auc))
-  
-  expect_snapshot(cor_expression(data, response = "auc"))
+  data <- data_nutlin() %>%
+    dplyr::filter(!is.na(.data$AUC)) %>%
+    add_ids("Cell line")
+
+  expect_snapshot(cor_expression(data, response = "AUC"))
 })

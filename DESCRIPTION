@@ -1,11 +1,11 @@
 Package: cellpanelr
 Title: Analyze Data from Cell Line Panels
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person(given = c("Douglas", "R"),
            family = "Wassarman",
            role = c("aut", "cre"),
-           email = "dwassar@gmail.com")
+           email = "douglas.wassarman@gmail.com")
 Description: A Shiny app and R package for analyzing data collected
   from cell line panels. It uses data sets and annotations available from
   [DepMap (Broad Institute)](<https://depmap.org/portal/>) to identify features
@@ -31,8 +31,10 @@ Imports:
     vroom
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Suggests: 
+    knitr,
+    rmarkdown,
     spelling,
     testthat (>= 3.0.0),
     tibble,
