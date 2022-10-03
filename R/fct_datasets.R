@@ -23,6 +23,8 @@
 #' }
 #'
 #' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
+#' 
+#' @importFrom memoise memoise
 #'
 #' @export
 data_expression <- memoise::memoise(.expression)

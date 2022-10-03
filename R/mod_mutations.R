@@ -107,7 +107,7 @@ mod_mutations_server <- function(id, rv) {
 
       result <-
         cor_mutations(rv$data(), rv$response_col()) %>%
-        dplyr::mutate(log.p = -log10(adj.p))
+        dplyr::mutate(log.p = -log10(.data$adj.p))
       shinyFeedback::resetLoadingButton("go")
       result
     }) %>% bindEvent(input$go)
