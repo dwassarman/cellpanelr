@@ -56,3 +56,53 @@ mut_plot_selected <- function(data, response, log_scale = FALSE) {
   
   p
 }
+
+
+#' Tooltip for the mutation volcano plot
+#' 
+#' See here for reference: https://gitlab.com/-/snippets/16220
+#' 
+#' @param data Tibble; output of gene correlation
+#' @param hover Hover information from plot
+mut_vol_tip <- function(data, hover) {
+  print("\n")
+  print("data")
+  print(data)
+  print("hover")
+  print(hover)
+  
+  # Find point near hover
+  point <- nearPoints(
+    data,
+    hover,
+    xvar = "effect",
+    yvar = "log.p",
+    maxpoints = 1
+  )
+  
+  print("point")
+  print(point)
+  
+  # Only show if cursor is near a point
+  if (nrow(point) == 0) {
+    return(NULL)
+  }
+  
+  # Get location
+  left_px <- hover$coords_css$x
+  top_px <- hover$coords_css$y
+  
+  # create style property for tooltip
+  # background color is set so tooltip is a bit transparent
+  # z-index is set so we are sure are tooltip will be on top
+  style <- paste0(
+    "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
+    "left:", left_px, "px; top:", top_px, "px;"
+  )
+  
+  # actual tooltip created as wellPanel
+  wellPanel(
+    style = style,
+    strong(point$gene)
+  )
+}

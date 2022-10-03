@@ -57,15 +57,19 @@ mod_mutations_server <- function(id, rv) {
         col_6(
           h3("Volcano plot: all mutations"),
           h5("Hover mouse to identify gene. Right-click to save image of plot."),
-          plotOutput(ns("vol_plot"), hover = ns("vol_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-          uiOutput(ns("vol_tip"), style = "pointer-events: none"),
+          col_12(
+            plotOutput(ns("vol_plot"), hover = ns("vol_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+            uiOutput(ns("vol_tip"), style = "pointer-events: none"),
+          )
         ),
         col_6(
           h3("Selected genes from table"),
           h5("Hover mouse to identify cell line. Right-click to save image of plot."),
-          plotOutput(ns("selected_plot"), hover = ns("selected_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
-          downloadButton(ns("dl_selected"), "Download plotted data"),
-          uiOutput(ns("selected_tip"), style = "pointer-events: none"),
+          col_12(
+            plotOutput(ns("selected_plot"), hover = ns("selected_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
+            downloadButton(ns("dl_selected"), "Download plotted data", style = "float:right"),
+            uiOutput(ns("selected_tip"), style = "pointer-events: none"),
+          )
         ),
       )
     })
@@ -154,6 +158,13 @@ mod_mutations_server <- function(id, rv) {
       },
       res = 96
     )
+    
+    # Volcano plot tooltip
+    output$vol_tip <- renderUI({
+      # Get hover info from plot
+      req(input$vol_hover)
+      mut_vol_tip(gene_cor(), input$vol_hover)
+    })
 
     # # Create tooltip for hovering over points in plot
     # # See here for reference: https://gitlab.com/-/snippets/16220
