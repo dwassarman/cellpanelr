@@ -34,7 +34,7 @@ mod_mutations_server <- function(id, rv) {
   stopifnot(is.reactivevalues(rv))
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-    
+
     ## Dynamic UI elements
 
     # UI outputs
@@ -79,11 +79,11 @@ mod_mutations_server <- function(id, rv) {
       req(rv$data)
       paste0(n_mut_matched(rv$data()), " cell lines from your data with mutation data")
     })
-    
+
     # Table in side bar
     output$table <- DT::renderDataTable({
       req(gene_cor())
-      
+
       gene_cor() %>%
         dplyr::select(.data$gene, .data$effect, .data$adj.p) %>%
         DT::datatable(
@@ -93,7 +93,7 @@ mod_mutations_server <- function(id, rv) {
         # Round to 3 digits
         DT::formatSignif(columns = c("effect", "adj.p"), digits = 3)
     })
-    
+
     ## Data set creation
 
     # Do correlation when button is pushed
@@ -111,7 +111,7 @@ mod_mutations_server <- function(id, rv) {
       shinyFeedback::resetLoadingButton("go")
       result
     }) %>% bindEvent(input$go)
-    
+
     # Merged user data with mutations data
     merged <- reactive({
       req(rv$data)
@@ -122,14 +122,14 @@ mod_mutations_server <- function(id, rv) {
           suffix = c("", ".depmap")
         )
     }) %>% bindEvent(input$go)
-    
+
     ## Select individual genes
-    
+
     # Debounce selected genes to prevent plot lagging
     merged_selected <- reactive({
       req(merged())
       selected <- get_selected_genes(gene_cor(), input$table_rows_selected)
-      
+
       merged() %>%
         dplyr::filter(.data$gene %in% selected) %>%
         dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
@@ -147,7 +147,7 @@ mod_mutations_server <- function(id, rv) {
       },
       res = 96
     )
-    
+
     output$selected_plot <- renderPlot(
       {
         req(merged_selected())
@@ -158,7 +158,7 @@ mod_mutations_server <- function(id, rv) {
       },
       res = 96
     )
-    
+
     # Volcano plot tooltip
     output$vol_tip <- renderUI({
       # Get hover info from plot
@@ -171,23 +171,23 @@ mod_mutations_server <- function(id, rv) {
     # output$hover_info <- renderUI({
     #   req(input$plot_hover)
     #   hover <- input$plot_hover
-    # 
+    #
     #   # Find point near hover
     #   df <- gene_cor() %>%
     #     dplyr::mutate(
     #       adj.p = -log10(.data$adj.p)
     #     )
-    # 
+    #
     #   point <- nearPoints(df, xvar = "effect", yvar = "adj.p", hover, maxpoints = 1)
-    # 
-    # 
+    #
+    #
     #   if (nrow(point) == 0) {
     #     return(NULL)
     #   }
-    # 
+    #
     #   left_px <- hover$coords_css$x
     #   top_px <- hover$coords_css$y
-    # 
+    #
     #   # create style property for tooltip
     #   # background color is set so tooltip is a bit transparent
     #   # z-index is set so we are sure are tooltip will be on top
@@ -195,14 +195,14 @@ mod_mutations_server <- function(id, rv) {
     #     "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
     #     "left:", left_px, "px; top:", top_px, "px;"
     #   )
-    # 
+    #
     #   # actual tooltip created as wellPanel
     #   wellPanel(
     #     style = style,
     #     strong(point$gene)
     #   )
     # })
-    # 
+    #
     # # Create tooltip for hovering over points in plot
     # # See here for reference: https://gitlab.com/-/snippets/16220
     # output$selected_hover_info <- renderUI({
@@ -211,13 +211,13 @@ mod_mutations_server <- function(id, rv) {
     #   hover <- input$selected_hover
     #   print("hover:")
     #   print(hover)
-    #   
+    #
     #   # Filter data to the correct facet
     #   filtered <- merged() %>%
     #     dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
     #     dplyr::mutate(genotype = factor(genotype, levels = c("Wild-type", "Mutant"))) %>%
     #     dplyr::filter(.data$gene == hover$panelvar1)
-    #   
+    #
     #   # Find the nearest point
     #   point <- nearPoints(
     #     filtered,
@@ -228,17 +228,17 @@ mod_mutations_server <- function(id, rv) {
     #   )
     #   print("point:")
     #   print(point)
-    #   
+    #
     #   # Don't show tooltip if there are no nearby points
     #   if (nrow(point) == 0) {
     #     return(NULL)
     #   }
-    #   
+    #
     #   # Find location on the screen for the tooltip
     #   # (Bug this looks off when there are headers above the)
     #   left_px <- hover$coords_css$x
     #   top_px <- hover$coords_css$y
-    #   
+    #
     #   # create style property for tooltip
     #   # background color is set so tooltip is a bit transparent
     #   # z-index is set so we are sure are tooltip will be on top
@@ -246,35 +246,35 @@ mod_mutations_server <- function(id, rv) {
     #     "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
     #     "left:", left_px, "px; top:", top_px, "px;"
     #   )
-    #   
+    #
     #   print("style:")
     #   print(style)
-    #   
+    #
     #   print("cell:")
     #   print(point[[rv$cell_col()]])
-    #   
+    #
     #   # actual tooltip created as wellPanel
     #   wellPanel(
     #     style = style,
     #     strong(point[[rv$cell_col()]])
     #   )
-    #   
+    #
     #   # exp_tooltip(input$selected_hover, merged(), rv$cell_col(), rv$response_col())
     #   # hover <- input$selected_hover
-    #   # 
+    #   #
     #   # # Find point near hover
     #   # df <- merged()
-    #   # 
+    #   #
     #   # point <- nearPoints(df, xvar = "mutant", yvar = rv$response_col(), hover, maxpoints = 1)
-    #   # 
-    #   # 
+    #   #
+    #   #
     #   # if (nrow(point) == 0) {
     #   #   return(NULL)
     #   # }
-    #   # 
+    #   #
     #   # left_px <- hover$coords_css$x
     #   # top_px <- hover$coords_css$y
-    #   # 
+    #   #
     #   # # create style property for tooltip
     #   # # background color is set so tooltip is a bit transparent
     #   # # z-index is set so we are sure are tooltip will be on top
@@ -282,7 +282,7 @@ mod_mutations_server <- function(id, rv) {
     #   #   "position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
     #   #   "left:", left_px, "px; top:", top_px, "px;"
     #   # )
-    #   # 
+    #   #
     #   # # actual tooltip created as wellPanel
     #   # wellPanel(
     #   #   style = style,
@@ -307,7 +307,7 @@ mod_mutations_server <- function(id, rv) {
     # },
     # res = 96
     # )
-  
+
     # Download data underlying plot
     output$dl_selected <- downloadHandler(
       filename = function() {

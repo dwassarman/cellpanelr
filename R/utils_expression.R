@@ -41,12 +41,12 @@ exp_tooltip <- function(hover, data, cell, response) {
   if (nrow(point) == 0) {
     return(NULL)
   }
-  
+
   # output <- paste0(
   #   point[[cell]], "\n",
-  #   "(", point[["rna_expression"]], ", ", point[[response]], ")" 
+  #   "(", point[["rna_expression"]], ", ", point[[response]], ")"
   # )
-  # 
+  #
   # tagList(
   #   p(point[[cell]]),
   #   p(
@@ -55,7 +55,7 @@ exp_tooltip <- function(hover, data, cell, response) {
   #     paste0(point[[response]], ")")
   #   ),
   # )
-  # 
+  #
   # renderText(output)
 
   # Find location on the screen for the tooltip
@@ -111,10 +111,10 @@ exp_plot_selected <- function(data, selected, response, log_scale = FALSE) {
     geom_smooth(method = "lm", se = FALSE) +
     facet_wrap(~ .data$gene, scales = "free") +
     xlab("RNA expression (log2[TPM + 1])")
-  
+
   if (log_scale) {
     p <- p + ggplot2::scale_y_log10()
   }
-  
+
   p
 }

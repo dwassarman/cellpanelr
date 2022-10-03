@@ -56,7 +56,7 @@ app_ui <- function(request) {
       div(
         align = "center",
         hr(),
-        span("version 0.0.0.9002. September 21, 2022"),
+        span("version 0.0.0.9002. October 3, 2022"),
       )
     )
   )
@@ -85,7 +85,7 @@ golem_add_external_resources <- function() {
     # Enable packages with extra UI features
     shinyFeedback::useShinyFeedback(),
     shinyjs::useShinyjs(),
-    
+
     # Pad page for fixed-top navbar
     tags$style(type = "text/css", "body {padding-top: 70px;}"),
   )

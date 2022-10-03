@@ -42,7 +42,7 @@ mod_expression_server <- function(id, rv) {
     ns <- session$ns
 
     ## Dynamic UI Elements
-    
+
     # Display correlations in side panel
     output$side <- renderUI({
       req(gene_cor())
@@ -123,7 +123,7 @@ mod_expression_server <- function(id, rv) {
         # Round to 3 digits
         DT::formatSignif(columns = c("rho", "p.value"), digits = 3)
     })
-    
+
     ## Select individual genes
 
     # Debounce selected genes to prevent plot lagging
@@ -152,20 +152,19 @@ mod_expression_server <- function(id, rv) {
       req(input$plot_hover)
       exp_tooltip(input$plot_hover, merged(), rv$cell_col(), rv$response_col())
     })
-    
+
     ## Downloads
-    
+
     # Download data underlying plot
     output$dl_selected <- downloadHandler(
       filename = function() {
         "selected_expression.tsv"
       },
       content = function(file) {
-        
-        data <- 
+        data <-
           merged() %>%
           dplyr::filter(.data[["gene"]] %in% selected_genes())
-        
+
         vroom::vroom_write(data, file)
       }
     )

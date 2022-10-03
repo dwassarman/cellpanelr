@@ -42,7 +42,7 @@ mod_home_ui <- function(id) {
         p("Upload response data you have collected from a panel of cell lines."),
         br(),
         h4("Step 2: Find biomarkers"),
-        p("Correlate your data with one of several data sets and interactively plot 
+        p("Correlate your data with one of several data sets and interactively plot
         the results."),
         br(),
       ),

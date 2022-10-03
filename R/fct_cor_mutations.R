@@ -1,5 +1,5 @@
 #' Correlate cell line response with gene mutations
-#' 
+#'
 #' For each of the 19.537 genes present in the
 #' \code{\link{data_mutations}} data set, perform a Mann-Whitney test
 #' \code{\link[stats]{wilcox.test}} to determine whether cell lines containing a mutant version of the gene respond
@@ -26,8 +26,8 @@
 #' }
 #'
 #' @export
-#' 
-#' @examples 
+#'
+#' @examples
 #' # Setup example data set
 #' df <- tibble::tibble(
 #'   CellLine = c("LS513", "253-J", "NIH:OVCAR-3"),

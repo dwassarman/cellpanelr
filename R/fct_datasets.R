@@ -23,7 +23,7 @@
 #' }
 #'
 #' @source DepMap (Broad Institute), release 22Q1: \url{https://depmap.org/portal/}
-#' 
+#'
 #' @importFrom memoise memoise
 #'
 #' @export
@@ -97,10 +97,10 @@ data_mutations <- memoise::memoise(.mutations)
 
 
 #' Nutlin-3 data set
-#' 
+#'
 #' Example data set containing  sensitivity of 968 cell lines to the drug nutlin-3. Nutlin-3 is an MDM2 inhibitor,
 #' which leads to the reactivation of p53 and cell cycle arrest.
-#' 
+#'
 #' @format A tibble with 968 rows and 6 columns.
 #' \describe{
 #'   \item{Cell line}{Common name of cell line}
@@ -112,7 +112,7 @@ data_mutations <- memoise::memoise(.mutations)
 #' }
 #'
 #' @source The Genomics of Drug Sensitivity in Cancer Project: \url{httpls://cancerrxgene.org}
-#' 
+#'
 #' @export
 data_nutlin <- function() {
   .nutlin

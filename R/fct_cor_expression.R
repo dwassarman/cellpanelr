@@ -1,5 +1,5 @@
 #' Calculate cell line response with gene expression
-#' 
+#'
 #' For each of the 19.177 genes present in the
 #' \code{\link{data_expression}} data set, perform Spearman's
 #' correlation between given response data and RNA expression levels across
@@ -24,7 +24,7 @@
 #'   \item{significant}{Whether the correlation is deemed significant after
 #'     multiple hypothesis correction with the given false discovery rate}
 #' }
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -68,7 +68,7 @@ cor_expression <- function(data, response, ids = "depmap_id", fdr = 0.05) {
 
 
 #' Benjamini-Hochberg correction for p-value significance
-#' 
+#'
 #' Determine significance of p-values after repeated hypothesis testing using the
 #'   Benjamini-Hochberg correction.
 #'
@@ -81,6 +81,6 @@ cor_expression <- function(data, response, ids = "depmap_id", fdr = 0.05) {
 bh_correction <- function(x, fdr) {
   adjusted <- x * length(x) / dplyr::row_number(x)
   significant <- adjusted < fdr
-  
+
   significant & dplyr::lag(significant, default = TRUE)
 }
