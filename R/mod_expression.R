@@ -48,7 +48,7 @@ mod_expression_server <- function(id, rv) {
       req(gene_cor())
       tagList(
         hr(),
-        h3("Select genes to plot on right"),
+        h3("Results: select genes to plot"),
         br(),
         DT::DTOutput(ns("table")),
         br(),

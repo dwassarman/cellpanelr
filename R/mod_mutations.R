@@ -43,7 +43,7 @@ mod_mutations_server <- function(id, rv) {
       tagList(
         hr(),
         # h3("Select genes to plot individually"),
-        h3("Results"),
+        h3("Results: select genes to plot"),
         DT::DTOutput(ns("table")),
         br(),
         downloadButton(ns("dl_tsv"), "Download .tsv"),
@@ -64,7 +64,7 @@ mod_mutations_server <- function(id, rv) {
         ),
         col_6(
           h3("Selected genes from table"),
-          h5("Hover mouse to identify cell line. Right-click to save image of plot."),
+          h5("Right-click to save image of plot."),
           col_12(
             plotOutput(ns("selected_plot"), hover = ns("selected_hover"), height = "100%") %>% shinycssloaders::withSpinner(),
             downloadButton(ns("dl_selected"), "Download plotted data", style = "float:right"),
