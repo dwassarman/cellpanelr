@@ -4,12 +4,11 @@
 \alias{mut_plot_selected}
 \title{Generate boxplot genotype vs. response, faceted by selected gene}
 \usage{
-mut_plot_selected(data, selected, response, log_scale = FALSE)
+mut_plot_selected(data, response, log_scale = FALSE)
 }
 \arguments{
-\item{data}{A tibble, user data merged with mutation data}
-
-\item{selected}{Character vector with selected gene names}
+\item{data}{A tibble, user data merged with mutation data and filtered only for selected genes.
+Contains the columns "gene" and "genotype".}
 
 \item{response}{Name of response column}
 
