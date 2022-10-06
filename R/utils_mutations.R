@@ -67,11 +67,6 @@ mut_plot_selected <- function(data, response, log_scale = FALSE) {
 #' @param data Tibble; output of gene correlation
 #' @param hover Hover information from plot
 mut_vol_tip <- function(data, hover) {
-  print("\n")
-  print("data")
-  print(data)
-  print("hover")
-  print(hover)
 
   # Find point near hover
   point <- nearPoints(
@@ -82,8 +77,6 @@ mut_vol_tip <- function(data, hover) {
     maxpoints = 1
   )
 
-  print("point")
-  print(point)
 
   # Only show if cursor is near a point
   if (nrow(point) == 0) {

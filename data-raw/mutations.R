@@ -1,7 +1,7 @@
 library(tidyverse)
 library(vroom)
 
-data <- vroom("~/Documents/r-projects/DepMap raw/22Q1/CCLE_mutations.csv") %>%
+data <- vroom("../DepMap raw/22Q1/CCLE_mutations.csv") %>%
   select(Hugo_Symbol, DepMap_ID) %>%
   rename(gene = Hugo_Symbol, depmap_id = DepMap_ID) %>%
   distinct(gene, depmap_id)
@@ -16,4 +16,4 @@ wide <- data %>%
     values_fill = FALSE
   )
 
-saveRDS(wide, "~/Documents/r-projects/cellpanelr data/22Q1/mutations.rds", compress = "gzip")
+saveRDS(wide, "../cellpanelr data/22Q1/mutations.rds", compress = "gzip")
