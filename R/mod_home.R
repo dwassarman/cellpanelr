@@ -48,7 +48,7 @@ mod_home_ui <- function(id) {
       ),
       mainPanel(
         h4("Overview of cellpanelr"),
-        tags$img(src = "www/cellpanelr_overview.pdf")
+        tags$image(src = "www/cellpanelr_overview.svg", width = "400px")
       )
     )
   )
