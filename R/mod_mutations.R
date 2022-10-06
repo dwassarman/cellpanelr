@@ -42,8 +42,8 @@ mod_mutations_server <- function(id, rv) {
       req(gene_cor())
       tagList(
         hr(),
-        # h3("Select genes to plot individually"),
         h3("Results: select genes to plot"),
+        actionButton(ns("clear_rows"), "Clear selections"),
         DT::DTOutput(ns("table")),
         br(),
         downloadButton(ns("dl_tsv"), "Download .tsv"),
@@ -135,6 +135,12 @@ mod_mutations_server <- function(id, rv) {
         dplyr::mutate(genotype = ifelse(.data$mutant, "Mutant", "Wild-type")) %>%
         dplyr::mutate(genotype = factor(.data$genotype, levels = c("Wild-type", "Mutant")))
     }) %>% debounce(750)
+    
+    # Clear row selections when button is pushed
+    observe({
+      proxy <- DT::dataTableProxy("table")
+      proxy %>% DT::selectRows(NULL)
+    }) %>% bindEvent(input$clear_rows)
 
     # Volcano plot
     output$vol_plot <- renderPlot(
