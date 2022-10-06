@@ -131,7 +131,7 @@ mod_expression_server <- function(id, rv) {
       req(gene_cor())
       get_selected_genes(gene_cor(), input$table_rows_selected)
     }) %>% debounce(750)
-    
+
     # Clear row selections when button is pushed
     observe({
       proxy <- DT::dataTableProxy("table")

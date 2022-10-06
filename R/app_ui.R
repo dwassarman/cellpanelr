@@ -56,7 +56,7 @@ app_ui <- function(request) {
       div(
         align = "center",
         hr(),
-        span("version 0.0.0.9002. October 3, 2022"),
+        span("version 0.0.0.9003. October 6, 2022"),
       )
     )
   )
