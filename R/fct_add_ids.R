@@ -1,3 +1,10 @@
+#############################
+# These functions currently generate a number of deprecation warnings related
+# to changes in the usage of ".data" usage in data masking and tidy selection
+# starting in tidyselect 1.2.0.
+# These deprecation warnings will be addressed in future versions
+#############################
+
 #' Append new column containing DepMap IDs
 #'
 #' Matches cell line names from the given column to unique DepMap IDs. Matching

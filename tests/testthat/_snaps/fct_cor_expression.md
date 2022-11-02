@@ -2,6 +2,17 @@
 
     Code
       cor_expression(data, response = "AUC")
+    Warning <lifecycle_warning_deprecated>
+      Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      i Please use `all_of(var)` (or `any_of(var)`) instead of `.data[[var]]`
+      Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      i Please use `"estimate"` instead of `.data$estimate`
+      Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      i Please use `"gene"` instead of `.data$gene`
+      Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      i Please use `"rho"` instead of `.data$rho`
+      Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      i Please use `"p.value"` instead of `.data$p.value`
     Output
       # A tibble: 19,177 x 4
          gene         rho  p.value significant

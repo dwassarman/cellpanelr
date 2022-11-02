@@ -2,6 +2,9 @@
 
     Code
       cor_mutations(data, response = "AUC")
+    Warning <lifecycle_warning_deprecated>
+      Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+      i Please use `"gene"` instead of `.data$gene`
     Output
       # A tibble: 19,537 x 5
          gene    effect  p.value    adj.p significant

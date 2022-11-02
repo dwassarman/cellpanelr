@@ -1,3 +1,10 @@
+#############################
+# These functions currently generate a number of deprecation warnings related
+# to changes in the usage of ".data" usage in data masking and tidy selection
+# starting in tidyselect 1.2.0.
+# These deprecation warnings will be addressed in future versions
+#############################
+
 #' @noRd
 .expression <- function() {
   readRDS(url("https://www.dropbox.com/s/9aq6vzzwvywy60k/expression.rds?dl=1")) %>%
