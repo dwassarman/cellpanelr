@@ -5,10 +5,10 @@ account: dwassarman
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5512079
-bundleId: 6377372
+bundleId: 6468428
 url: https://dwassarman.shinyapps.io/cellpanelr/
-when: 1665091900.41871
-lastSyncTime: 1665091900.41872
+when: 1667412644.99672
+lastSyncTime: 1667412644.99673
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: CODE_OF_CONDUCT.md|data-raw/annotations.R|data-raw/expression.R|data-raw/mutations.R|data-raw/sysdata.R|LICENSE.md|publication/nutlin_example_files/figure-gfm/plotting-1.png|publication/nutlin_example_files/figure-gfm/plotting-2.png|publication/nutlin_example.md|publication/nutlin_example.pdf|publication/nutlin_example.Rmd|README.md|README.Rmd|dev|man|tests
+ignoredFiles: data-raw/annotations.R|data-raw/expression.R|data-raw/mutations.R|data-raw/sysdata.R|publication/nutlin_example_files/figure-gfm/plotting-1.png|publication/nutlin_example_files/figure-gfm/plotting-2.png|publication/nutlin_example.md|publication/nutlin_example.pdf|publication/nutlin_example.Rmd|README.md|README.Rmd
