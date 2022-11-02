@@ -7,6 +7,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 Identify predictive biomarkers from cell line panels. Correlate your
@@ -34,23 +36,23 @@ interactive R session
 remotes::install_github("dwassarman/cellpanelr")
 ```
 
--   Note: if you get the following error
-    `Error in loadNamespace(x) : there is no package called ‘remotes’`.
-    Remove the `#` character from the command above to install the
-    `remotes` package.
+- Note: if you get the following error
+  `Error in loadNamespace(x) : there is no package called ‘remotes’`.
+  Remove the `#` character from the command above to install the
+  `remotes` package.
 
 ## Usage
 
--   `run_app()` runs a local instance of the interactive shiny app
--   `add_ids()` matches cell line names with DepMap IDs for subsequent
-    analysis
--   `cor_expression()` and `cor_mutations()` correlate cell line
-    response data with gene expression and gene mutations
--   `data_annotations()`, `data_expression()`, and `data_mutations()`
-    retrieve modified DepMap data sets for over 1,000 cell lines
--   `data_nutlin()` provides an example data set containing cell line
-    sensitivity to the drug nutlin-3. See the example in the publication
-    folder for a more detailed analysis of this data set.
+- `run_app()` runs a local instance of the interactive shiny app
+- `add_ids()` matches cell line names with DepMap IDs for subsequent
+  analysis
+- `cor_expression()` and `cor_mutations()` correlate cell line response
+  data with gene expression and gene mutations
+- `data_annotations()`, `data_expression()`, and `data_mutations()`
+  retrieve modified DepMap data sets for over 1,000 cell lines
+- `data_nutlin()` provides an example data set containing cell line
+  sensitivity to the drug nutlin-3. See the example in the publication
+  folder for a more detailed analysis of this data set.
 
 ``` r
 library(cellpanelr)
