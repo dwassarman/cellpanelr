@@ -1,6 +1,6 @@
 Package: cellpanelr
 Title: Analyze Data from Cell Line Panels
-Version: 0.0.0.9003
+Version: 1.0.0
 Authors@R: 
     person(given = c("Douglas", "R"),
            family = "Wassarman",
@@ -31,7 +31,7 @@ Imports:
     vroom
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Suggests: 
     knitr,
     rmarkdown,

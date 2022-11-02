@@ -1,14 +1,13 @@
 name: cellpanelr-beta
-title:
+title: cellpanelr-beta
 username:
 account: dwassarman
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6095612
-bundleId: 6377337
+bundleId: 6468239
 url: https://dwassarman.shinyapps.io/cellpanelr-beta/
-when: 1665091222.33252
-lastSyncTime: 1665091222.33254
+when: 1667409048.958
+lastSyncTime: 1667409048.95801
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: CODE_OF_CONDUCT.md|data-raw/annotations.R|data-raw/expression.R|data-raw/mutations.R|data-raw/sysdata.R|LICENSE.md|publication/nutlin_example_files/figure-gfm/plotting-1.png|publication/nutlin_example_files/figure-gfm/plotting-2.png|publication/nutlin_example.md|publication/nutlin_example.pdf|publication/nutlin_example.Rmd|README.md|README.Rmd|dev|man|tests
