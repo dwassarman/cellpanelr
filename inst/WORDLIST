@@ -3,7 +3,6 @@ Benjamini
 DepMap
 DropBox
 Hochberg
-Lifecycle
 MDM
 Nutlin
 TPM
@@ -24,6 +23,7 @@ magrittr
 ns
 nutlin
 omics
+preprint
 shinyapps
 tibble
 tooltip

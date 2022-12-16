@@ -1,0 +1,8 @@
+bibentry(
+  "Article",
+  title    = "Cellpanelr: identify predictive biomarkers from cell line panel response data",
+  author   = "Douglas R. Wassarman, Taiasean Wu, Kevan M. Shokat",
+  journal  = "bioRxiv",
+  year     = "2022",
+  doi      = "10.1101/2022.11.02.514913",
+)
