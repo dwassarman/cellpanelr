@@ -11,6 +11,9 @@ data with mutations, gene expression, and more. The goal of cellpanelr
 is to make “omics” level data analysis accessible and open-source for
 everyone.
 
+If you want to know more, please see our
+[preprint](https://www.biorxiv.org/content/10.1101/2022.11.02.514913v1).
+
 cellpanelr uses data sets adapted from [DepMap (Broad
 Institute)](https://depmap.org/portal/) under the [CC BY
 4.0](https://creativecommons.org/licenses/by/4.0/) license. The current
@@ -47,7 +50,8 @@ remotes::install_github("dwassarman/cellpanelr")
   retrieve modified DepMap data sets for over 1,000 cell lines
 - `data_nutlin()` provides an example data set containing cell line
   sensitivity to the drug nutlin-3. See the example in the publication
-  folder for a more detailed analysis of this data set.
+  folder for a more detailed analysis of this data set or read our
+  [preprint](https://www.biorxiv.org/content/10.1101/2022.11.02.514913v1).
 
 ``` r
 library(cellpanelr)
